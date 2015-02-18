@@ -1,0 +1,9 @@
+<#if licenseFirst??>
+${licenseFirst}
+</#if>
+${licensePrefix}Diese Software ist Eigentum von Julian Winter
+${licensePrefix}Alle Rechte sind vorbehalten.
+${licensePrefix}Copyright 2015.
+<#if licenseLast??>
+${licenseLast}
+</#if>
