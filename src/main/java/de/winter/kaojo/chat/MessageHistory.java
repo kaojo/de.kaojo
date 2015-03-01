@@ -19,13 +19,14 @@ public class MessageHistory<T> extends CircularFifoBuffer {
     }
 
     public MessageHistory() {
-        Author author = new Author("Tester", "Herr Test");
-//        this.add(new Message(author, text));
-//        this.buffer = new CircularFifoBuffer(100);
-        this.add(new Message(author, "text text text text text text text text text text "));
-        for (int i = 0; i < 100; i++) {
-            this.add(new Message(author, "text" + i));
-        }
+//        Author author = new Author("Tester", "Herr Test");
+////        this.add(new Message(author, text));
+////        this.buffer = new CircularFifoBuffer(100);
+//        this.add(new Message(author, "text text text text text text text text text text "));
+//        for (int i = 0; i < 100; i++) {
+//            this.add(new Message(author, "text" + i));
+//        }
+        super();
     }
 
 //    @Override

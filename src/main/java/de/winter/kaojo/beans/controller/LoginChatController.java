@@ -5,17 +5,25 @@
  */
 package de.winter.kaojo.beans.controller;
 
-import javax.faces.bean.ManagedBean;
+import de.winter.kaojo.beans.user.User;
+import de.winter.kaojo.beans.user.UserImpl;
+import javax.enterprise.context.RequestScoped;
+import javax.inject.Inject;
+import javax.inject.Named;
 
 /**
  *
  * @author julian
  */
-@ManagedBean(name = "loginController")
-public class LoginController {
+@Named("loginChatController")
+@RequestScoped
+public class LoginChatController {
 
     private String loginPass;
     private String loginName;
+    
+    @Inject
+    private User user;
 
     /**
      * Set the value of loginPass
@@ -34,9 +42,15 @@ public class LoginController {
     public void setLoginName(String loginName) {
         this.loginName = loginName;
     }
+    
+    public String getLoginName(){
+        return this.loginName;
+    }
 
     public String login() {
-
+        this.user = new UserImpl();
+        this.user.setDisplayName(loginName);
+        this.user.setUserId(loginName);
         return "chat";
     }
 

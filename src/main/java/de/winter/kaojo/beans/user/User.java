@@ -7,45 +7,17 @@ package de.winter.kaojo.beans.user;
 
 /**
  *
- * @author julian
+ * @author julian.winter
  */
-public class User {
-
-    String userId;
-    String firtName;
-    String lastName;
-    String displayName;
-
-    public String getUserId() {
-        return userId;
-    }
-
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
-
-    public String getFirtName() {
-        return firtName;
-    }
-
-    public void setFirtName(String firtName) {
-        this.firtName = firtName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public String getDisplayName() {
-        return displayName;
-    }
-
-    public void setDisplayName(String displayName) {
-        this.displayName = displayName;
-    }
-
+public interface User {
+    
+    String getUserId();
+    void setUserId(String userId);
+    String getFirtName();
+    void setFirtName(String firstName);
+    String getLastName();
+    void setLastName(String lastName);
+    String getDisplayName();
+    void setDisplayName(String displayName);
+    
 }

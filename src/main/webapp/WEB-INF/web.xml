@@ -16,7 +16,7 @@
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>Faces Servlet</servlet-name>
-        <url-pattern>/pages/*</url-pattern>
+        <url-pattern>/pages/*.xhtml</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
@@ -24,7 +24,7 @@
         </session-timeout>
     </session-config>
     <welcome-file-list>
-        <welcome-file>pages/login.xhtml</welcome-file>
-        <welcome-file>pages/chat.xhtml</welcome-file>
+        <welcome-file>/pages/login.xhtml</welcome-file>
+        <welcome-file>/pages/chat.xhtml</welcome-file>
     </welcome-file-list>
 </web-app>

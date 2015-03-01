@@ -15,6 +15,14 @@ class ChatUser {
 
     private String userId;
 
+    public ChatUser() {
+    }
+
+    public ChatUser(String iUserId, String iDisplayName) {
+        this.displayName = iDisplayName;
+        this.userId = iUserId;
+    }
+
     public String getUserId() {
         return userId;
     }

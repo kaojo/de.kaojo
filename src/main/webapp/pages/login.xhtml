@@ -10,18 +10,29 @@ Copyright 2015.
         xmlns:f="http://xmlns.jcp.org/jsf/core"
         xmlns:ui="http://java.sun.com/jsf/facelets"
         xmlns:p="http://primefaces.org/ui">
-    <head>
+    <h:head>
         <title>Loginpage</title>
         <h:outputStylesheet name="grid/grid.css" library="primefaces" />
-    </head>
-    <body>
+    </h:head>
+    <h:body>
         <div class="ui-grid headerDiv ui-grid-responsive">
             <div class="ui-grid-row">
                 <div class="ui-grid-col-12">
-                    <p:inputText value="loginController.loginName" id="loginName" autocomplete="false" />
-                    <h:inputSecret value="loginController.loginPass" id="loginPass" />
+                    <h:form>
+                        <p:inputText value="#{loginChatController.loginName}" id="loginName" autocomplete="false" label="test"/>
+                    </h:form>
+                </div>
+            </div>
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-12">
+                    <h:inputSecret value="loginChatController.loginPass" id="loginPass" rendered="false"/>
+                </div>
+            </div>
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-12">
+                    <p:commandButton id="submit" action="#{loginChatController.login()}" value="Login"/>
                 </div>
             </div>
         </div>
-    </body>
+    </h:body>
 </html>

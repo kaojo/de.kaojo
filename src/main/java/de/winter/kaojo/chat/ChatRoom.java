@@ -5,8 +5,12 @@
  */
 package de.winter.kaojo.chat;
 
+import de.winter.kaojo.beans.user.User;
 import de.winter.kaojo.websockets.ChatEndpoint;
 import java.io.IOException;
+import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
+import javax.inject.Inject;
 import javax.websocket.EncodeException;
 import javax.websocket.Session;
 
@@ -19,16 +23,17 @@ public class ChatRoom {
     private String name;
     private ChatEndpoint chatEndpoint;
     private MessageHistory<Message> messageHistory;
-    private ChatUserList<ChatUser> chatUsers;
+    private ConcurrentHashMap<String, ChatUser> chatUsers = new ConcurrentHashMap(8,0.9F,1);
 
     public MessageHistory<Message> getMessageHistory() {
         return messageHistory;
     }
 
-    public ChatRoom(String name) {
+    public ChatRoom(String name, User user) {
         this.name = name;
         this.chatEndpoint = new ChatEndpoint();
-        this.messageHistory = new MessageHistory<Message>();
+        this.messageHistory = new MessageHistory<>(100);
+        this.chatUsers.put(user.getUserId(), new ChatUser(user.getUserId(), user.getDisplayName()));
     }
 
     public void sendMessage(String m, Session c) throws IOException, EncodeException {
