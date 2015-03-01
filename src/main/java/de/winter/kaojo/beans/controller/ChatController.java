@@ -1,4 +1,4 @@
-package de.winter.kaojo.beans;
+package de.winter.kaojo.beans.controller;
 
 import de.winter.kaojo.chat.ChatRoom;
 import java.io.Serializable;

@@ -5,16 +5,19 @@
  */
 package de.winter.kaojo.chat;
 
-import java.util.ArrayList;
 import org.apache.commons.collections.buffer.CircularFifoBuffer;
 
 /**
  *
  * @author julian
  */
-public class MessageHistory<T> extends ArrayList {
+public class MessageHistory<T> extends CircularFifoBuffer {
 
 //    private final CircularFifoBuffer buffer;
+    public MessageHistory(int size) {
+        super(size);
+    }
+
     public MessageHistory() {
         Author author = new Author("Tester", "Herr Test");
 //        this.add(new Message(author, text));
