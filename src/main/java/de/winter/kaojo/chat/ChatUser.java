@@ -9,7 +9,7 @@ package de.winter.kaojo.chat;
  *
  * @author julian
  */
-class ChatUser {
+public class ChatUser {
 
     private String displayName;
 

@@ -98,7 +98,7 @@
                                         </div>
                                         <!--Userlist-->
                                         <div class="ui-grid-col-4">
-                                            <p:dataScroller value="chatRoom.users" var="chatUser" scrollHeight="300" mode="inline" >
+                                            <p:dataScroller value="#{chatRoom.chatUsers}" var="chatUser" scrollHeight="300" mode="inline" >
                                                 <h:outputText value="#{chatUser.displayName}" />
                                             </p:dataScroller>
                                         </div>

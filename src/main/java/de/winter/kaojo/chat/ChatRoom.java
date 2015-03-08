@@ -25,10 +25,6 @@ public class ChatRoom {
     private MessageHistory<Message> messageHistory;
     private ConcurrentHashMap<String, ChatUser> chatUsers;
 
-    public MessageHistory<Message> getMessageHistory() {
-        return messageHistory;
-    }
-
     public ChatRoom(String name, User user) {
         this.name = name;
         this.chatEndpoint = new ChatEndpoint();
@@ -57,6 +53,22 @@ public class ChatRoom {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public void setMessageHistory(MessageHistory<Message> messageHistory) {
+        this.messageHistory = messageHistory;
+    }
+
+    public MessageHistory<Message> getMessageHistory() {
+        return messageHistory;
+    }
+
+    public void setChatUsers(ConcurrentHashMap<String, ChatUser> chatUsers) {
+        this.chatUsers = chatUsers;
+    }
+
+    public ConcurrentHashMap<String, ChatUser> getChatUsers() {
+        return chatUsers;
     }
 
 }
