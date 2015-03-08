@@ -1,13 +1,14 @@
 package de.winter.kaojo.beans.controller;
 
 import de.winter.kaojo.beans.user.User;
-import de.winter.kaojo.beans.user.UserImpl;
+import de.winter.kaojo.beans.user.UserQ;
 import de.winter.kaojo.chat.ChatRoom;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import javax.annotation.PostConstruct;
 import javax.enterprise.context.SessionScoped;
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 
@@ -21,22 +22,47 @@ public class ChatController implements Serializable {
 
     private List<ChatRoom> chatRooms = new ArrayList<>();
     private String openRoom;
+    private List<String> accessibleRooms = new ArrayList<>();
 
     @Inject
+    @UserQ
     private User user;
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
 
     public String openChatRoom() {
         if (openRoom != null) {
             ChatRoom chatRoom = new ChatRoom(openRoom, user);
             chatRooms.add(chatRoom);
+            addMessage("You opened ChatRoom '" + openRoom + "'");
+            openRoom = null;
         }
+        return "chat";
+    }
+
+    public String joinChatRoom() {
+        return "chat";
+    }
+
+    public void addMessage(String summary) {
+        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, summary, null);
+        FacesContext.getCurrentInstance().addMessage(null, message);
+    }
+
+    public String leaveChatRoom(String name) {
         return "chat";
     }
 
     public List<ChatRoom> getChatRooms() {
         return chatRooms;
     }
-    
+
     public void setChatRooms(List<ChatRoom> iChatRooms) {
         this.chatRooms = iChatRooms;
     }
@@ -44,9 +70,17 @@ public class ChatController implements Serializable {
     public String getOpenRoom() {
         return openRoom;
     }
-    
+
     public void setOpenRoom(String iOpenRoom) {
         this.openRoom = iOpenRoom;
+    }
+
+    public List<String> getAccessibleRooms() {
+        return accessibleRooms;
+    }
+
+    public void setAccessibleRooms(List<String> accessibleRooms) {
+        this.accessibleRooms = accessibleRooms;
     }
 
 }

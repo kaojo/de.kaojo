@@ -7,6 +7,7 @@ package de.winter.kaojo.beans.controller;
 
 import de.winter.kaojo.beans.user.User;
 import de.winter.kaojo.beans.user.UserImpl;
+import de.winter.kaojo.beans.user.UserQ;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -21,8 +22,9 @@ public class LoginChatController {
 
     private String loginPass;
     private String loginName;
-    
+
     @Inject
+    @UserQ
     private User user;
 
     /**
@@ -42,16 +44,23 @@ public class LoginChatController {
     public void setLoginName(String loginName) {
         this.loginName = loginName;
     }
-    
-    public String getLoginName(){
+
+    public String getLoginName() {
         return this.loginName;
     }
 
     public String login() {
-        this.user = new UserImpl();
-        this.user.setDisplayName(loginName);
         this.user.setUserId(loginName);
+        this.user.setDisplayName(loginName);
         return "chat";
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
 }

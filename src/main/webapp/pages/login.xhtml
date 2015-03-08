@@ -15,24 +15,24 @@ Copyright 2015.
         <h:outputStylesheet name="grid/grid.css" library="primefaces" />
     </h:head>
     <h:body>
-        <div class="ui-grid headerDiv ui-grid-responsive">
-            <div class="ui-grid-row">
-                <div class="ui-grid-col-12">
-                    <h:form>
+        <h:form>
+            <div class="ui-grid headerDiv ui-grid-responsive">
+                <div class="ui-grid-row">
+                    <div class="ui-grid-col-12">
                         <p:inputText value="#{loginChatController.loginName}" id="loginName" autocomplete="false" label="test"/>
-                    </h:form>
+                    </div>
+                </div>
+                <div class="ui-grid-row">
+                    <div class="ui-grid-col-12">
+                        <h:inputSecret value="loginChatController.loginPass" id="loginPass" rendered="false"/>
+                    </div>
+                </div>
+                <div class="ui-grid-row">
+                    <div class="ui-grid-col-12">
+                        <p:commandButton id="submit" action="#{loginChatController.login()}" value="Login"/>
+                    </div>
                 </div>
             </div>
-            <div class="ui-grid-row">
-                <div class="ui-grid-col-12">
-                    <h:inputSecret value="loginChatController.loginPass" id="loginPass" rendered="false"/>
-                </div>
-            </div>
-            <div class="ui-grid-row">
-                <div class="ui-grid-col-12">
-                    <p:commandButton id="submit" action="#{loginChatController.login()}" value="Login"/>
-                </div>
-            </div>
-        </div>
+        </h:form>
     </h:body>
 </html>

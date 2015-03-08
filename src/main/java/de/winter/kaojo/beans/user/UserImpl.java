@@ -7,13 +7,12 @@ package de.winter.kaojo.beans.user;
 
 import java.io.Serializable;
 import javax.enterprise.context.SessionScoped;
-import javax.inject.Named;
 
 /**
  *
  * @author julian
  */
-@Named("user")
+@UserQ
 @SessionScoped
 public class UserImpl implements User, Serializable {
 
