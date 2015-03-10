@@ -9,7 +9,6 @@ import de.winter.kaojo.beans.user.User;
 import de.winter.kaojo.websockets.ChatEndpoint;
 import java.io.IOException;
 import java.util.concurrent.ConcurrentHashMap;
-import javax.enterprise.context.ApplicationScoped;
 import javax.websocket.EncodeException;
 import javax.websocket.Session;
 
@@ -17,7 +16,6 @@ import javax.websocket.Session;
  *
  * @author julian
  */
-@ApplicationScoped
 public class ChatRoom {
 
     private String name;
@@ -69,6 +67,14 @@ public class ChatRoom {
 
     public ConcurrentHashMap<String, ChatUser> getChatUsers() {
         return chatUsers;
+    }
+
+    public void receiveMessage(Message message) {
+        messageHistory.add(message);
+    }
+
+    public void removeUser(User user) {
+        chatUsers.remove(user.getUserId());
     }
 
 }
