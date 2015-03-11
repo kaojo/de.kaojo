@@ -6,26 +6,30 @@
 package de.winter.kaojo.chat;
 
 import de.winter.kaojo.beans.user.User;
-import de.winter.kaojo.websockets.ChatEndpoint;
-import java.io.IOException;
+import de.winter.kaojo.beans.user.UserQ;
+import java.io.Serializable;
 import java.util.concurrent.ConcurrentHashMap;
-import javax.websocket.EncodeException;
-import javax.websocket.Session;
+import javax.inject.Inject;
+import javax.inject.Named;
 
 /**
  *
  * @author julian
  */
-public class ChatRoom {
+@Named
+public class ChatRoom implements Serializable {
+
+    @Inject
+    @UserQ
+    private User user;
 
     private String name;
-    private ChatEndpoint chatEndpoint;
     private MessageHistory<Message> messageHistory;
     private ConcurrentHashMap<String, ChatUser> chatUsers;
+    private String messageArea;
 
     public ChatRoom(String name, User user) {
         this.name = name;
-        this.chatEndpoint = new ChatEndpoint();
         this.messageHistory = new MessageHistory<>(100);
         if (user != null && user.getUserId() != null && user.getDisplayName() != null) {
             this.chatUsers = new ConcurrentHashMap(8, 0.9F, 1);
@@ -33,16 +37,14 @@ public class ChatRoom {
         }
     }
 
-    public void sendMessage(String m, Session c) throws IOException, EncodeException {
-        this.chatEndpoint.message(m, c);
+    public String sendMessage() {
+        Message message = new Message(new Author(user.getUserId(), user.getDisplayName()), messageArea);
+        receiveMessage(message);
+        return "chat";
     }
 
-    public void joinChatRoom(Session peer) {
-        this.chatEndpoint.onOpen(peer);
-    }
-
-    public void leaveChatRoom(Session peer) {
-        this.chatEndpoint.onClose(peer);
+    public String leaveChatRoom() {
+        return "chat";
     }
 
     public String getName() {
@@ -77,4 +79,19 @@ public class ChatRoom {
         chatUsers.remove(user.getUserId());
     }
 
+    public String getMessageArea() {
+        return messageArea;
+    }
+
+    public void setMessageArea(String messageArea) {
+        this.messageArea = messageArea;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
 }

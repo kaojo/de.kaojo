@@ -108,16 +108,16 @@
                                             <div class="ui-grid ui-grid-responsive" >
                                                 <div class="ui-grid-row">
                                                     <div class="ui-grid-col-10 contentDiv">
-                                                        <h:inputTextarea value="#{chatController.messageText}" class="ui-grid-col-11"/>
+                                                        <h:inputTextarea value="#{chatRoom.messageArea}" class="ui-grid-col-11"/>
                                                     </div>
                                                     <div class="ui-grid-col-2 contentDiv">
-                                                        <p:commandButton value="Senden" action="#{chatController.sendMessage(chatRoom)}" />
+                                                        <p:commandButton value="Senden" action="#{chatRoom.sendMessage}" />
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="ui-grid-col-4 contentDiv">
-                                            <p:commandButton id="leaveButton" value="Leave" action="#{chatController.leaveChatRoom(chatRoom)}" update="@all"/>
+                                            <p:commandButton id="leaveButton" value="Leave" action="#{chatRoom.leaveChatRoom}" update="@all"/>
                                         </div>
                                     </div>
                                 </div>
