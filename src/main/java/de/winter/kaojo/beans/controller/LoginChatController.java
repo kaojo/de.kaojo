@@ -6,7 +6,6 @@
 package de.winter.kaojo.beans.controller;
 
 import de.winter.kaojo.beans.user.User;
-import de.winter.kaojo.beans.user.UserImpl;
 import de.winter.kaojo.beans.user.UserQ;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
@@ -52,10 +51,10 @@ public class LoginChatController {
     public String login() {
         this.user.setUserId(loginName);
         this.user.setDisplayName(loginName);
-        if (loginName.equals("Julian")){
+        if (loginName.equals("Julian")) {
             return "failure";
         }
-        return "success";
+        return "chat?faces-redirect=true";
     }
 
     public User getUser() {
