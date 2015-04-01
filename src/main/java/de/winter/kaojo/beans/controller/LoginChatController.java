@@ -52,7 +52,10 @@ public class LoginChatController {
     public String login() {
         this.user.setUserId(loginName);
         this.user.setDisplayName(loginName);
-        return "chat";
+        if (loginName.equals("Julian")){
+            return "failure";
+        }
+        return "success";
     }
 
     public User getUser() {
