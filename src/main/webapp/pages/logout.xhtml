@@ -7,15 +7,18 @@
         xmlns:p="http://primefaces.org/ui">
     <body>
         
-        <ui:composition template="./../template.xhtml">
+        <ui:composition template="./../publicTemplate.xhtml">
 
             <ui:define name="title">
-                My Profile
+                Logout
             </ui:define>
 
             <ui:define name="content">
-                <h:outputText value="logout" />
+                <h:outputText value="Du bist nun ausgeloggt." />
+                <h:outputText value="Wieder einloggen:" /> 
+                <p:link outcome="login" value="Login" />
             </ui:define>
+            
         </ui:composition>
         
     </body>
