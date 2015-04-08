@@ -6,12 +6,17 @@
         xmlns:ui="http://java.sun.com/jsf/facelets"
         xmlns:p="http://primefaces.org/ui">
     <body>
+        <ui:composition template="./../template.xhtml">
 
-        <ui:component id="header" >
-            <!--<p:graphicImage library="images" name="header.jpg" />-->
-            <ui:include src="../components/tabMenu.xhtml" />
-            <ui:include src="userDisplay.xhtml" />
-        </ui:component>
+            <ui:define name="title">
+                My Profile
+            </ui:define>
+
+            <ui:define name="content">
+                <h:outputText value="my profile" />
+            </ui:define>
+        </ui:composition>
 
     </body>
 </html>
+

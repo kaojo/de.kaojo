@@ -7,11 +7,13 @@
         xmlns:p="http://primefaces.org/ui">
     <body>
 
-        <ui:component id="header" >
-            <!--<p:graphicImage library="images" name="header.jpg" />-->
-            <ui:include src="../components/tabMenu.xhtml" />
-            <ui:include src="userDisplay.xhtml" />
-        </ui:component>
-
-    </body>
+        <ui:component id="userDisplay" >
+            <p:panelGrid columns="3" layout="grid">
+                <h:outputText value="#{userController.user.displayName}" />
+                <p:button outcome="myProfile" icon="ui-icon-person" title="myProfile" />
+                <p:button outcome="logout" icon="ui-icon-power" title="logout" />
+        </p:panelGrid>
+    </ui:component>
+        
+</body>
 </html>
