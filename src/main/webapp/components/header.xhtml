@@ -8,9 +8,10 @@
     <body>
 
         <ui:component id="header" >
-            <!--<p:graphicImage library="images" name="header.jpg" />-->
-            <ui:include src="../components/tabMenu.xhtml" />
-            <ui:include src="userDisplay.xhtml" />
+            <p:panelGrid columns="2" layout="grid"> 
+                <ui:include src="../components/tabMenu.xhtml" />
+                <ui:include src="userDisplay.xhtml" />
+            </p:panelGrid>
         </ui:component>
 
     </body>

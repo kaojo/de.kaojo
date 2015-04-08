@@ -13,7 +13,16 @@
             </ui:define>
 
             <ui:define name="content">
-                <h:outputText value="my profile" />
+                <!--<h:outputText value="my profile" />-->
+                <h:form>
+                    <h:outputLabel for="ajax" value="Displayname:" />
+                    <p:inplace id="ajax" editor="true">
+                        <p:inputText value="#{userController.user.displayName}" required="true" label="text" />
+                    </p:inplace>
+                        <!--<p:inputText value="#{userController.name}" id="loginName" autocomplete="false" label="test"/>-->
+                    <!--<p:commandButton id="submit" action="#{userController.changeDisplayName()}" value="Login"/>-->
+
+                </h:form>
             </ui:define>
         </ui:composition>
 

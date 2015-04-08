@@ -23,9 +23,22 @@ public class UserController implements Serializable {
     @Inject
     @UserQ
     private User user;
+    
+    private String name;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 
     public User getUser() {
         return user;
+    }
+    public void changeDisplayName(){
+        this.user.setDisplayName(name);
     }
     
 }

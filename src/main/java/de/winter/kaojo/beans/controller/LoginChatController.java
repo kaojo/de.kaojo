@@ -51,9 +51,6 @@ public class LoginChatController {
     public String login() {
         this.user.setUserId(loginName);
         this.user.setDisplayName(loginName);
-        if (loginName.equals("Julian")) {
-            return "failure";
-        }
         return "chat?faces-redirect=true";
     }
 
