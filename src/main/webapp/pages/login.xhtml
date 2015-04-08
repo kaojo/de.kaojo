@@ -10,29 +10,36 @@ Copyright 2015.
         xmlns:f="http://xmlns.jcp.org/jsf/core"
         xmlns:ui="http://java.sun.com/jsf/facelets"
         xmlns:p="http://primefaces.org/ui">
-    <h:head>
-        <title>Loginpage</title>
-        <h:outputStylesheet name="grid/grid.css" library="primefaces" />
-    </h:head>
-    <h:body>
-        <h:form>
-            <div class="ui-grid headerDiv ui-grid-responsive">
-                <div class="ui-grid-row">
-                    <div class="ui-grid-col-12">
-                        <p:inputText value="#{loginChatController.loginName}" id="loginName" autocomplete="false" label="test"/>
+    <body>
+        <ui:composition template="./../publicTemplate.xhtml">
+
+            <ui:define name="title">
+                Loginpage
+            </ui:define>
+
+            <ui:define name="content">
+                <h:form>
+                    <div class="ui-grid headerDiv ui-grid-responsive">
+                        <div class="ui-grid-row">
+                            <div class="ui-grid-col-12">
+                                <p:inputText value="#{loginChatController.loginName}" id="loginName" autocomplete="false" label="test"/>
+                            </div>
+                        </div>
+                        <div class="ui-grid-row">
+                            <div class="ui-grid-col-12">
+                                <h:inputSecret value="loginChatController.loginPass" id="loginPass" rendered="false"/>
+                            </div>
+                        </div>
+                        <div class="ui-grid-row">
+                            <div class="ui-grid-col-12">
+                                <p:commandButton id="submit" action="#{loginChatController.login()}" value="Login"/>
+                            </div>
+                        </div>
                     </div>
-                </div>
-                <div class="ui-grid-row">
-                    <div class="ui-grid-col-12">
-                        <h:inputSecret value="loginChatController.loginPass" id="loginPass" rendered="false"/>
-                    </div>
-                </div>
-                <div class="ui-grid-row">
-                    <div class="ui-grid-col-12">
-                        <p:commandButton id="submit" action="#{loginChatController.login()}" value="Login"/>
-                    </div>
-                </div>
-            </div>
-        </h:form>
-    </h:body>
+                </h:form>
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
 </html>
