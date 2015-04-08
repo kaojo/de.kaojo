@@ -8,8 +8,8 @@
     <body>
 
         <ui:component id="userDisplay" >
-            <p:panelGrid columns="3" >
-                <h:outputText value="#{userController.userDisplayName}" />
+            <p:panelGrid columns="3" layout="grid">
+                <h:outputText value="#{userController.user.displayName}" />
                 <p:button outcome="myProfile" icon="ui-icon-person" title="myProfile" />
                 <p:button outcome="logout" icon="ui-icon-power" title="logout" />
         </p:panelGrid>

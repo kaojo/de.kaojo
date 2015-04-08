@@ -32,10 +32,6 @@ public class ChatController implements Serializable {
         return user;
     }
 
-    public void setUser(User user) {
-        this.user = user;
-    }
-
     public String openChatRoom() {
         if (openRoom != null) {
             ChatRoom chatRoom = new ChatRoom(openRoom, user);
