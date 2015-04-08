@@ -7,9 +7,13 @@
         xmlns:p="http://primefaces.org/ui">
     <body>
 
-        <ui:component id="header" >
-            <ui:include src="userDisplay.xhtml" />
-        </ui:component>
-
-    </body>
+        <ui:component id="userDisplay" >
+            <p:panelGrid columns="3" >
+                <h:outputText value="#{userController.userDisplayName}" />
+                <p:button outcome="myProfile" icon="ui-icon-person" title="myProfile" />
+                <p:button outcome="logout" icon="ui-icon-power" title="logout" />
+        </p:panelGrid>
+    </ui:component>
+        
+</body>
 </html>
