@@ -138,24 +138,24 @@
         </subsystem>
         <subsystem xmlns="urn:jboss:domain:datasources:2.0">
             <datasources>
-                <xa-datasource jndi-name="java:/jdbc/kaojoDB" pool-name="kaojo" enabled="true" use-ccm="false">
+                <datasource jndi-name="java:jboss/datasources/ExampleDS" pool-name="ExampleDS" enabled="true" use-java-context="true">
+                    <connection-url>jdbc:h2:mem:test;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE</connection-url>
+                    <driver>h2</driver>
+                    <security>
+                        <user-name>sa</user-name>
+                        <password>sa</password>
+                    </security>
+                </datasource>
+                <xa-datasource jndi-name="java:/jdbc/kaojoDB" pool-name="kaojo" enabled="true" use-ccm="true">
                     <xa-datasource-property name="ServerName">
                         localhost
                     </xa-datasource-property>
                     <xa-datasource-property name="DatabaseName">
                         kaojo
                     </xa-datasource-property>
-                    <xa-datasource-property name="User">
-                        kaojo
-                    </xa-datasource-property>
-                    <xa-datasource-property name="Password">
-                        admin
-                    </xa-datasource-property>
                     <xa-datasource-class>org.postgresql.xa.PGXADataSource</xa-datasource-class>
-                    <driver>postgresqlDriver</driver>
-                    <transaction-isolation>TRANSACTION_READ_UNCOMMITTED</transaction-isolation>
+                    <driver>postgresql-9.4-1201.jdbc4.jar</driver>
                     <xa-pool>
-                        <max-pool-size>20</max-pool-size>
                         <is-same-rm-override>false</is-same-rm-override>
                         <interleaving>false</interleaving>
                         <pad-xid>false</pad-xid>
@@ -169,13 +169,23 @@
                         <validate-on-match>false</validate-on-match>
                         <background-validation>false</background-validation>
                     </validation>
+                    <timeout>
+                        <set-tx-query-timeout>false</set-tx-query-timeout>
+                        <blocking-timeout-millis>0</blocking-timeout-millis>
+                        <idle-timeout-minutes>0</idle-timeout-minutes>
+                        <query-timeout>0</query-timeout>
+                        <use-try-lock>0</use-try-lock>
+                        <allocation-retry>0</allocation-retry>
+                        <allocation-retry-wait-millis>0</allocation-retry-wait-millis>
+                        <xa-resource-timeout>0</xa-resource-timeout>
+                    </timeout>
                     <statement>
                         <share-prepared-statements>false</share-prepared-statements>
                     </statement>
                 </xa-datasource>
                 <drivers>
-                    <driver name="postgresqlDriver" module="org.postgresql">
-                        <xa-datasource-class>org.postgresql.xa.PGXADataSource</xa-datasource-class>
+                    <driver name="h2" module="com.h2database.h2">
+                        <xa-datasource-class>org.h2.jdbcx.JdbcDataSource</xa-datasource-class>
                     </driver>
                 </drivers>
             </datasources>
@@ -409,4 +419,13 @@
             <remote-destination host="localhost" port="25"/>
         </outbound-socket-binding>
     </socket-binding-group>
+
+    <deployments>
+        <deployment name="kaojo.war" runtime-name="kaojo.war">
+            <content sha1="7729ae2196302e255866b6160772e6831c89a889"/>
+        </deployment>
+        <deployment name="postgresql-9.4-1201.jdbc4.jar" runtime-name="postgresql-9.4-1201.jdbc4.jar" enabled="true">
+            <content sha1="b46544ef0eaf0405504089dcc71f36e3f190ef09"/>
+        </deployment>
+    </deployments>
 </server>
