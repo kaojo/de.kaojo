@@ -1,0 +1,15 @@
+web:
+  image: kaojo/wildfly-db
+  links:
+   - postgres
+  ports:
+   - "9990:9990"
+   - "9999:9999"
+   - "8080:8080"
+postgres:
+  image: kaojo/postgres
+  environment:
+  - POSTGRES_USER=kaojo
+  - POSTGRES_PASSWORD=admin
+  volumes:
+   - /var/lib/postgresql/9.4/main:/var/lib/postgresql/data

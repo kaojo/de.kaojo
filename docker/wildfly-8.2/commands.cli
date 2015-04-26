@@ -1,11 +1,11 @@
-module add --name=org.postgresql --resources=~/workspace/de.kaojo/docker/postgresql-9.4-1201.jdbc4.jar --dependencies=javax.api,javax.transaction.api
+module add --name=org.postgresql --resources=config/postgresql-9.4-1201.jdbc4.jar --dependencies=javax.api,javax.transaction.api
 /subsystem=datasources/jdbc-driver=postgresqlDriver:add(driver-name=postgresqlDriver,driver-module-name=org.postgresql,driver-xa-datasource-class-name=org.postgresql.xa.PGXADataSource)
 xa-data-source add \
 --name=kaojo \
 --jndi-name=java:/jdbc/kaojoDB \
 --driver-name=postgresqlDriver \
 --xa-datasource-class=org.postgresql.xa.PGXADataSource \
---xa-datasource-properties={"ServerName"=>"localhost","DatabaseName"=>"kaojo","User"=>"kaojo","Password"=>"admin"} \
+--xa-datasource-properties={"ServerName"=>"postgres","DatabaseName"=>"kaojo","User"=>"kaojo","Password"=>"admin"} \
 --user-name=kaojo \
 --password=admin \
 --enabled=true \

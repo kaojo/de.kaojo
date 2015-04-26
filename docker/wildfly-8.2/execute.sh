@@ -1,6 +1,7 @@
 #!/bin/bash
 
 HOME=/opt/jboss
+CONFIG=$HOME/config
 JBOSS_HOME=$HOME/wildfly
 JBOSS_CLI=$JBOSS_HOME/bin/jboss-cli.sh
 JBOSS_MODE=${1:-"standalone"}
