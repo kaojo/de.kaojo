@@ -3,10 +3,10 @@
  * Alle Rechte sind vorbehalten.
  * Copyright 2015.
  */
-package de.winter.kaojo.beans.app;
+package de.kaojo.beans.app;
 
-import de.winter.kaojo.beans.user.User;
-import de.winter.kaojo.chat.ChatRoom;
+import de.kaojo.beans.user.User;
+import de.kaojo.chat.ChatRoom;
 import java.util.List;
 
 /**

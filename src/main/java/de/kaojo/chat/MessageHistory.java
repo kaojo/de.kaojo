@@ -3,7 +3,7 @@
  * Alle Rechte sind vorbehalten.
  * Copyright 2015.
  */
-package de.winter.kaojo.chat;
+package de.kaojo.chat;
 
 import org.apache.commons.collections.buffer.CircularFifoBuffer;
 

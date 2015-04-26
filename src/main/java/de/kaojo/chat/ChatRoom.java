@@ -3,10 +3,10 @@
  * Alle Rechte sind vorbehalten.
  * Copyright 2015.
  */
-package de.winter.kaojo.chat;
+package de.kaojo.chat;
 
-import de.winter.kaojo.beans.user.User;
-import de.winter.kaojo.beans.user.UserQ;
+import de.kaojo.beans.user.User;
+import de.kaojo.beans.user.UserQ;
 import java.io.Serializable;
 import java.util.concurrent.ConcurrentHashMap;
 import javax.inject.Inject;

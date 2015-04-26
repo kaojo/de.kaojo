@@ -3,7 +3,7 @@
  * Alle Rechte sind vorbehalten.
  * Copyright 2015.
  */
-package de.winter.kaojo.beans.user;
+package de.kaojo.beans.user;
 
 import static java.lang.annotation.ElementType.TYPE;
 import static java.lang.annotation.ElementType.FIELD;

@@ -4,7 +4,6 @@ web:
    - postgres
   ports:
    - "9990:9990"
-   - "9999:9999"
    - "8080:8080"
 postgres:
   image: kaojo/postgres

@@ -3,10 +3,10 @@
  * Alle Rechte sind vorbehalten.
  * Copyright 2015.
  */
-package de.winter.kaojo.beans.controller;
+package de.kaojo.beans.controller;
 
-import de.winter.kaojo.beans.user.User;
-import de.winter.kaojo.beans.user.UserQ;
+import de.kaojo.beans.user.User;
+import de.kaojo.beans.user.UserQ;
 import java.io.Serializable;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;

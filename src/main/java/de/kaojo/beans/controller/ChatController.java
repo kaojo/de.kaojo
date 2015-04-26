@@ -1,8 +1,8 @@
-package de.winter.kaojo.beans.controller;
+package de.kaojo.beans.controller;
 
-import de.winter.kaojo.beans.user.User;
-import de.winter.kaojo.beans.user.UserQ;
-import de.winter.kaojo.chat.ChatRoom;
+import de.kaojo.beans.user.User;
+import de.kaojo.beans.user.UserQ;
+import de.kaojo.chat.ChatRoom;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;

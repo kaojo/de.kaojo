@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package de.winter.kaojo.websockets;
+package de.kaojo.websockets;
 
 import java.io.IOException;
 import java.util.Collections;
