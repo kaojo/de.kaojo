@@ -3,10 +3,10 @@
  * Alle Rechte sind vorbehalten.
  * Copyright 2015.
  */
-package de.kaojo.beans.controller;
+package de.kaojo.context.controller;
 
-import de.kaojo.beans.user.User;
-import de.kaojo.beans.user.UserQ;
+import de.kaojo.context.user.User;
+import de.kaojo.context.user.DefaultUser;
 import java.io.Serializable;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
@@ -21,7 +21,7 @@ import javax.inject.Named;
 public class UserController implements Serializable {
     
     @Inject
-    @UserQ
+    @DefaultUser
     private User user;
     
     private String name;

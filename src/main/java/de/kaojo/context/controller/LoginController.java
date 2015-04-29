@@ -3,10 +3,12 @@
  * Alle Rechte sind vorbehalten.
  * Copyright 2015.
  */
-package de.kaojo.beans.controller;
+package de.kaojo.context.controller;
 
-import de.kaojo.beans.user.User;
-import de.kaojo.beans.user.UserQ;
+import de.kaojo.context.login.Credentials;
+import de.kaojo.context.login.DefaultCredentials;
+import de.kaojo.context.user.User;
+import de.kaojo.context.user.DefaultUser;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -15,16 +17,20 @@ import javax.inject.Named;
  *
  * @author julian
  */
-@Named("loginChatController")
+@Named("loginController")
 @RequestScoped
-public class LoginChatController {
+public class LoginController {
 
     private String loginPass;
     private String loginName;
 
     @Inject
-    @UserQ
+    @DefaultUser
     private User user;
+
+    @Inject
+    @DefaultCredentials
+    private Credentials credentials;
 
     /**
      * Set the value of loginPass
@@ -49,8 +55,7 @@ public class LoginChatController {
     }
 
     public String login() {
-        this.user.setUserId(loginName);
-        this.user.setDisplayName(loginName);
+        this.credentials = credentials.build(loginName, loginPass);
         return "chat?faces-redirect=true";
     }
 

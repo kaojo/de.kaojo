@@ -5,6 +5,7 @@
  */
 package de.kaojo.ejb;
 
+import de.kaojo.context.login.Credentials;
 import javax.ejb.Local;
 
 /**
@@ -13,5 +14,8 @@ import javax.ejb.Local;
  */
 @Local
 public interface User {
-    
+
+    public void initialize(Credentials credentials);
+
+    public boolean updateUser(de.kaojo.context.user.User contextUser);
 }

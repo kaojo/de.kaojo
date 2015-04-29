@@ -5,7 +5,7 @@
  */
 package de.kaojo.beans.app;
 
-import de.kaojo.beans.user.User;
+import de.kaojo.context.user.User;
 import de.kaojo.chat.ChatRoom;
 import java.util.List;
 import javax.enterprise.context.ApplicationScoped;

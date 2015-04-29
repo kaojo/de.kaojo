@@ -1,7 +1,7 @@
-package de.kaojo.beans.controller;
+package de.kaojo.context.controller;
 
-import de.kaojo.beans.user.User;
-import de.kaojo.beans.user.UserQ;
+import de.kaojo.context.user.User;
+import de.kaojo.context.user.DefaultUser;
 import de.kaojo.chat.ChatRoom;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -25,7 +25,7 @@ public class ChatController implements Serializable {
     private List<String> accessibleRooms = new ArrayList<>();
 
     @Inject
-    @UserQ
+    @DefaultUser
     private User user;
 
     public User getUser() {

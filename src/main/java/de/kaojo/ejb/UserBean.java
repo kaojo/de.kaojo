@@ -5,13 +5,24 @@
  */
 package de.kaojo.ejb;
 
-import javax.ejb.Local;
+import de.kaojo.context.login.Credentials;
+import javax.ejb.Stateful;
 
 /**
  *
  * @author jwinter
  */
-@Local(User.class)
+@Stateful
 public class UserBean implements User {
+
+    @Override
+    public void initialize(Credentials credentials) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public boolean updateUser(de.kaojo.context.user.User contextUser) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 
 }

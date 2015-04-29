@@ -5,8 +5,8 @@
  */
 package de.kaojo.chat;
 
-import de.kaojo.beans.user.User;
-import de.kaojo.beans.user.UserQ;
+import de.kaojo.context.user.User;
+import de.kaojo.context.user.DefaultUser;
 import java.io.Serializable;
 import java.util.concurrent.ConcurrentHashMap;
 import javax.inject.Inject;
@@ -20,7 +20,7 @@ import javax.inject.Named;
 public class ChatRoom implements Serializable {
 
     @Inject
-    @UserQ
+    @DefaultUser
     private User user;
 
     private String name;
