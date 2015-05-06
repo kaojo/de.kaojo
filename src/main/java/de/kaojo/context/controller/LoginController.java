@@ -9,6 +9,8 @@ import de.kaojo.context.login.Credentials;
 import de.kaojo.context.login.DefaultCredentials;
 import de.kaojo.context.user.User;
 import de.kaojo.context.user.DefaultUser;
+import de.kaojo.persistence.entities.Data;
+import de.kaojo.persistence.entities.Test;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -55,6 +57,15 @@ public class LoginController {
     }
 
     public String login() {
+        Test test = new Test();
+        Data data = new Data();
+        data.setId(loginName);
+        data.setMessage(loginName);
+        data.setName(loginName);
+        
+        test.save(data);
+        
+        this.user.build(loginName, loginName, loginName);
         this.credentials = credentials.build(loginName, loginPass);
         return "chat?faces-redirect=true";
     }
