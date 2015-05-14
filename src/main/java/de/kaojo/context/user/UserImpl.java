@@ -5,7 +5,9 @@
  */
 package de.kaojo.context.user;
 
+import de.kaojo.ejb.dto.UserDTO;
 import java.io.Serializable;
+import java.util.Date;
 import javax.enterprise.context.SessionScoped;
 
 /**
@@ -16,10 +18,13 @@ import javax.enterprise.context.SessionScoped;
 @SessionScoped
 public class UserImpl implements User, Serializable {
 
-    String userId;
-    String firtName;
-    String lastName;
-    String displayName;
+    private Boolean active;
+    private Date birthday;
+    private String displayName;
+    private String firstName;
+    private String lastName;
+    private String mail;
+    private String userId;
 
     public UserImpl() {
 
@@ -28,24 +33,6 @@ public class UserImpl implements User, Serializable {
     @Override
     public String getUserId() {
         return userId;
-    }
-
-    /**
-     *
-     * @return
-     */
-    @Override
-    public String getFirtName() {
-        return firtName;
-    }
-
-    /**
-     *
-     * @param firtName
-     */
-    @Override
-    public void setFirtName(String firtName) {
-        this.firtName = firtName;
     }
 
     /**
@@ -85,12 +72,73 @@ public class UserImpl implements User, Serializable {
     }
 
     @Override
-    public User build(String firstname, String lastName, String displayName) {
-        this.displayName = displayName;
-        this.firtName = firstname;
-        this.lastName = lastName;
+    public User build(UserDTO userDTO) {
+            this.active = userDTO.getActive();
+            this.birthday = userDTO.getBirthday();
+            this.displayName = userDTO.getDisplayName();
+            this.firstName = userDTO.getFirstName();
+            this.lastName = userDTO.getLastName();
+            this.mail = userDTO.getMail();
+            this.userId = userDTO.getUserId();
 
         return this;
     }
+
+    @Override
+    public Boolean getActive() {
+        return active;
+    }
+
+    /**
+     *
+     * @param active
+     */
+    @Override
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
+    @Override
+    public Date getBirthday() {
+        return birthday;
+    }
+
+    /**
+     *
+     * @param birthday
+     */
+    @Override
+    public void setBirthday(Date birthday) {
+        this.birthday = birthday;
+    }
+
+    @Override
+    public String getFirstName() {
+        return firstName;
+    }
+
+    @Override
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    /**
+     *
+     * @return
+     */
+    @Override
+    public String getMail() {
+        return mail;
+    }
+
+    /**
+     *
+     * @param mail
+     */
+    @Override
+    public void setMail(String mail) {
+        this.mail = mail;
+    }
+
 
 }

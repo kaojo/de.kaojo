@@ -5,26 +5,41 @@
  */
 package de.kaojo.context.user;
 
+import de.kaojo.ejb.dto.UserDTO;
+import java.util.Date;
+
 /**
  *
  * @author julian.winter
  */
 public interface User {
 
-    public String getUserId();
+    public Boolean getActive();
 
-    public String getFirtName();
+    public void setActive(boolean active);
 
-    public void setFirtName(String firstName);
+    public Date getBirthday();
 
-    public String getLastName();
-
-    public void setLastName(String lastName);
+    public void setBirthday(Date birthday);
 
     public String getDisplayName();
 
     public void setDisplayName(String displayName);
 
-    public User build(String firstname, String lastName, String displayName);
+    public String getFirstName();
+
+    public void setFirstName(String firstName);
+
+    public String getLastName();
+
+    public void setLastName(String lastName);
+
+    public String getMail();
+
+    public void setMail(String mail);
+
+    public String getUserId();
+
+    public User build(UserDTO userDTO);
 
 }

@@ -3,20 +3,16 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package de.kaojo.context.login;
-
-import javax.enterprise.context.RequestScoped;
+package de.kaojo.ejb.dto;
 
 /**
  *
  * @author julian
  */
-@RequestScoped
-@DefaultCredentials
 public class CredentialsImpl implements Credentials {
 
-    String loginId;
-    String password;
+    private String loginId;
+    private String password;
 
     @Override
     public String getLoginId() {

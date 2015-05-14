@@ -5,12 +5,13 @@
  */
 package de.kaojo.context.controller;
 
-import de.kaojo.context.login.Credentials;
-import de.kaojo.context.login.DefaultCredentials;
 import de.kaojo.context.user.User;
 import de.kaojo.context.user.DefaultUser;
-import de.kaojo.persistence.entities.Data;
-import de.kaojo.persistence.entities.Test;
+import de.kaojo.ejb.UserManager;
+import de.kaojo.ejb.dto.Credentials;
+import de.kaojo.ejb.dto.CredentialsImpl;
+import de.kaojo.ejb.dto.UserDTO;
+import javax.ejb.EJB;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -30,9 +31,8 @@ public class LoginController {
     @DefaultUser
     private User user;
 
-    @Inject
-    @DefaultCredentials
-    private Credentials credentials;
+    @EJB
+    private UserManager userManager;
 
     /**
      * Set the value of loginPass
@@ -57,16 +57,11 @@ public class LoginController {
     }
 
     public String login() {
-        Test test = new Test();
-        Data data = new Data();
-        data.setId(loginName);
-        data.setMessage(loginName);
-        data.setName(loginName);
-        
-        test.save(data);
-        
-        this.user.build(loginName, loginName, loginName);
-        this.credentials = credentials.build(loginName, loginPass);
+        Credentials credentials = new CredentialsImpl();
+        credentials.build(loginName, loginPass);
+        UserDTO userDTO = userManager.getUserFromDB(credentials);
+
+        this.user.build(userDTO);
         return "chat?faces-redirect=true";
     }
 
