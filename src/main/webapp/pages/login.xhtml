@@ -21,18 +21,84 @@ Copyright 2015.
                 <h:form>
                     <div class="ui-grid headerDiv ui-grid-responsive">
                         <div class="ui-grid-row">
-                            <div class="ui-grid-col-12">
-                                <p:inputText value="#{loginController.loginName}" id="loginName" autocomplete="false" label="test"/>
+                            <div class="ui-grid-col-4 contentDiv">
+                                <h:outputText  value="Log in" />
                             </div>
                         </div>
                         <div class="ui-grid-row">
-                            <div class="ui-grid-col-12">
-                                <h:inputSecret value="loginController.loginPass" id="loginPass" rendered="false"/>
+                            <div class="ui-grid-col-6 contentDiv">
+                                <p:outputLabel for="loginName" value="Username"/>
+                            </div>
+                            <div class="ui-grid-col-6">
+                                <p:inputText value="#{loginController.loginName}" id="loginName" autocomplete="false" />
                             </div>
                         </div>
                         <div class="ui-grid-row">
-                            <div class="ui-grid-col-12">
+                            <div class="ui-grid-col-6 contentDiv">
+                                <p:outputLabel for="loginPass" value="Password"/>
+                            </div>
+                            <div class="ui-grid-col-6">
+                                <h:inputSecret value="loginController.loginPass" id="loginPass"/>
+                            </div>
+                        </div>
+                        <div class="ui-grid-row">
+                            <div class="ui-grid-col-6">
                                 <p:commandButton id="submit" action="#{loginController.login()}" value="Login"/>
+                            </div>
+                        </div>
+                    </div>
+                </h:form>
+                <p:separator />
+                <h:form>
+                    <div class="ui-grid headerDiv ui-grid-responsive">
+                        <div class="ui-grid-row">
+                            <div class="ui-grid-col-4 contentDiv">
+                                <h:outputText  value="Register" />
+                            </div>
+                        </div>
+                        <div class="ui-grid-row">
+                            <div class="ui-grid-col-6 contentDiv">
+                                <p:outputLabel for="loginName" value="Username"/>
+                            </div>
+                            <div class="ui-grid-col-6">
+                                <p:inputText value="#{loginController.loginName}" id="loginName" autocomplete="false"/>
+                            </div>
+                        </div>
+                        <div class="ui-grid-row">
+                            <div class="ui-grid-col-6 contentDiv">
+                                <p:outputLabel for="loginPass" value="Password"/>
+                            </div>
+                            <div class="ui-grid-col-6">
+                                <h:inputSecret value="#{loginController.loginPass}" id="loginPass"/>
+                            </div>
+                        </div>
+                        <div class="ui-grid-row">
+                            <div class="ui-grid-col-6 contentDiv">
+                                <p:outputLabel for="loginPassConfirm" value="Confirm password"/>
+                            </div>
+                            <div class="ui-grid-col-6">
+                                <h:inputSecret value="#{loginController.loginPassConfirm}" id="loginPassConfirm"/>
+                            </div>
+                        </div>
+                        <div class="ui-grid-row">
+                            <div class="ui-grid-col-6 contentDiv">
+                                <p:outputLabel for="mail" value="Mail"/>
+                            </div>
+                            <div class="ui-grid-col-6">
+                                <p:inputText value="#{loginController.mail}" id="mail"/>
+                            </div>
+                        </div>
+                        <div class="ui-grid-row">
+                            <div class="ui-grid-col-6 contentDiv">
+                                <p:outputLabel for="mailConfirm" value="Confirm Mail"/>
+                            </div>
+                            <div class="ui-grid-col-6">
+                                <p:inputText value="#{loginController.mailConfirm}" id="mailConfirm"/>
+                            </div>
+                        </div>
+                        <div class="ui-grid-row">
+                            <div class="ui-grid-col-6">
+                                <p:commandButton id="submit" action="#{loginController.register()}" value="Register"/>
                             </div>
                         </div>
                     </div>

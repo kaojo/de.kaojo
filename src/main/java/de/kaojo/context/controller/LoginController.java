@@ -10,9 +10,12 @@ import de.kaojo.context.user.DefaultUser;
 import de.kaojo.ejb.UserManager;
 import de.kaojo.ejb.dto.Credentials;
 import de.kaojo.ejb.dto.CredentialsImpl;
+import de.kaojo.ejb.dto.NewUserRequest;
 import de.kaojo.ejb.dto.UserDTO;
 import javax.ejb.EJB;
 import javax.enterprise.context.RequestScoped;
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 
@@ -25,7 +28,10 @@ import javax.inject.Named;
 public class LoginController {
 
     private String loginPass;
+    private String loginPassConfirm;
     private String loginName;
+    private String mail;
+    private String mailConfirm;
 
     @Inject
     @DefaultUser
@@ -56,13 +62,75 @@ public class LoginController {
         return this.loginName;
     }
 
+    public String getLoginPass() {
+        return loginPass;
+    }
+
+    public String getLoginPassConfirm() {
+        return loginPassConfirm;
+    }
+
+    public void setLoginPassConfirm(String loginPassConfirm) {
+        this.loginPassConfirm = loginPassConfirm;
+    }
+
+    public String getMail() {
+        return mail;
+    }
+
+    public void setMail(String mail) {
+        this.mail = mail;
+    }
+
+    public String getMailConfirm() {
+        return mailConfirm;
+    }
+
+    public void setMailConfirm(String mailConfirm) {
+        this.mailConfirm = mailConfirm;
+    }
+
+    public UserManager getUserManager() {
+        return userManager;
+    }
+
+    public void setUserManager(UserManager userManager) {
+        this.userManager = userManager;
+    }
+
     public String login() {
         Credentials credentials = new CredentialsImpl();
         credentials.build(loginName, loginPass);
         UserDTO userDTO = userManager.getUserFromDB(credentials);
-
+        if (userDTO == null) {
+            addMessage("Fehlschlag", "Die Zugangsdaten sind nicht korrekt.");
+        }
         this.user.build(userDTO);
         return "chat?faces-redirect=true";
+    }
+
+    public String register() {
+        if (null == loginPass | !loginPass.equals(loginPassConfirm)) {
+            addMessage("Fehlschlag", "Die Passwörter stimmen nicht überein");
+            return null;
+        }
+        if (null == mail | !mail.equals(mailConfirm)) {
+            addMessage("Fehlschlag", "Die E-mail-Adressen stimmen nicht überein");
+            return null;
+        }
+        if (!userManager.userAllreadyExists(loginName)) {
+            NewUserRequest.NewUserRequestBuilder newUserRequestBuilder
+                    = new NewUserRequest.NewUserRequestBuilder(loginName, mail, loginPass);
+            NewUserRequest newUserRequest = newUserRequestBuilder.build();
+            UserDTO userDTO = userManager.createNewUser(newUserRequest);
+            if (userDTO != null) {
+                this.user.build(userDTO);
+                return "chat?faces-redirect=true;";
+            }
+
+        }
+        addMessage("Fehlschlag", "Der Benutzername existiert bereits. Versuche es mit einem anderen Benutzernamen erneut");
+        return null;
     }
 
     public User getUser() {
@@ -73,4 +141,8 @@ public class LoginController {
         this.user = user;
     }
 
+    private void addMessage(String summary, String detail) {
+        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, summary, detail);
+        FacesContext.getCurrentInstance().addMessage(null, message);
+    }
 }

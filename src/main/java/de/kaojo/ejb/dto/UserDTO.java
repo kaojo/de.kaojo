@@ -13,13 +13,13 @@ import java.util.Date;
  */
 public class UserDTO {
 
-    private Boolean active;
-    private Date birthday;
-    private String displayName;
-    private String firstName;
-    private String lastName;
-    private String mail;
-    private String userId;
+    private final Boolean active;
+    private final Date birthday;
+    private final String displayName;
+    private final String firstName;
+    private final String lastName;
+    private final String mail;
+    private final String userId;
 
     public String getUserId() {
         return userId;
@@ -48,12 +48,18 @@ public class UserDTO {
     public String getMail() {
         return mail;
     }
-    
-    public UserDTOBuilder getBuilder() {
-        return new UserDTOBuilder(this);
+
+    private UserDTO(Boolean active, Date birthday, String displayName, String firstName, String lastName, String mail, String userId) {
+        this.active = active;
+        this.birthday = birthday;
+        this.displayName = displayName;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.mail = mail;
+        this.userId = userId;
     }
 
-    public class UserDTOBuilder {
+    public static class UserDTOBuilder {
 
         private Boolean active;
         private Date birthday;
@@ -63,10 +69,8 @@ public class UserDTO {
         private String mail;
         private String userId;
         
-        private final UserDTO userDTO;
         
-        private UserDTOBuilder(UserDTO userDTO) {
-            this.userDTO = userDTO;
+        public UserDTOBuilder() {
         }
 
         public UserDTOBuilder withActive(Boolean active) {
@@ -106,15 +110,7 @@ public class UserDTO {
 
         public UserDTO build() {
             
-            this.userDTO.active = this.active;
-            this.userDTO.birthday = this.birthday;
-            this.userDTO.displayName = this.displayName;
-            this.userDTO.firstName = this.firstName;
-            this.userDTO.lastName = this.lastName;
-            this.userDTO.mail = this.mail;
-            this.userDTO.userId = this.userId;
-            
-            return userDTO;
+            return new UserDTO(active, birthday, displayName, firstName, lastName, mail, userId);
         }
     }
 }

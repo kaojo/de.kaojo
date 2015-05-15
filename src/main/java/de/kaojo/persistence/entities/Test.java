@@ -5,30 +5,28 @@
  */
 package de.kaojo.persistence.entities;
 
-import org.hibernate.SessionFactory;
-import org.hibernate.cfg.Configuration;
-import org.hibernate.classic.Session;
 
 /**
  *
  * @author jwinter
  */
 public class Test {
-
-    private final SessionFactory sessionFactory;
-
-    public Test() {
-        Configuration  configuration = new Configuration();
-        configuration.addAnnotatedClass(Data.class);
-        sessionFactory = configuration.configure().buildSessionFactory();
-    }
-           
-
-    public void save(Data data) {
-        Session session = sessionFactory.openSession();
-        session.beginTransaction();
-        session.save(data);
-        session.getTransaction().commit();
-//        session.close();
-    }
+    
+//
+//    private final SessionFactory sessionFactory;
+//
+//    public Test() {
+//        Configuration  configuration = new Configuration();
+//        configuration.addAnnotatedClass(Data.class);
+//        sessionFactory = configuration.configure().buildSessionFactory();
+//    }
+//           
+//
+//    public void save(Data data) {
+//        Session session = sessionFactory.openSession();
+//        session.beginTransaction();
+//        session.save(data);
+//        session.getTransaction().commit();
+////        session.close();
+//    }
 }

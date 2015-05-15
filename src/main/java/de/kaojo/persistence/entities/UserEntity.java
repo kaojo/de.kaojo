@@ -9,6 +9,7 @@ import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Table;
 import javax.persistence.Temporal;
 
 /**
@@ -16,6 +17,7 @@ import javax.persistence.Temporal;
  * @author jwinter
  */
 @Entity
+@Table(name="KAOJO_USER")
 public class UserEntity extends AbstractEntity<String> implements Serializable {
 
     @Column
