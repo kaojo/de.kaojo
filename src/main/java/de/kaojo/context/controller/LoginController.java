@@ -28,17 +28,34 @@ import javax.inject.Named;
 public class LoginController {
 
     private String loginPass;
-    private String loginPassConfirm;
     private String loginName;
     private String mail;
     private String mailConfirm;
+    private String pass;
+    private String passConfirm;
+    private String userName;
 
     @Inject
     @DefaultUser
     private User user;
-
     @EJB
     private UserManager userManager;
+
+    public String getPass() {
+        return pass;
+    }
+
+    public void setPass(String pass) {
+        this.pass = pass;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
 
     /**
      * Set the value of loginPass
@@ -66,12 +83,12 @@ public class LoginController {
         return loginPass;
     }
 
-    public String getLoginPassConfirm() {
-        return loginPassConfirm;
+    public String getPassConfirm() {
+        return passConfirm;
     }
 
-    public void setLoginPassConfirm(String loginPassConfirm) {
-        this.loginPassConfirm = loginPassConfirm;
+    public void setPassConfirm(String loginPassConfirm) {
+        this.passConfirm = loginPassConfirm;
     }
 
     public String getMail() {
@@ -104,13 +121,19 @@ public class LoginController {
         UserDTO userDTO = userManager.getUserFromDB(credentials);
         if (userDTO == null) {
             addMessage("Fehlschlag", "Die Zugangsdaten sind nicht korrekt.");
+            return null;
         }
         this.user.build(userDTO);
-        return "chat?faces-redirect=true";
+        if (user.getUserName() != null) {
+            return "chat?faces-redirect=true";
+        }
+
+        addMessage("Fehlschlag", "Die Zugangsdaten sind nicht korrekt.");
+        return null;
     }
 
     public String register() {
-        if (null == loginPass | !loginPass.equals(loginPassConfirm)) {
+        if (null == pass | !pass.equals(passConfirm)) {
             addMessage("Fehlschlag", "Die Passwörter stimmen nicht überein");
             return null;
         }
@@ -118,18 +141,20 @@ public class LoginController {
             addMessage("Fehlschlag", "Die E-mail-Adressen stimmen nicht überein");
             return null;
         }
-        if (!userManager.userAllreadyExists(loginName)) {
-            NewUserRequest.NewUserRequestBuilder newUserRequestBuilder
-                    = new NewUserRequest.NewUserRequestBuilder(loginName, mail, loginPass);
-            NewUserRequest newUserRequest = newUserRequestBuilder.build();
-            UserDTO userDTO = userManager.createNewUser(newUserRequest);
-            if (userDTO != null) {
-                this.user.build(userDTO);
-                return "chat?faces-redirect=true;";
-            }
-
+        if (userManager.userAllreadyExists(userName)) {
+            addMessage("Fehlschlag", "Der Benutzername existiert bereits. Versuche es mit einem anderen Benutzernamen erneut");
+            return null;
         }
-        addMessage("Fehlschlag", "Der Benutzername existiert bereits. Versuche es mit einem anderen Benutzernamen erneut");
+
+        NewUserRequest.NewUserRequestBuilder newUserRequestBuilder
+                = new NewUserRequest.NewUserRequestBuilder(userName, mail, pass);
+        NewUserRequest newUserRequest = newUserRequestBuilder.build();
+        UserDTO userDTO = userManager.createNewUser(newUserRequest);
+        if (userDTO != null) {
+            this.user.build(userDTO);
+            return "chat?faces-redirect=true;";
+        }
+        addMessage("Fehlschlag", "Ein technisches Problem ist aufgetreten.");
         return null;
     }
 

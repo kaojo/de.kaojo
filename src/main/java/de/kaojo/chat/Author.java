@@ -11,20 +11,20 @@ package de.kaojo.chat;
  */
 public class Author {
 
-    private final String userId;
+    private final String userName;
     private final String displayName;
 
-    public String getUserId() {
-        return userId;
+    public String getUserName() {
+        return userName;
     }
 
     public String getDisplayName() {
         return displayName;
     }
 
-    public Author(String userId, String displayName) {
+    public Author(String userName, String displayName) {
         this.displayName = displayName;
-        this.userId = userId;
+        this.userName = userName;
     }
 
 }

@@ -17,8 +17,8 @@ import javax.persistence.Temporal;
  * @author jwinter
  */
 @Entity
-@Table(name="KAOJO_USER")
-public class UserEntity extends AbstractEntity<String> implements Serializable {
+@Table(name = "KAOJO_USER")
+public class UserEntity extends AbstractEntity<Long> implements Serializable {
 
     @Column
     private String password;
@@ -42,6 +42,9 @@ public class UserEntity extends AbstractEntity<String> implements Serializable {
     @Column
     private String mail;
 
+    @Column
+    private String userName;
+
     /**
      * Get the value of password
      *
@@ -58,6 +61,14 @@ public class UserEntity extends AbstractEntity<String> implements Serializable {
      */
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
     /**

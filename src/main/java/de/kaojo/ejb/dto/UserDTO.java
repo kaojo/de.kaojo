@@ -19,10 +19,10 @@ public class UserDTO {
     private final String firstName;
     private final String lastName;
     private final String mail;
-    private final String userId;
+    private final String userName;
 
-    public String getUserId() {
-        return userId;
+    public String getUserName() {
+        return userName;
     }
 
     public String getDisplayName() {
@@ -49,14 +49,14 @@ public class UserDTO {
         return mail;
     }
 
-    private UserDTO(Boolean active, Date birthday, String displayName, String firstName, String lastName, String mail, String userId) {
+    private UserDTO(Boolean active, Date birthday, String displayName, String firstName, String lastName, String mail, String userName) {
         this.active = active;
         this.birthday = birthday;
         this.displayName = displayName;
         this.firstName = firstName;
         this.lastName = lastName;
         this.mail = mail;
-        this.userId = userId;
+        this.userName = userName;
     }
 
     public static class UserDTOBuilder {
@@ -67,7 +67,7 @@ public class UserDTO {
         private String firstName;
         private String lastName;
         private String mail;
-        private String userId;
+        private String userName;
         
         
         public UserDTOBuilder() {
@@ -75,6 +75,9 @@ public class UserDTO {
 
         public UserDTOBuilder withActive(Boolean active) {
             this.active = active;
+            if (active == null) {
+                this.active = false;
+            }
             return this;
         }
 
@@ -103,14 +106,14 @@ public class UserDTO {
             return this;
         }
 
-        public UserDTOBuilder withUserId(String userId) {
-            this.userId = userId;
+        public UserDTOBuilder withUserName(String userName) {
+            this.userName = userName;
             return this;
         }
 
         public UserDTO build() {
             
-            return new UserDTO(active, birthday, displayName, firstName, lastName, mail, userId);
+            return new UserDTO(active, birthday, displayName, firstName, lastName, mail, userName);
         }
     }
 }

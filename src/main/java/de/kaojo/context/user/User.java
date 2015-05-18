@@ -38,7 +38,7 @@ public interface User {
 
     public void setMail(String mail);
 
-    public String getUserId();
+    public String getUserName();
 
     public User build(UserDTO userDTO);
 

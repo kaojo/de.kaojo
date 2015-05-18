@@ -19,6 +19,9 @@ Copyright 2015.
 
             <ui:define name="content">
                 <h:form>
+                    <p:growl id="growl" showDetail="true" life="20000" autoUpdate="true" />
+                </h:form>
+                <h:form>
                     <div class="ui-grid headerDiv ui-grid-responsive">
                         <div class="ui-grid-row">
                             <div class="ui-grid-col-4 contentDiv">
@@ -43,7 +46,7 @@ Copyright 2015.
                         </div>
                         <div class="ui-grid-row">
                             <div class="ui-grid-col-6">
-                                <p:commandButton id="submit" action="#{loginController.login()}" value="Login"/>
+                                <p:commandButton id="login" action="#{loginController.login()}" value="Login"/>
                             </div>
                         </div>
                     </div>
@@ -58,26 +61,26 @@ Copyright 2015.
                         </div>
                         <div class="ui-grid-row">
                             <div class="ui-grid-col-6 contentDiv">
-                                <p:outputLabel for="loginName" value="Username"/>
+                                <p:outputLabel for="userName" value="Username"/>
                             </div>
                             <div class="ui-grid-col-6">
-                                <p:inputText value="#{loginController.loginName}" id="loginName" autocomplete="false"/>
+                                <p:inputText value="#{loginController.userName}" id="userName" autocomplete="false"/>
                             </div>
                         </div>
                         <div class="ui-grid-row">
                             <div class="ui-grid-col-6 contentDiv">
-                                <p:outputLabel for="loginPass" value="Password"/>
+                                <p:outputLabel for="pass" value="Password"/>
                             </div>
                             <div class="ui-grid-col-6">
-                                <h:inputSecret value="#{loginController.loginPass}" id="loginPass"/>
+                                <h:inputSecret value="#{loginController.pass}" id="pass"/>
                             </div>
                         </div>
                         <div class="ui-grid-row">
                             <div class="ui-grid-col-6 contentDiv">
-                                <p:outputLabel for="loginPassConfirm" value="Confirm password"/>
+                                <p:outputLabel for="passConfirm" value="Confirm password"/>
                             </div>
                             <div class="ui-grid-col-6">
-                                <h:inputSecret value="#{loginController.loginPassConfirm}" id="loginPassConfirm"/>
+                                <h:inputSecret value="#{loginController.passConfirm}" id="passConfirm"/>
                             </div>
                         </div>
                         <div class="ui-grid-row">
@@ -98,7 +101,7 @@ Copyright 2015.
                         </div>
                         <div class="ui-grid-row">
                             <div class="ui-grid-col-6">
-                                <p:commandButton id="submit" action="#{loginController.register()}" value="Register"/>
+                                <p:commandButton id="register" action="#{loginController.register()}" value="Register"/>
                             </div>
                         </div>
                     </div>

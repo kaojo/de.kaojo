@@ -6,6 +6,8 @@
 package de.kaojo.persistence.entities;
 
 import java.io.Serializable;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.Version;
@@ -19,6 +21,7 @@ import javax.persistence.Version;
 public abstract class AbstractEntity<ID extends Serializable> implements Serializable {
     
     @Id
+    @GeneratedValue(strategy=GenerationType.AUTO)
     private ID id;
 
     @Version

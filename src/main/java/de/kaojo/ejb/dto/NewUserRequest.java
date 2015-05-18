@@ -19,16 +19,16 @@ public class NewUserRequest {
     private final String lastName;
     private final String mail;
     private final String password;
-    private final String userId;
+    private final String userName;
 
-    private NewUserRequest(Date birthday, String displayName, String firstName, String lastName, String mail, String password, String userId) {
+    private NewUserRequest(Date birthday, String displayName, String firstName, String lastName, String mail, String password, String userName) {
         this.birthday = birthday;
         this.displayName = displayName;
         this.firstName = firstName;
         this.lastName = lastName;
         this.mail = mail;
         this.password = password;
-        this.userId = userId;
+        this.userName = userName;
     }
 
     public Date getBirthday() {
@@ -55,8 +55,8 @@ public class NewUserRequest {
         return password;
     }
 
-    public String getUserId() {
-        return userId;
+    public String getUserName() {
+        return userName;
     }
 
     public static class NewUserRequestBuilder {
@@ -67,10 +67,10 @@ public class NewUserRequest {
         private String lastName;
         private final String mail;
         private final String password;
-        private final String userId;
+        private final String userName;
 
-        public NewUserRequestBuilder(String userId, String mail, String password) {
-            this.userId = userId;
+        public NewUserRequestBuilder(String userName, String mail, String password) {
+            this.userName = userName;
             this.mail = mail;
             this.password = password;
         }
@@ -96,7 +96,7 @@ public class NewUserRequest {
         }
         
         public NewUserRequest build() {
-            return new NewUserRequest(birthday,displayName,firstName,lastName,mail,password,userId);
+            return new NewUserRequest(birthday,displayName,firstName,lastName,mail,password,userName);
         }
 
     }

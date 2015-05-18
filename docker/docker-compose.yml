@@ -12,4 +12,4 @@ postgres:
   - POSTGRES_USER=kaojo
   - POSTGRES_PASSWORD=admin
   volumes:
-   - /var/lib/postgresql/9.4/main:/var/lib/postgresql/data
+   - /home/jwinter/workspace/postgres-data:/var/lib/postgresql/data

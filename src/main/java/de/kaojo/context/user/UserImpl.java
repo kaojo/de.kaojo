@@ -24,15 +24,15 @@ public class UserImpl implements User, Serializable {
     private String firstName;
     private String lastName;
     private String mail;
-    private String userId;
+    private String userName;
 
     public UserImpl() {
 
     }
 
     @Override
-    public String getUserId() {
-        return userId;
+    public String getUserName() {
+        return userName;
     }
 
     /**
@@ -59,6 +59,9 @@ public class UserImpl implements User, Serializable {
      */
     @Override
     public String getDisplayName() {
+        if (displayName == null) {
+            return firstName != null ? firstName + lastName : userName;
+        }
         return displayName;
     }
 
@@ -73,14 +76,17 @@ public class UserImpl implements User, Serializable {
 
     @Override
     public User build(UserDTO userDTO) {
+        if (userDTO != null) {
             this.active = userDTO.getActive();
             this.birthday = userDTO.getBirthday();
             this.displayName = userDTO.getDisplayName();
             this.firstName = userDTO.getFirstName();
             this.lastName = userDTO.getLastName();
             this.mail = userDTO.getMail();
-            this.userId = userDTO.getUserId();
+            this.userName = userDTO.getUserName();
 
+            return this;
+        }
         return this;
     }
 
@@ -139,6 +145,5 @@ public class UserImpl implements User, Serializable {
     public void setMail(String mail) {
         this.mail = mail;
     }
-
 
 }

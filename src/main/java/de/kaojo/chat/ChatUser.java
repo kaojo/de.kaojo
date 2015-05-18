@@ -13,22 +13,22 @@ public class ChatUser {
 
     private String displayName;
 
-    private String userId;
+    private String userName;
 
     public ChatUser() {
     }
 
-    public ChatUser(String iUserId, String iDisplayName) {
+    public ChatUser(String userName, String iDisplayName) {
         this.displayName = iDisplayName;
-        this.userId = iUserId;
+        this.userName = userName;
     }
 
-    public String getUserId() {
-        return userId;
+    public String getUserName() {
+        return userName;
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
     public String getDisplayName() {

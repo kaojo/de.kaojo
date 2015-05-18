@@ -31,14 +31,14 @@ public class ChatRoom implements Serializable {
     public ChatRoom(String name, User user) {
         this.name = name;
         this.messageHistory = new MessageHistory<>(100);
-        if (user != null && user.getUserId() != null && user.getDisplayName() != null) {
+        if (user != null && user.getUserName() != null && user.getDisplayName() != null) {
             this.chatUsers = new ConcurrentHashMap(8, 0.9F, 1);
-            this.chatUsers.put(user.getUserId(), new ChatUser(user.getUserId(), user.getDisplayName()));
+            this.chatUsers.put(user.getUserName(), new ChatUser(user.getUserName(), user.getDisplayName()));
         }
     }
 
     public String sendMessage() {
-        Message message = new Message(new Author(user.getUserId(), user.getDisplayName()), messageArea);
+        Message message = new Message(new Author(user.getUserName(), user.getDisplayName()), messageArea);
         receiveMessage(message);
         return "chat";
     }
@@ -76,7 +76,7 @@ public class ChatRoom implements Serializable {
     }
 
     public void removeUser(User user) {
-        chatUsers.remove(user.getUserId());
+        chatUsers.remove(user.getUserName());
     }
 
     public String getMessageArea() {
