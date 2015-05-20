@@ -1,4 +1,4 @@
-<?xml version="1.0" ?>
+<?xml version='1.0' encoding='UTF-8'?>
 
 <server xmlns="urn:jboss:domain:2.2">
 
@@ -26,35 +26,35 @@
         <extension module="org.wildfly.extension.batch"/>
         <extension module="org.wildfly.extension.io"/>
         <extension module="org.wildfly.extension.undertow"/>
-    </extensions>
-
-
-    <management>
-        <security-realms>
-            <security-realm name="ManagementRealm">
-                <authentication>
-                    <local default-user="$local" skip-group-loading="true"/>
-                    <properties path="mgmt-users.properties" relative-to="jboss.server.config.dir"/>
-                </authentication>
-                <authorization map-groups-to-roles="false">
-                    <properties path="mgmt-groups.properties" relative-to="jboss.server.config.dir"/>
-                </authorization>
-            </security-realm>
-            <security-realm name="ApplicationRealm">
-                <authentication>
-                    <local default-user="$local" allowed-users="*" skip-group-loading="true"/>
-                    <properties path="application-users.properties" relative-to="jboss.server.config.dir"/>
-                </authentication>
-                <authorization>
-                    <properties path="application-roles.properties" relative-to="jboss.server.config.dir"/>
-                </authorization>
-            </security-realm>
-        </security-realms>
-        <audit-log>
-            <formatters>
-                <json-formatter name="json-formatter"/>
-            </formatters>
-            <handlers>
+    </extensions>                                                                                                                                                                                                                                                              
+                                                                                                                                                                                                                                                                               
+                                                                                                                                                                                                                                                                               
+    <management>                                                                                                                                                                                                                                                               
+        <security-realms>                                                                                                                                                                                                                                                      
+            <security-realm name="ManagementRealm">                                                                                                                                                                                                                            
+                <authentication>                                                                                                                                                                                                                                               
+                    <local default-user="$local" skip-group-loading="true"/>                                                                                                                                                                                                   
+                    <properties path="mgmt-users.properties" relative-to="jboss.server.config.dir"/>                                                                                                                                                                           
+                </authentication>                                                                                                                                                                                                                                              
+                <authorization map-groups-to-roles="false">                                                                                                                                                                                                                    
+                    <properties path="mgmt-groups.properties" relative-to="jboss.server.config.dir"/>                                                                                                                                                                          
+                </authorization>                                                                                                                                                                                                                                               
+            </security-realm>                                                                                                                                                                                                                                                  
+            <security-realm name="ApplicationRealm">                                                                                                                                                                                                                           
+                <authentication>                                                                                                                                                                                                                                               
+                    <local default-user="$local" allowed-users="*" skip-group-loading="true"/>                                                                                                                                                                                 
+                    <properties path="application-users.properties" relative-to="jboss.server.config.dir"/>                                                                                                                                                                    
+                </authentication>                                                                                                                                                                                                                                              
+                <authorization>                                                                                                                                                                                                                                                
+                    <properties path="application-roles.properties" relative-to="jboss.server.config.dir"/>                                                                                                                                                                    
+                </authorization>                                                                                                                                                                                                                                               
+            </security-realm>                                                                                                                                                                                                                                                  
+        </security-realms>                                                                                                                                                                                                                                                     
+        <audit-log>                                                                                                                                                                                                                                                            
+            <formatters>                                                                                                                                                                                                                                                       
+                <json-formatter name="json-formatter"/>                                                                                                                                                                                                                        
+            </formatters>                                                                                                                                                                                                                                                      
+            <handlers>                                                                                                                                                                                                                                                         
                 <file-handler name="file" formatter="json-formatter" path="audit-log.log" relative-to="jboss.server.data.dir"/>
             </handlers>
             <logger log-boot="true" log-read-only="false" enabled="false">
@@ -146,10 +146,29 @@
                         <password>sa</password>
                     </security>
                 </datasource>
-                <datasource jta="true" jndi-name="java:/kaojo" pool-name="kaojo" enabled="true" use-ccm="true">
-                    <connection-url>jdbc:postgresql://localhost:5432/kaojo</connection-url>
-                    <driver-class>org.postgresql.Driver</driver-class>
-                    <driver>postgresql-9.4-1201.jdbc4.jar</driver>
+                <xa-datasource jndi-name="java:/jdbc/kaojoDB" pool-name="kaojo" enabled="true" use-ccm="false">
+                    <xa-datasource-property name="ServerName">
+                        postgres
+                    </xa-datasource-property>
+                    <xa-datasource-property name="DatabaseName">
+                        kaojo
+                    </xa-datasource-property>
+                    <xa-datasource-property name="User">
+                        kaojo
+                    </xa-datasource-property>
+                    <xa-datasource-property name="Password">
+                        admin
+                    </xa-datasource-property>
+                    <xa-datasource-class>org.postgresql.xa.PGXADataSource</xa-datasource-class>
+                    <driver>postgresqlDriver</driver>
+                    <transaction-isolation>TRANSACTION_READ_UNCOMMITTED</transaction-isolation>
+                    <xa-pool>
+                        <max-pool-size>20</max-pool-size>
+                        <is-same-rm-override>false</is-same-rm-override>
+                        <interleaving>false</interleaving>
+                        <pad-xid>false</pad-xid>
+                        <wrap-xa-resource>false</wrap-xa-resource>
+                    </xa-pool>
                     <security>
                         <user-name>kaojo</user-name>
                         <password>admin</password>
@@ -158,22 +177,16 @@
                         <validate-on-match>false</validate-on-match>
                         <background-validation>false</background-validation>
                     </validation>
-                    <timeout>
-                        <set-tx-query-timeout>false</set-tx-query-timeout>
-                        <blocking-timeout-millis>0</blocking-timeout-millis>
-                        <idle-timeout-minutes>0</idle-timeout-minutes>
-                        <query-timeout>0</query-timeout>
-                        <use-try-lock>0</use-try-lock>
-                        <allocation-retry>0</allocation-retry>
-                        <allocation-retry-wait-millis>0</allocation-retry-wait-millis>
-                    </timeout>
                     <statement>
                         <share-prepared-statements>false</share-prepared-statements>
                     </statement>
-                </datasource>
+                </xa-datasource>
                 <drivers>
                     <driver name="h2" module="com.h2database.h2">
                         <xa-datasource-class>org.h2.jdbcx.JdbcDataSource</xa-datasource-class>
+                    </driver>
+                    <driver name="postgresqlDriver" module="org.postgresql">
+                        <xa-datasource-class>org.postgresql.xa.PGXADataSource</xa-datasource-class>
                     </driver>
                 </drivers>
             </datasources>
@@ -407,13 +420,4 @@
             <remote-destination host="localhost" port="25"/>
         </outbound-socket-binding>
     </socket-binding-group>
-
-    <deployments>
-        <deployment name="kaojo.war" runtime-name="kaojo.war">
-            <content sha1="ce3ce8c39038ac4af99739d511d92db01bcc39c3"/>
-        </deployment>
-        <deployment name="postgresql-9.4-1201.jdbc4.jar" runtime-name="postgresql-9.4-1201.jdbc4.jar" enabled="true">
-            <content sha1="b46544ef0eaf0405504089dcc71f36e3f190ef09"/>
-        </deployment>
-    </deployments>
 </server>
