@@ -1,0 +1,16 @@
+web:
+  build: ./wildfly-debug/
+  links:
+   - postgres
+  ports:
+   - "9990:9990"
+   - "9999:9999"
+   - "8080:8080"
+   - "8787:8787"
+postgres:
+  image: kaojo/postgres
+  environment:
+  - POSTGRES_USER=kaojo
+  - POSTGRES_PASSWORD=admin
+  volumes:
+   - /home/jwinter/workspace/postgres-data:/var/lib/postgresql/data
