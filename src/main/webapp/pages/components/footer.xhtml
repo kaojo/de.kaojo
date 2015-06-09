@@ -7,10 +7,12 @@
         xmlns:p="http://primefaces.org/ui">
     <body>
 
-        <ui:component id="header" >
-            <p:panelGrid columns="2" layout="grid"> 
-                <ui:include src="../components/tabMenu.xhtml" />
-                <ui:include src="userDisplay.xhtml" />
+        <ui:component id="footer" >
+            <p:panelGrid columns="4" layout="grid" >
+                <p:link outcome="/pages/public/impressum" value="Impressum" />
+                <p:link outcome="/pages/public/agb" value="AGB" />
+                <p:link outcome="/pages/public/contact" value="Kontakt" />
+                <p:link outcome="/pages/public/faq" value="FAQ" />
             </p:panelGrid>
         </ui:component>
 

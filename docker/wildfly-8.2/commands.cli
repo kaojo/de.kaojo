@@ -19,3 +19,5 @@ xa-data-source add \
 --interleaving=false \
 --pad-xid=false \
 --wrap-xa-resource=false
+/subsystem=security/security-domain=kaojoSecurityDomain:add(cache-type=default)
+/subsystem=security/security-domain=kaojoSecurityDomain/authentication=classic:add(login-modules=[{"code"=>"Database","flag"=>"required","module-options"=>[("dsJndiName"=>"java:/jdbc/kaojoDB"),("principalsQuery"=>"SELECT password FROM kaojo_user WHERE username=?"),("rolesQuery"=>"SELECT roles, 'Roles' FROM kaojo_user WHERE username=?")]}]

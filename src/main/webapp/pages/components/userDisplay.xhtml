@@ -7,17 +7,13 @@
         xmlns:p="http://primefaces.org/ui">
     <body>
 
-        <ui:composition template="./../publicTemplate.xhtml">
-
-            <ui:define name="title">
-                Impressum
-            </ui:define>
-
-            <ui:define name="content">
-                Impressum
-            </ui:define>
-
-        </ui:composition>
-
-    </body>
+        <ui:component id="userDisplay" >
+            <p:panelGrid columns="3" >
+                <h:outputText value="#{userController.user.displayName}" />
+                <p:button outcome="myProfile" icon="ui-icon-person" title="myProfile" />
+                <p:button outcome="/pages/public/logout" icon="ui-icon-power" title="logout" />
+        </p:panelGrid>
+    </ui:component>
+        
+</body>
 </html>

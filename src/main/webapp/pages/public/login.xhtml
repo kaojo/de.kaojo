@@ -11,7 +11,7 @@ Copyright 2015.
         xmlns:ui="http://java.sun.com/jsf/facelets"
         xmlns:p="http://primefaces.org/ui">
     <body>
-        <ui:composition template="./../publicTemplate.xhtml">
+        <ui:composition template="./../templates/publicTemplate.xhtml">
 
             <ui:define name="title">
                 Loginpage
@@ -21,6 +21,17 @@ Copyright 2015.
                 <h:form>
                     <p:growl id="growl" showDetail="true" life="20000" autoUpdate="true" />
                 </h:form>
+                <form method="POST" action="j_security_check">
+
+                    <input type="text" name="j_username"/>
+                    <input type="password" name="j_password"/>
+                    <input type="submit" value="Login" />
+                    <!--                    <h:outputLabel value="Username"/>
+                                    <h:inputText id="j_username" size="20" />
+                                    <h:outputLabel value="Password"/>
+                                    <h:inputSecret id="j_password" size="20" />
+                                    <h:commandButton value="Login" />-->
+                </form>
                 <h:form>
                     <div class="ui-grid headerDiv ui-grid-responsive">
                         <div class="ui-grid-row">

@@ -45,6 +45,12 @@ public class UserEntity extends AbstractEntity<Long> implements Serializable {
     @Column
     private String userName;
 
+    @Column
+    private String groups;
+    
+    @Column
+    private String roles;
+
     /**
      * Get the value of password
      *
@@ -179,4 +185,21 @@ public class UserEntity extends AbstractEntity<Long> implements Serializable {
         this.mail = mail;
     }
 
+    public String getGroups() {
+        return groups;
+    }
+
+    public void setGroups(String groups) {
+        this.groups = groups;
+    }
+
+    public String getRoles() {
+        return roles;
+    }
+
+    public void setRoles(String roles) {
+        this.roles = roles;
+    }
+
+    
 }
