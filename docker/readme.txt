@@ -21,4 +21,9 @@
 # SQL Abfragen abschicken #
 > su -l postgres
 > psql kaojo
-> select .......
+> select ......
+
+### Deployen auf den JBoss ###
+> mvn clean wildfly:deploy
+
+
