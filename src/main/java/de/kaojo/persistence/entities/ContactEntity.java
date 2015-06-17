@@ -7,8 +7,6 @@ package de.kaojo.persistence.entities;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 /**
@@ -26,7 +24,7 @@ public class ContactEntity extends AbstractEntity<Long> {
     String countryCode;
 
     @Column
-    String eMail;
+    String email;
 
     @Column
     Long phoneNumber;
@@ -51,12 +49,12 @@ public class ContactEntity extends AbstractEntity<Long> {
         this.countryCode = countryCode;
     }
 
-    public String geteMail() {
-        return eMail;
+    public String getEmail() {
+        return email;
     }
 
-    public void seteMail(String eMail) {
-        this.eMail = eMail;
+    public void setEmail(String eMail) {
+        this.email = eMail;
     }
 
     public Long getPhoneNumber() {

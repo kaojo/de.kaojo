@@ -51,6 +51,18 @@ public class UserManager {
         return user.getUserName().equals(userName);
     }
 
+    public boolean emailAllreadyExists(String email) {
+        List<AccountEntity> users = getUsersByEmail(email);
+        if (users.isEmpty()) {
+            return false;
+        }
+        if (users.size() != 1) {
+            return true;
+        }
+        AccountEntity user = users.get(0);
+        return user.getContactEntity().getEmail().equals(email);
+    }
+
     public UserDTO createNewUser(NewUserRequest newUserRequest) {
         AccountEntity accountEntity = new AccountEntity();
         accountEntity.setUserName(newUserRequest.getUserName());
@@ -81,6 +93,13 @@ public class UserManager {
     private List<AccountEntity> getUsersByName(String userName) {
         Query query = em.createQuery("SELECT ku FROM UserEntity ku WHERE ku.userName = :userName");
         query.setParameter("userName", userName);
+        query.setMaxResults(10);
+        return new ArrayList<>(query.getResultList());
+    }
+
+    private List<AccountEntity> getUsersByEmail(String email) {
+        Query query = em.createQuery("SELECT ku FROM UserEntity ku WHERE ku.email = :email");
+        query.setParameter("email", email);
         query.setMaxResults(10);
         return new ArrayList<>(query.getResultList());
     }

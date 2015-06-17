@@ -34,9 +34,9 @@ public interface User {
 
     public void setLastName(String lastName);
 
-    public String getMail();
+    public String getEmail();
 
-    public void setMail(String mail);
+    public void setEmail(String email);
 
     public String getUserName();
 

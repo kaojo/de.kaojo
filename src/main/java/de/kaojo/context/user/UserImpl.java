@@ -23,7 +23,7 @@ public class UserImpl implements User, Serializable {
     private String displayName;
     private String firstName;
     private String lastName;
-    private String mail;
+    private String email;
     private String userName;
 
     public UserImpl() {
@@ -82,7 +82,7 @@ public class UserImpl implements User, Serializable {
             this.displayName = userDTO.getDisplayName();
             this.firstName = userDTO.getFirstName();
             this.lastName = userDTO.getLastName();
-            this.mail = userDTO.getMail();
+            this.email = userDTO.getEmail();
             this.userName = userDTO.getUserName();
 
             return this;
@@ -130,20 +130,20 @@ public class UserImpl implements User, Serializable {
 
     /**
      *
-     * @return
+     * @return email
      */
     @Override
-    public String getMail() {
-        return mail;
+    public String getEmail() {
+        return email;
     }
 
     /**
      *
-     * @param mail
+     * @param email
      */
     @Override
-    public void setMail(String mail) {
-        this.mail = mail;
+    public void setEmail(String mail) {
+        this.email = mail;
     }
 
 }

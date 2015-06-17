@@ -18,7 +18,7 @@ public class UserDTO {
     private final String displayName;
     private final String firstName;
     private final String lastName;
-    private final String mail;
+    private final String email;
     private final String userName;
 
     public String getUserName() {
@@ -45,17 +45,17 @@ public class UserDTO {
         return birthday;
     }
 
-    public String getMail() {
-        return mail;
+    public String getEmail() {
+        return email;
     }
 
-    private UserDTO(Boolean active, Date birthday, String displayName, String firstName, String lastName, String mail, String userName) {
+    private UserDTO(Boolean active, Date birthday, String displayName, String firstName, String lastName, String email, String userName) {
         this.active = active;
         this.birthday = birthday;
         this.displayName = displayName;
         this.firstName = firstName;
         this.lastName = lastName;
-        this.mail = mail;
+        this.email = email;
         this.userName = userName;
     }
 
@@ -66,7 +66,7 @@ public class UserDTO {
         private String displayName;
         private String firstName;
         private String lastName;
-        private String mail;
+        private String email;
         private String userName;
         
         
@@ -101,8 +101,8 @@ public class UserDTO {
             return this;
         }
 
-        public UserDTOBuilder withMail(String mail) {
-            this.mail = mail;
+        public UserDTOBuilder withMail(String email) {
+            this.email = email;
             return this;
         }
 
@@ -113,7 +113,7 @@ public class UserDTO {
 
         public UserDTO build() {
             
-            return new UserDTO(active, birthday, displayName, firstName, lastName, mail, userName);
+            return new UserDTO(active, birthday, displayName, firstName, lastName, email, userName);
         }
     }
 }

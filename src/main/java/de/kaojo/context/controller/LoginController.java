@@ -20,6 +20,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 /**
+ * Content dependency injection
  *
  * @author julian
  */
@@ -29,8 +30,8 @@ public class LoginController {
 
     private String loginPass;
     private String loginName;
-    private String mail;
-    private String mailConfirm;
+    private String email;
+    private String emailConfirm;
     private String pass;
     private String passConfirm;
     private String userName;
@@ -91,20 +92,20 @@ public class LoginController {
         this.passConfirm = loginPassConfirm;
     }
 
-    public String getMail() {
-        return mail;
+    public String getEmail() {
+        return email;
     }
 
-    public void setMail(String mail) {
-        this.mail = mail;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
-    public String getMailConfirm() {
-        return mailConfirm;
+    public String getEmailConfirm() {
+        return emailConfirm;
     }
 
-    public void setMailConfirm(String mailConfirm) {
-        this.mailConfirm = mailConfirm;
+    public void setEmailConfirm(String emailConfirm) {
+        this.emailConfirm = emailConfirm;
     }
 
     public UserManager getUserManager() {
@@ -137,7 +138,7 @@ public class LoginController {
             addMessage("Fehlschlag", "Die Passwörter stimmen nicht überein");
             return null;
         }
-        if (null == mail | !mail.equals(mailConfirm)) {
+        if (null == email | !email.equals(emailConfirm)) {
             addMessage("Fehlschlag", "Die E-mail-Adressen stimmen nicht überein");
             return null;
         }
@@ -145,9 +146,13 @@ public class LoginController {
             addMessage("Fehlschlag", "Der Benutzername existiert bereits. Versuche es mit einem anderen Benutzernamen erneut");
             return null;
         }
+        if (userManager.emailAllreadyExists(email)) {
+            addMessage("Fehlschlag", "Die Email-Adressse existiert bereits. Versuche es mit einer anderen Email-Adressse erneut");
+            return null;
+        }
 
         NewUserRequest.NewUserRequestBuilder newUserRequestBuilder
-                = new NewUserRequest.NewUserRequestBuilder(userName, mail, pass);
+                = new NewUserRequest.NewUserRequestBuilder(userName, email, pass);
         NewUserRequest newUserRequest = newUserRequestBuilder.build();
         UserDTO userDTO = userManager.createNewUser(newUserRequest);
         if (userDTO != null) {

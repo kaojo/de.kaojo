@@ -17,16 +17,16 @@ public class NewUserRequest {
     private final String displayName;
     private final String firstName;
     private final String lastName;
-    private final String mail;
+    private final String email;
     private final String password;
     private final String userName;
 
-    private NewUserRequest(Date birthday, String displayName, String firstName, String lastName, String mail, String password, String userName) {
+    private NewUserRequest(Date birthday, String displayName, String firstName, String lastName, String email, String password, String userName) {
         this.birthday = birthday;
         this.displayName = displayName;
         this.firstName = firstName;
         this.lastName = lastName;
-        this.mail = mail;
+        this.email = email;
         this.password = password;
         this.userName = userName;
     }
@@ -47,8 +47,8 @@ public class NewUserRequest {
         return lastName;
     }
 
-    public String getMail() {
-        return mail;
+    public String getEmail() {
+        return email;
     }
 
     public String getPassword() {
@@ -65,13 +65,13 @@ public class NewUserRequest {
         private String displayName;
         private String firstName;
         private String lastName;
-        private final String mail;
+        private final String email;
         private final String password;
         private final String userName;
 
-        public NewUserRequestBuilder(String userName, String mail, String password) {
+        public NewUserRequestBuilder(String userName, String email, String password) {
             this.userName = userName;
-            this.mail = mail;
+            this.email = email;
             this.password = password;
         }
         
@@ -96,7 +96,7 @@ public class NewUserRequest {
         }
         
         public NewUserRequest build() {
-            return new NewUserRequest(birthday,displayName,firstName,lastName,mail,password,userName);
+            return new NewUserRequest(birthday,displayName,firstName,lastName,email,password,userName);
         }
 
     }
