@@ -52,6 +52,7 @@
         </web-resource-collection>
         <auth-constraint>
             <role-name>user</role-name>
+            <role-name>admin</role-name>
         </auth-constraint>
         <user-data-constraint>
             <transport-guarantee>NONE</transport-guarantee>
