@@ -6,8 +6,7 @@
         <class>de.kaojo.persistence.entities.RolesEntity</class>
         <properties>
             <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQLDialect"/>
-            <!--<property name="hibernate.connection.datasource" value="java:/jdbc/kaojoDB"/>-->
-            <property name="hibernate.hbm2ddl.auto" value="create"/>
+            <property name="hibernate.hbm2ddl.auto" value="update"/>
         </properties>
     </persistence-unit>
 </persistence>

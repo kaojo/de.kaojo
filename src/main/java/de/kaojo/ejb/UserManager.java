@@ -75,7 +75,7 @@ public class UserManager {
         accountEntity.setActive(Boolean.FALSE);
         accountEntity.setDisplayName(newUserRequest.getDisplayName());
         accountEntity.setPassword(newUserRequest.getPassword());
-        
+
         Set<RolesEntity> rolesEntitys = getDefaultRolesEntities();
         accountEntity.setRoles(rolesEntitys);
         try {
@@ -122,6 +122,7 @@ public class UserManager {
     }
 
     private Set<RolesEntity> getDefaultRolesEntities() {
+
         Set<RolesEntity> rolesEntitys = new HashSet();
         RolesEntity rolesEntity = new RolesEntity();
         rolesEntity.setRoles(DEFAULT_ROLE);

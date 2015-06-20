@@ -12,6 +12,8 @@ import de.kaojo.ejb.dto.Credentials;
 import de.kaojo.ejb.dto.CredentialsImpl;
 import de.kaojo.ejb.dto.NewUserRequest;
 import de.kaojo.ejb.dto.UserDTO;
+import de.kaojo.security.cipher.SecureHashingAlgorithmHelper;
+import java.security.NoSuchAlgorithmException;
 import javax.ejb.EJB;
 import javax.enterprise.context.RequestScoped;
 import javax.faces.application.FacesMessage;
@@ -133,7 +135,7 @@ public class LoginController {
         return null;
     }
 
-    public String register() {
+    public String register() throws NoSuchAlgorithmException {
         if (null == pass | !pass.equals(passConfirm)) {
             addMessage("Fehlschlag", "Die Passwörter stimmen nicht überein");
             return null;
@@ -150,14 +152,14 @@ public class LoginController {
             addMessage("Fehlschlag", "Die Email-Adressse existiert bereits. Versuche es mit einer anderen Email-Adressse erneut");
             return null;
         }
-
+        String shaPassword = getHashedPassword(pass);
         NewUserRequest.NewUserRequestBuilder newUserRequestBuilder
-                = new NewUserRequest.NewUserRequestBuilder(userName, email, pass);
+                = new NewUserRequest.NewUserRequestBuilder(userName, email, shaPassword);
         NewUserRequest newUserRequest = newUserRequestBuilder.build();
         UserDTO userDTO = userManager.createNewUser(newUserRequest);
         if (userDTO != null) {
             this.user.build(userDTO);
-            return "chat?faces-redirect=true;";
+            return "/pages/user/chat?faces-redirect=true;";
         }
         addMessage("Fehlschlag", "Ein technisches Problem ist aufgetreten.");
         return null;
@@ -174,5 +176,9 @@ public class LoginController {
     private void addMessage(String summary, String detail) {
         FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, summary, detail);
         FacesContext.getCurrentInstance().addMessage(null, message);
+    }
+
+    private String getHashedPassword(String pass) throws NoSuchAlgorithmException {
+        return SecureHashingAlgorithmHelper.hashSHA256(pass);
     }
 }
