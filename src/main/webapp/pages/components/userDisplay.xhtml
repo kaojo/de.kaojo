@@ -8,12 +8,14 @@
     <body>
 
         <ui:component id="userDisplay" >
-            <p:panelGrid columns="3" >
-                <h:outputText value="#{userController.user.displayName}" />
-                <p:button outcome="myProfile" icon="ui-icon-person" title="myProfile" />
-                <p:button outcome="/pages/public/logout" icon="ui-icon-power" title="logout" />
-        </p:panelGrid>
-    </ui:component>
-        
-</body>
+            <h:form>
+                <p:panelGrid columns="3" >
+                    <h:outputText value="#{userController.user.displayName}" />
+                    <p:button outcome="myProfile" icon="ui-icon-person" title="myProfile" />
+                    <p:commandButton id="logout" action="#{loginController.logoutButton()}" icon="ui-icon-power" />
+                </p:panelGrid>
+            </h:form>
+        </ui:component>
+
+    </body>
 </html>

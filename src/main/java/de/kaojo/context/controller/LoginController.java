@@ -22,6 +22,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 /**
  * Content dependency injection
@@ -207,5 +208,13 @@ public class LoginController {
             throw new RuntimeException("Sorry. Got a null request from faces context");
         }
         return request;
+    }
+    
+    public String logoutButton() throws ServletException {
+        HttpServletRequest request = getRequest();
+        request.logout();
+        HttpSession session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(false);
+        session.invalidate();
+        return "/pages/public/logout?faces-redirect=true;";
     }
 }
