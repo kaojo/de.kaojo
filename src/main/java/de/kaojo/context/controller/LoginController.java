@@ -120,12 +120,17 @@ public class LoginController {
         this.userManager = userManager;
     }
 
-    public String loginButton() throws ServletException {
+    public String loginButton() throws ServletException, NoSuchAlgorithmException {
         Credentials credentials = new CredentialsImpl();
-        credentials.build(loginName, loginPass);
-        UserDTO userDTO = userManager.getUserFromDB(credentials);
+        if (loginName != null && loginPass != null) {
+            String hashedPassword = getHashedPassword(loginPass);
+            credentials.build(loginName, hashedPassword);
+            UserDTO userDTO = userManager.getUserFromDB(credentials);
 
-        return performLogin(userDTO, loginName, loginPass);
+            return performLogin(userDTO, loginName, loginPass);
+        }
+        addMessage("Fehler beim Anmelden", "Username oder Passwort fehlt!");
+        return null;
     }
 
     public String register() throws NoSuchAlgorithmException, ServletException {

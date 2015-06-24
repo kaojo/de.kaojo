@@ -37,7 +37,7 @@ public class UserManager {
         if (userEntity == null) {
             return null;
         }
-        if (userEntity.getPassword().equals(credentials.getPassword())) {
+        if (!userEntity.getPassword().equals(credentials.getPassword())) {
             return null;
         }
 
