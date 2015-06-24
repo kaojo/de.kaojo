@@ -126,21 +126,6 @@ public class UserManager {
         query.setParameter("defaultRole", DEFAULT_ROLE);
         query.setMaxResults(10);
         Set resultList = new HashSet(query.getResultList());
-
-        if (!resultList.isEmpty()) {
-            return resultList;
-        }
-        Set<RolesEntity> rolesEntitys = new HashSet();
-        RolesEntity rolesEntity = new RolesEntity();
-        rolesEntity.setRoles(DEFAULT_ROLE);
-        try {
-            em.persist(rolesEntity);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-        rolesEntitys.add(rolesEntity);
-
-        return rolesEntitys;
+        return resultList;
     }
 }
