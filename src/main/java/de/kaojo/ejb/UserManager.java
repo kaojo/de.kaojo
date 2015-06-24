@@ -76,14 +76,14 @@ public class UserManager {
         accountEntity.setDisplayName(newUserRequest.getDisplayName());
         accountEntity.setPassword(newUserRequest.getPassword());
 
-        Set<RolesEntity> rolesEntitys = getDefaultRolesEntities();
-        accountEntity.setRoles(rolesEntitys);
         try {
             em.persist(accountEntity);
         } catch (Exception e) {
             e.printStackTrace();
             return null;
         }
+        Set<RolesEntity> rolesEntitys = getDefaultRolesEntities();
+        accountEntity.setRoles(rolesEntitys);
         return mapUserEntityToUserDTO(accountEntity);
     }
 
@@ -122,7 +122,14 @@ public class UserManager {
     }
 
     private Set<RolesEntity> getDefaultRolesEntities() {
+        Query query = em.createQuery("SELECT re FROM RolesEntity re WHERE re.roles = :defaultRole");
+        query.setParameter("defaultRole", DEFAULT_ROLE);
+        query.setMaxResults(10);
+        Set resultList = new HashSet(query.getResultList());
 
+        if (!resultList.isEmpty()) {
+            return resultList;
+        }
         Set<RolesEntity> rolesEntitys = new HashSet();
         RolesEntity rolesEntity = new RolesEntity();
         rolesEntity.setRoles(DEFAULT_ROLE);
@@ -136,5 +143,4 @@ public class UserManager {
 
         return rolesEntitys;
     }
-
 }

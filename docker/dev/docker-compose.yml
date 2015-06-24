@@ -1,5 +1,5 @@
 web:
-  build: ./wildfly-debug/
+  build: wildfly-debug/
   links:
    - postgres
   ports:

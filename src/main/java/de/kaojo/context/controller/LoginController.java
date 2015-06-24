@@ -20,6 +20,8 @@ import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * Content dependency injection
@@ -118,51 +120,59 @@ public class LoginController {
         this.userManager = userManager;
     }
 
-    public String login() {
+    public String loginButton() throws ServletException {
         Credentials credentials = new CredentialsImpl();
         credentials.build(loginName, loginPass);
         UserDTO userDTO = userManager.getUserFromDB(credentials);
-        if (userDTO == null) {
-            addMessage("Fehlschlag", "Die Zugangsdaten sind nicht korrekt.");
-            return null;
-        }
-        this.user.build(userDTO);
-        if (user.getUserName() != null) {
-            return "chat?faces-redirect=true";
-        }
 
-        addMessage("Fehlschlag", "Die Zugangsdaten sind nicht korrekt.");
-        return null;
+        return performLogin(userDTO, loginName, loginPass);
     }
 
-    public String register() throws NoSuchAlgorithmException {
-        if (null == pass | !pass.equals(passConfirm)) {
-            addMessage("Fehlschlag", "Die Passwörter stimmen nicht überein");
+    public String register() throws NoSuchAlgorithmException, ServletException {
+        if (!checkRegisterInput()) {
             return null;
         }
-        if (null == email | !email.equals(emailConfirm)) {
-            addMessage("Fehlschlag", "Die E-mail-Adressen stimmen nicht überein");
-            return null;
-        }
-        if (userManager.userAllreadyExists(userName)) {
-            addMessage("Fehlschlag", "Der Benutzername existiert bereits. Versuche es mit einem anderen Benutzernamen erneut");
-            return null;
-        }
-        if (userManager.emailAllreadyExists(email)) {
-            addMessage("Fehlschlag", "Die Email-Adressse existiert bereits. Versuche es mit einer anderen Email-Adressse erneut");
-            return null;
-        }
+        // Store Account in DB
         String shaPassword = getHashedPassword(pass);
         NewUserRequest.NewUserRequestBuilder newUserRequestBuilder
                 = new NewUserRequest.NewUserRequestBuilder(userName, email, shaPassword);
         NewUserRequest newUserRequest = newUserRequestBuilder.build();
         UserDTO userDTO = userManager.createNewUser(newUserRequest);
-        if (userDTO != null) {
-            this.user.build(userDTO);
-            return "/pages/user/chat?faces-redirect=true;";
+
+        return performLogin(userDTO, userName, pass);
+    }
+
+    private String performLogin(UserDTO userDTO, String userName, String password) throws ServletException {
+        // If creating user failed, stay on Page and display a message
+        if (userDTO == null) {
+            addMessage("Fehlschlag", "Ein technisches Problem ist aufgetreten.");
+            return null;
         }
-        addMessage("Fehlschlag", "Ein technisches Problem ist aufgetreten.");
-        return null;
+        // Perform Login into Applikation
+        this.user.build(userDTO);
+        HttpServletRequest request = getRequest();
+        request.login(userName, password);
+        return "/pages/user/chat?faces-redirect=true;";
+    }
+
+    private boolean checkRegisterInput() {
+        if (null == pass | !pass.equals(passConfirm)) {
+            addMessage("Fehlschlag", "Die Passwörter stimmen nicht überein");
+            return false;
+        }
+        if (null == email | !email.equals(emailConfirm)) {
+            addMessage("Fehlschlag", "Die E-mail-Adressen stimmen nicht überein");
+            return false;
+        }
+        if (userManager.userAllreadyExists(userName)) {
+            addMessage("Fehlschlag", "Der Benutzername existiert bereits. Versuche es mit einem anderen Benutzernamen erneut");
+            return false;
+        }
+        if (userManager.emailAllreadyExists(email)) {
+            addMessage("Fehlschlag", "Die Email-Adressse existiert bereits. Versuche es mit einer anderen Email-Adressse erneut");
+            return false;
+        }
+        return true;
     }
 
     public User getUser() {
@@ -180,5 +190,17 @@ public class LoginController {
 
     private String getHashedPassword(String pass) throws NoSuchAlgorithmException {
         return SecureHashingAlgorithmHelper.hashSHA256(pass);
+    }
+
+    public static HttpServletRequest getRequest() {
+        HttpServletRequest request
+                = (HttpServletRequest) FacesContext
+                .getCurrentInstance()
+                .getExternalContext()
+                .getRequest();
+        if (request == null) {
+            throw new RuntimeException("Sorry. Got a null request from faces context");
+        }
+        return request;
     }
 }

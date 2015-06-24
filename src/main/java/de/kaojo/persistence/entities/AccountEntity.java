@@ -11,7 +11,7 @@ import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinTable;
-import javax.persistence.OneToMany;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -41,7 +41,7 @@ public class AccountEntity extends AbstractEntity<Long> implements Serializable 
 	@OneToOne
 	PersonEntity personEntity;
 
-	@OneToMany
+	@ManyToMany
 	@JoinTable(name = "ACCOUNT_ROLES")
 	Set<RolesEntity> roles;
 
