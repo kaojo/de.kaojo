@@ -5,36 +5,69 @@
  */
 package de.kaojo.websockets;
 
-import java.io.IOException;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
-import javax.websocket.EncodeException;
+import de.kaojo.chat.ChatRoom;
+import de.kaojo.chat.ChatRoomImpl;
+import de.kaojo.chat.Message;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import javax.websocket.EndpointConfig;
 import javax.websocket.OnClose;
+import javax.websocket.OnError;
 import javax.websocket.OnMessage;
 import javax.websocket.OnOpen;
 import javax.websocket.Session;
+import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 
-@ServerEndpoint("/chatWebsocket")
+@ServerEndpoint("/chatrooms/{room-name}")
 public class ChatEndpoint {
 
-    private static final Set<Session> peers = Collections.synchronizedSet(new HashSet<Session>());
+    private static ConcurrentHashMap<String, ChatRoom> chatRooms;
+    public static final String CHAT_USER_PARAM = "chatUser";
 
     @OnOpen
-    public void onOpen(Session peer) {
-        peers.add(peer);
-    }
+    public void open(Session session,
+            EndpointConfig c,
+            @PathParam("room-name") String roomName) {
 
-    @OnClose
-    public void onClose(Session peer) {
-        peers.remove(peer);
+        ChatRoom chatRoom = chatRooms.get(roomName);
+        Map<String, String> pathParameters = session.getPathParameters();
+        String chatUser = pathParameters.get(CHAT_USER_PARAM);
+
+        if (chatRoom != null && chatUser != null) {
+            Map<String, Object> userProperties = session.getUserProperties();
+            userProperties.put(CHAT_USER_PARAM, chatUser);
+            chatRoom.joinChatRoom(session);
+        } else {
+            chatRoom = new ChatRoomImpl(roomName);
+            chatRoom.joinChatRoom(session);
+            chatRooms.put(roomName, chatRoom);
+        }
     }
 
     @OnMessage
-    public void message(String message, Session client) throws IOException, EncodeException {
-        for (Session peer : peers) {
-            peer.getBasicRemote().sendObject(message);
+    public void onMessage(Session session, @PathParam("room-name") String roomName, Message message) {
+
+        ChatRoom chatRoom = chatRooms.get(roomName);
+        chatRoom.sendMessage(message);
+
+    }
+
+    @OnClose
+    public void onClose(Session session, @PathParam("room-name") String roomName) {
+
+        ChatRoom chatRoom = chatRooms.get(roomName);
+
+        if (chatRoom != null) {
+            chatRoom.leaveChatRoom(session);
+            if (chatRoom.isEmpty()) {
+                chatRooms.remove(roomName);
+            }
         }
+    }
+
+    @OnError
+    public void onError(Throwable t) {
+        t.printStackTrace();
     }
 }

@@ -1,97 +1,27 @@
-/*
- * Diese Software ist Eigentum von Julian Winter
- * Alle Rechte sind vorbehalten.
- * Copyright 2015.
- */
 package de.kaojo.chat;
 
-import de.kaojo.context.user.User;
-import de.kaojo.context.user.DefaultUser;
-import java.io.Serializable;
-import java.util.concurrent.ConcurrentHashMap;
-import javax.inject.Inject;
-import javax.inject.Named;
+import java.util.List;
+import java.util.Set;
+import javax.websocket.Session;
 
 /**
  *
- * @author julian
+ * @author jwinter
  */
-@Named
-public class ChatRoom implements Serializable {
+public interface ChatRoom {
 
-    @Inject
-    @DefaultUser
-    private User user;
+    public String getName();
 
-    private String name;
-    private MessageHistory<Message> messageHistory;
-    private ConcurrentHashMap<String, ChatUser> chatUsers;
-    private String messageArea;
+    public Set<ChatUser> getAllChatUsers();
 
-    public ChatRoom(String name, User user) {
-        this.name = name;
-        this.messageHistory = new MessageHistory<>(100);
-        if (user != null && user.getUserName() != null && user.getDisplayName() != null) {
-            this.chatUsers = new ConcurrentHashMap(8, 0.9F, 1);
-            this.chatUsers.put(user.getUserName(), new ChatUser(user.getUserName(), user.getDisplayName()));
-        }
-    }
+    public void sendMessage(Message message);
 
-    public String sendMessage() {
-        Message message = new Message(new Author(user.getUserName(), user.getDisplayName()), messageArea);
-        receiveMessage(message);
-        return "chat";
-    }
+    public void leaveChatRoom(Session session);
 
-    public String leaveChatRoom() {
-        return "chat";
-    }
+    public void joinChatRoom(Session session);
 
-    public String getName() {
-        return name;
-    }
+    public List<Message> getMessageHistory();
 
-    public void setName(String name) {
-        this.name = name;
-    }
+    public boolean isEmpty();
 
-    public void setMessageHistory(MessageHistory<Message> messageHistory) {
-        this.messageHistory = messageHistory;
-    }
-
-    public MessageHistory<Message> getMessageHistory() {
-        return messageHistory;
-    }
-
-    public void setChatUsers(ConcurrentHashMap<String, ChatUser> chatUsers) {
-        this.chatUsers = chatUsers;
-    }
-
-    public ConcurrentHashMap<String, ChatUser> getChatUsers() {
-        return chatUsers;
-    }
-
-    public void receiveMessage(Message message) {
-        messageHistory.add(message);
-    }
-
-    public void removeUser(User user) {
-        chatUsers.remove(user.getUserName());
-    }
-
-    public String getMessageArea() {
-        return messageArea;
-    }
-
-    public void setMessageArea(String messageArea) {
-        this.messageArea = messageArea;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
 }
