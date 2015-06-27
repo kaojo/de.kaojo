@@ -5,11 +5,13 @@
  */
 package de.kaojo.chat;
 
-import de.kaojo.websockets.ChatEndpoint;
+import de.kaojo.websocket.ChatEndpoint;
 import java.io.IOException;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import javax.enterprise.event.Event;
+import javax.inject.Inject;
 import javax.websocket.EncodeException;
 import javax.websocket.Session;
 
@@ -21,6 +23,14 @@ public class ChatRoomImpl implements ChatRoom {
 
     private final String name;
     private final ConcurrentHashMap<String, ChatUser> chatUsers;
+
+    @Inject
+    @JoinedEvent
+    private Event<ChatEvent> joinEvent;
+
+    @Inject
+    @LeftEvent
+    private Event<ChatEvent> leftEvent;
 
     public ChatRoomImpl(String name) {
         this.chatUsers = new ConcurrentHashMap<>();
@@ -42,6 +52,11 @@ public class ChatRoomImpl implements ChatRoom {
         String chatUser = getChatUserFromSession(session);
         chatUsers.remove(chatUser);
         broadCastMessage(new Message(new Author(name, name), chatUser + " hat den Raum verlassen."));
+        
+        //notify ChatManager
+        ChatEvent chatEvent = new ChatEvent(name, chatUser);
+        leftEvent.fire(chatEvent);
+
     }
 
     @Override
@@ -49,6 +64,11 @@ public class ChatRoomImpl implements ChatRoom {
         String chatUser = getChatUserFromSession(session);
         chatUsers.put(chatUser, new ChatUserImpl(chatUser, session));
         broadCastMessage(new Message(new Author(name, name), chatUser + " hat den Raum betreten."));
+
+        //notify ChatManager
+        ChatEvent chatEvent = new ChatEvent(name, chatUser);
+        joinEvent.fire(chatEvent);
+
     }
 
     @Override

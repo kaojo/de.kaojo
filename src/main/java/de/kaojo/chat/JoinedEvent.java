@@ -1,4 +1,4 @@
-package de.kaojo.beans.app;
+package de.kaojo.chat;
 
 import static java.lang.annotation.ElementType.TYPE;
 import static java.lang.annotation.ElementType.FIELD;
@@ -16,5 +16,5 @@ import javax.inject.Qualifier;
 @Qualifier
 @Retention(RUNTIME)
 @Target({METHOD, FIELD, PARAMETER, TYPE})
-public @interface DefaultChatManager {
+public @interface JoinedEvent {
 }

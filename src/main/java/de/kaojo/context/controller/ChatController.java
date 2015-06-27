@@ -1,12 +1,11 @@
 package de.kaojo.context.controller;
 
-import de.kaojo.beans.app.DefaultChatManager;
-import de.kaojo.beans.app.ChatManager;
 import de.kaojo.context.user.User;
 import de.kaojo.context.user.DefaultUser;
+import de.kaojo.ejb.ChatManagerBean;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
+import javax.ejb.EJB;
 import javax.enterprise.context.RequestScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
@@ -21,17 +20,16 @@ import javax.inject.Named;
 @RequestScoped
 public class ChatController implements Serializable {
 
-    private List<String> chatRooms = new ArrayList<>();
     private String openRoom;
-    private List<String> accessibleRooms = new ArrayList<>();
+    private List<String> chatRooms;
+    private List<String> accessibleRooms;
 
     @Inject
     @DefaultUser
     private User user;
 
-    @Inject
-    @DefaultChatManager
-    private ChatManager chatmanager;
+    @EJB
+    private ChatManagerBean chatmanager;
 
     public User getUser() {
         return user;

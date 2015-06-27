@@ -25,7 +25,7 @@ import javax.persistence.Query;
  * @author julian
  */
 @Stateless
-public class UserManager {
+public class UserManagerBean {
 
     @PersistenceContext(unitName = "postgres")
     EntityManager em;

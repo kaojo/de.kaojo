@@ -1,40 +1,38 @@
 /*
- * Diese Software ist Eigentum von Julian Winter
- * Alle Rechte sind vorbehalten.
- * Copyright 2015.
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
  */
-package de.kaojo.beans.app;
+package de.kaojo.chat;
 
-import de.kaojo.context.user.User;
-import java.util.List;
-import javax.enterprise.context.ApplicationScoped;
+import javax.websocket.DecodeException;
+import javax.websocket.Decoder;
+import javax.websocket.EndpointConfig;
 
 /**
  *
- * @author julian.winter
+ * @author jwinter
  */
-@ApplicationScoped
-@DefaultChatManager
-public class ChatManagerImpl implements ChatManager {
+public class TextMessageDecoder implements Decoder.Text<Message>{
 
     @Override
-    public void userjoined(ChatEvent chatEvent) {
+    public Message decode(String s) throws DecodeException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public void userleft(ChatEvent chatEvent) {
+    public boolean willDecode(String s) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public List<String> getChatRooms(User user) {
+    public void init(EndpointConfig config) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public List<String> getAccessibleChatRooms(User user) {
+    public void destroy() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-
+    
 }

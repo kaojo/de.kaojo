@@ -3,11 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package de.kaojo.websockets;
+package de.kaojo.websocket;
 
 import de.kaojo.chat.ChatRoom;
 import de.kaojo.chat.ChatRoomImpl;
 import de.kaojo.chat.Message;
+import de.kaojo.chat.TextMessageDecoder;
+import de.kaojo.chat.TextMessageEncoder;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import javax.websocket.EndpointConfig;
@@ -19,7 +21,11 @@ import javax.websocket.Session;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 
-@ServerEndpoint("/chatrooms/{room-name}")
+@ServerEndpoint(
+   value = "/chatrooms/{room-name}",
+   encoders = { TextMessageEncoder.class },
+   decoders = { TextMessageDecoder.class }
+)
 public class ChatEndpoint {
 
     private static ConcurrentHashMap<String, ChatRoom> chatRooms;

@@ -7,12 +7,12 @@ package de.kaojo.context.controller;
 
 import de.kaojo.context.user.User;
 import de.kaojo.context.user.DefaultUser;
-import de.kaojo.ejb.UserManager;
+import de.kaojo.ejb.UserManagerBean;
 import de.kaojo.ejb.dto.Credentials;
 import de.kaojo.ejb.dto.CredentialsImpl;
 import de.kaojo.ejb.dto.NewUserRequest;
 import de.kaojo.ejb.dto.UserDTO;
-import de.kaojo.security.cipher.SecureHashingAlgorithmHelper;
+import de.kaojo.security.util.SecureHashingAlgorithmHelper;
 import java.security.NoSuchAlgorithmException;
 import javax.ejb.EJB;
 import javax.enterprise.context.RequestScoped;
@@ -44,8 +44,9 @@ public class LoginController {
     @Inject
     @DefaultUser
     private User user;
+    
     @EJB
-    private UserManager userManager;
+    private UserManagerBean userManager;
 
     public String getPass() {
         return pass;
@@ -113,11 +114,11 @@ public class LoginController {
         this.emailConfirm = emailConfirm;
     }
 
-    public UserManager getUserManager() {
+    public UserManagerBean getUserManager() {
         return userManager;
     }
 
-    public void setUserManager(UserManager userManager) {
+    public void setUserManager(UserManagerBean userManager) {
         this.userManager = userManager;
     }
 
