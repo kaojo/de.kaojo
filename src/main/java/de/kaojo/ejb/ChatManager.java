@@ -10,12 +10,14 @@ import de.kaojo.chat.JoinedEvent;
 import de.kaojo.chat.LeftEvent;
 import de.kaojo.context.user.User;
 import java.util.List;
+import javax.ejb.Local;
 import javax.enterprise.event.Observes;
 
 /**
  *
  * @author julian.winter
  */
+@Local
 public interface ChatManager {
 
     public List<String> getChatRooms(User user);

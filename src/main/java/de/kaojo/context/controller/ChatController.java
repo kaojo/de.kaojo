@@ -2,7 +2,7 @@ package de.kaojo.context.controller;
 
 import de.kaojo.context.user.User;
 import de.kaojo.context.user.DefaultUser;
-import de.kaojo.ejb.ChatManagerBean;
+import de.kaojo.ejb.ChatManager;
 import java.io.Serializable;
 import java.util.List;
 import javax.ejb.EJB;
@@ -29,7 +29,7 @@ public class ChatController implements Serializable {
     private User user;
 
     @EJB
-    private ChatManagerBean chatmanager;
+    private ChatManager chatmanager;
 
     public User getUser() {
         return user;
