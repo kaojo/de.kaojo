@@ -18,7 +18,7 @@ import javax.persistence.Table;
 public class RolesEntity extends AbstractEntity<Long>{
     
     @Column
-    String roles; //enum list
+    private String roles; //enum list
 
     public String getRoles() {
         return roles;

@@ -18,28 +18,28 @@ import javax.persistence.Table;
 public class ContactEntity extends AbstractEntity<Long> {
 
     @Column
-    String country;
+    private String country;
 
     @Column
-    String countryCode;
+    private String countryCode;
 
     @Column
-    String email;
+    private String email;
 
     @Column
-    Long phoneNumber;
+    private Long phoneNumber;
 
     @Column
-    Long postalCode;
+    private Long postalCode;
 
     @Column
-    String street;
+    private String street;
 
     @Column
-    String streetNumber;
+    private String streetNumber;
 
     @Column
-    String town;
+    private String town;
 
     public String getCountryCode() {
         return countryCode;

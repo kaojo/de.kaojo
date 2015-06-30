@@ -21,24 +21,25 @@ public class PersonEntity extends AbstractEntity<Long> {
 
     @Column
     @Temporal(javax.persistence.TemporalType.DATE)
-    Date birthday;
+    private Date birthday;
     
-    String firstName;
+    @Column
+    private String firstName;
 
     @Column
-    String lastName;
+    private String lastName;
 
     @Column
-    String maritalStatus; // ENUM
+    private String maritalStatus; // ENUM
 
     @Column
-    String middleName;
+    private String middleName;
 
     @Column
-    String salutation; // ENUM
+    private String salutation; // ENUM
 
     @Column
-    String title; // ENUM    
+    private String title; // ENUM    
 
     public Date getBirthday() {
         return birthday;

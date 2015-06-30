@@ -36,14 +36,14 @@ public class AccountEntity extends AbstractEntity<Long> implements Serializable 
 	private String userName;
 
 	@OneToOne
-	ContactEntity contactEntity;
+	private ContactEntity contactEntity;
 
 	@OneToOne
-	PersonEntity personEntity;
+	private PersonEntity personEntity;
 
 	@ManyToMany
 	@JoinTable(name = "ACCOUNT_ROLES")
-	Set<RolesEntity> roles;
+	private Set<RolesEntity> roles;
 
 	public Boolean getActive() {
 		return active;
