@@ -1,14 +1,19 @@
 package de.kaojo.chat;
 
+import java.io.Serializable;
+
 /**
  *
  * @author jwinter
  */
-public class ChatEvent {
+public class ChatEvent implements Serializable{
 
-    private final String chatUser;
+    private String chatUser;
 
-    private final String chatRoom;
+    private String chatRoom;
+    
+    public ChatEvent() {
+    }
     
     public ChatEvent(String chatRoom, String chatUser) {
         this.chatRoom = chatRoom;

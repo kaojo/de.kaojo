@@ -5,7 +5,6 @@ import de.kaojo.context.user.DefaultUser;
 import de.kaojo.ejb.ChatManager;
 import java.io.Serializable;
 import java.util.List;
-import javax.ejb.EJB;
 import javax.enterprise.context.RequestScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
@@ -28,7 +27,8 @@ public class ChatController implements Serializable {
     @DefaultUser
     private User user;
 
-    @EJB
+    @Inject
+    @DefaultChatManager
     private ChatManager chatManager;
 
     public User getUser() {

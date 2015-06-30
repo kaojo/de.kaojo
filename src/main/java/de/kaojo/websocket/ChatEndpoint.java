@@ -28,15 +28,15 @@ import javax.websocket.server.ServerEndpoint;
 )
 public class ChatEndpoint {
 
-    private static ConcurrentHashMap<String, ChatRoom> chatRooms;
+    private ConcurrentHashMap<String, ChatRoomImpl> chatRooms = new ConcurrentHashMap<>();
     public static final String CHAT_USER_PARAM = "chatUser";
 
     @OnOpen
     public void open(Session session,
             EndpointConfig c,
             @PathParam("room-name") String roomName) {
-        System.out.println("openSession");
-        ChatRoom chatRoom = chatRooms.get(roomName);
+        System.out.println("openSession with roomName :" + roomName);
+        ChatRoomImpl chatRoom = chatRooms.get(roomName);
         Map<String, String> pathParameters = session.getPathParameters();
         String chatUser = pathParameters.get(CHAT_USER_PARAM);
 
@@ -56,7 +56,6 @@ public class ChatEndpoint {
         System.out.println("onMessage " + message);
         ChatRoom chatRoom = chatRooms.get(roomName);
         chatRoom.sendMessage(message);
-
     }
 
     @OnClose

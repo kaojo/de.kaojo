@@ -1,18 +1,19 @@
 package de.kaojo.chat;
 
 import java.util.List;
-import java.util.Set;
+import javax.ejb.Local;
 import javax.websocket.Session;
 
 /**
  *
  * @author jwinter
  */
+@Local
 public interface ChatRoom {
 
     public String getName();
 
-    public Set<ChatUser> getAllChatUsers();
+    public List<ChatUser> getAllChatUsers();
 
     public void sendMessage(Message message);
 

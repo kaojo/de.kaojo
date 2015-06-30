@@ -8,18 +8,21 @@ package de.kaojo.ejb;
 import de.kaojo.chat.ChatEvent;
 import de.kaojo.chat.JoinedEvent;
 import de.kaojo.chat.LeftEvent;
+import de.kaojo.context.controller.DefaultChatManager;
 import de.kaojo.context.user.User;
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.List;
-import javax.ejb.Stateless;
+import javax.enterprise.context.SessionScoped;
 import javax.enterprise.event.Observes;
 
 /**
  *
  * @author julian.winter
  */
-@Stateless
-public class ChatManagerBean implements ChatManager {
+@SessionScoped
+@DefaultChatManager
+public class ChatManagerImpl implements Serializable, ChatManager {
 
     /**
      * Method performs all the necessary task when a user joins a chatRoom

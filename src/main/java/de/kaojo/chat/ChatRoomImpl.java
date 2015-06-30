@@ -7,9 +7,10 @@ package de.kaojo.chat;
 
 import de.kaojo.websocket.ChatEndpoint;
 import java.io.IOException;
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
+import javax.enterprise.context.SessionScoped;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import javax.websocket.EncodeException;
@@ -19,10 +20,11 @@ import javax.websocket.Session;
  *
  * @author julian
  */
-public class ChatRoomImpl implements ChatRoom {
+@SessionScoped
+public class ChatRoomImpl implements Serializable, ChatRoom {
 
-    private final String name;
-    private final ConcurrentHashMap<String, ChatUser> chatUsers;
+    private String name;
+    private List<ChatUser> chatUsers;
 
     @Inject
     @JoinedEvent
@@ -32,14 +34,17 @@ public class ChatRoomImpl implements ChatRoom {
     @LeftEvent
     private Event<ChatEvent> leftEvent;
 
+    public ChatRoomImpl() {
+    }
+
     public ChatRoomImpl(String name) {
-        this.chatUsers = new ConcurrentHashMap<>();
+        this.chatUsers = new ArrayList<>();
         this.name = name;
     }
 
     @Override
-    public Set<ChatUser> getAllChatUsers() {
-        return (Set<ChatUser>) chatUsers.elements();
+    public List<ChatUser> getAllChatUsers() {
+        return chatUsers;
     }
 
     @Override
@@ -49,12 +54,16 @@ public class ChatRoomImpl implements ChatRoom {
 
     @Override
     public void leaveChatRoom(Session session) {
-        String chatUser = getChatUserFromSession(session);
-        chatUsers.remove(chatUser);
-        broadCastMessage(new Message(new Author(name, name), chatUser + " hat den Raum verlassen."));
+        String chatUserName = getChatUserFromSession(session);
+        for (ChatUser chatUser: chatUsers) {
+            if (chatUserName != null && chatUserName.equals(chatUser.getName())) {
+                chatUsers.remove(chatUser);
+            }
+        }
+        broadCastMessage(new Message(new Author(name, name), chatUserName + " hat den Raum verlassen."));
         
         //notify ChatManager
-        ChatEvent chatEvent = new ChatEvent(name, chatUser);
+        ChatEvent chatEvent = new ChatEvent(name, chatUserName);
         leftEvent.fire(chatEvent);
 
     }
@@ -62,12 +71,12 @@ public class ChatRoomImpl implements ChatRoom {
     @Override
     public void joinChatRoom(Session session) {
         String chatUser = getChatUserFromSession(session);
-        chatUsers.put(chatUser, new ChatUserImpl(chatUser, session));
+        chatUsers.add(new ChatUserImpl(chatUser, session));
         broadCastMessage(new Message(new Author(name, name), chatUser + " hat den Raum betreten."));
 
         //notify ChatManager
         ChatEvent chatEvent = new ChatEvent(name, chatUser);
-        joinEvent.fire(chatEvent);
+//        joinEvent.fire(chatEvent);
 
     }
 
@@ -87,7 +96,7 @@ public class ChatRoomImpl implements ChatRoom {
     }
 
     private void broadCastMessage(Message message) {
-        for (ChatUser chatUser : chatUsers.values()) {
+        for (ChatUser chatUser : chatUsers) {
             try {
                 chatUser.getSession().getBasicRemote().sendObject(message);
             } catch (IOException | EncodeException ex) {
