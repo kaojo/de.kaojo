@@ -7,7 +7,7 @@ function getMessageArea(sendButton) {
 function send(sendButton) {
     var messageArea = getMessageArea(sendButton);
     var message = messageArea.value;
-    if (message !== null) {
+    if (message !== "") {
         sendMessage(message);
         messageArea.value = "";
         messageArea.focus();
