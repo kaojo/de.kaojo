@@ -22,9 +22,9 @@ import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 
 @ServerEndpoint(
-   value = "/chatrooms/{room-name}",
-   encoders = { TextMessageEncoder.class },
-   decoders = { TextMessageDecoder.class }
+        value = "/chatrooms/{room-name}",
+        encoders = {TextMessageEncoder.class},
+        decoders = {TextMessageDecoder.class}
 )
 public class ChatEndpoint {
 
@@ -35,7 +35,7 @@ public class ChatEndpoint {
     public void open(Session session,
             EndpointConfig c,
             @PathParam("room-name") String roomName) {
-
+        System.out.println("openSession");
         ChatRoom chatRoom = chatRooms.get(roomName);
         Map<String, String> pathParameters = session.getPathParameters();
         String chatUser = pathParameters.get(CHAT_USER_PARAM);
@@ -53,7 +53,7 @@ public class ChatEndpoint {
 
     @OnMessage
     public void onMessage(Session session, @PathParam("room-name") String roomName, Message message) {
-
+        System.out.println("onMessage " + message);
         ChatRoom chatRoom = chatRooms.get(roomName);
         chatRoom.sendMessage(message);
 
