@@ -5,6 +5,10 @@
  */
 package de.kaojo.chat;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.websocket.EncodeException;
 import javax.websocket.Encoder;
 import javax.websocket.EndpointConfig;
@@ -18,17 +22,24 @@ public class TextMessageEncoder implements
 
     @Override
     public String encode(Message object) throws EncodeException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        String result = null;
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            result =  mapper.writeValueAsString(object);
+        } catch (JsonProcessingException ex) {
+            ex.printStackTrace();
+        }
+        return result;
     }
 
     @Override
     public void init(EndpointConfig config) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        
     }
 
     @Override
     public void destroy() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        
     }
 
 }

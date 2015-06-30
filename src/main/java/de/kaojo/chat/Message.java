@@ -13,9 +13,13 @@ import java.util.Date;
  */
 public class Message {
 
-    private final Date timestamp;
-    private final Author author;
-    private final String content;
+    private Date timestamp;
+    private Author author;
+    private String content;
+    
+    public Message() {
+    
+    }
 
     public Message(Author author, String content) {
         this.author = author;

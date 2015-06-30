@@ -13,6 +13,7 @@
             </ui:define>
 
             <ui:define name="content">
+                <h:outputScript library="js" target="head" name="chat.js" />
                 <h:form>
                     <p:growl id="growl" showDetail="true" life="20000" autoUpdate="true" />
                 </h:form>
@@ -57,36 +58,16 @@
                 </h:form>
                 <h:form id="tabview">
                     <p:tabView id="chatTabView" scrollable="true" value="#{chatController.chatRooms}" var="chatRoom">
-                        <p:tab title="#{chatRoom.name}" >
+                        <p:tab title="#{chatRoom}" >
                             <div class="ui-grid  ui-grid-responsive">
                                 <div class="ui-grid-row">
                                     <!--Chatwindow-->
                                     <div class="ui-grid-col-8 contentDiv">
-                                        <p:dataScroller chunkSize="10"
-                                                        value="#{chatRoom.messageHistory}"
-                                                        var="message" mode="inline"
-                                                        scrollHeight="300">
-                                            <div class="ui-grid  ui-grid-responsive">
-                                                <div class="ui-grid-row">
-                                                    <div class="ui-grid-col-4 contentDiv">
-                                                        <h:panelGrid columns="1" cellpadding="1" >
-                                                            <h:outputText value="#{message.author.displayName}"/>
-                                                            <h:outputText value="#{message.timestamp}">
-                                                                <f:convertDateTime type="date" pattern="YY-MM-dd hh:mm :"/>
-                                                            </h:outputText>
-                                                        </h:panelGrid>
-                                                    </div>
-                                                    <div class="ui-grid-col-8 contentDiv">
-                                                        <h:outputText value="#{message.content}"/>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </p:dataScroller>
                                     </div>
                                     <!--Userlist-->
                                     <div class="ui-grid-col-4">
-                                        <p:dataScroller value="#{chatRoom.chatUsers}" var="chatUser" scrollHeight="300" mode="inline" >
-                                            <h:outputText value="#{chatUser.displayName}" />
+                                        <p:dataScroller value="#{chatRoom}" var="chatUser" scrollHeight="300" mode="inline" >
+                                            <h:outputText value="#{chatUser}" />
                                         </p:dataScroller>
                                     </div>
                                 </div>
@@ -95,10 +76,10 @@
                                         <div class="ui-grid ui-grid-responsive" >
                                             <div class="ui-grid-row">
                                                 <div class="ui-grid-col-10 contentDiv">
-                                                    <h:inputTextarea value="#{chatRoom.messageArea}" class="ui-grid-col-11"/>
+                                                    <h:inputTextarea id="messageArea" class="ui-grid-col-11"/>
                                                 </div>
                                                 <div class="ui-grid-col-2 contentDiv">
-                                                    <p:commandButton value="Senden" action="#{chatRoom.sendMessage}" />
+                                                    <p:button value="Senden" onclick="test()" />
                                                 </div>
                                             </div>
                                         </div>

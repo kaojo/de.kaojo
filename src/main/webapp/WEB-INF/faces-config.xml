@@ -6,12 +6,12 @@
     http://java.sun.com/xml/ns/javaee/web-facesconfig_2_2.xsd"
     version="2.2">
 
-    <navigation-rule>
+<!--    <navigation-rule>
         <navigation-case>
             <from-outcome>failure</from-outcome>
             <to-view-id>/pages/login.xhtml</to-view-id>
         </navigation-case>
-    </navigation-rule>
+    </navigation-rule>-->
 </faces-config>
 
 

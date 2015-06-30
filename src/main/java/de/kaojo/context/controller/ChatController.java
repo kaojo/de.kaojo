@@ -2,7 +2,7 @@ package de.kaojo.context.controller;
 
 import de.kaojo.context.user.User;
 import de.kaojo.context.user.DefaultUser;
-import de.kaojo.ejb.ChatManagerBean;
+import de.kaojo.ejb.ChatManager;
 import java.io.Serializable;
 import java.util.List;
 import javax.ejb.EJB;
@@ -29,7 +29,7 @@ public class ChatController implements Serializable {
     private User user;
 
     @EJB
-    private ChatManagerBean chatmanager;
+    private ChatManager chatManager;
 
     public User getUser() {
         return user;
@@ -52,14 +52,14 @@ public class ChatController implements Serializable {
 
     public List<String> getChatRooms() {
         if (chatRooms == null) {
-            chatRooms = chatmanager.getChatRooms(user);
+            chatRooms = chatManager.getChatRooms(user);
         }
         return chatRooms;
     }
 
     public List<String> getAccessibleRooms() {
         if (accessibleRooms == null) {
-            accessibleRooms = chatmanager.getAccessibleChatRooms(user);
+            accessibleRooms = chatManager.getAccessibleChatRooms(user);
         }
         return accessibleRooms;
     }
