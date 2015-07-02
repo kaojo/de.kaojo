@@ -3,8 +3,10 @@ package de.kaojo.context.controller;
 import de.kaojo.context.user.User;
 import de.kaojo.context.user.DefaultUser;
 import de.kaojo.ejb.ChatManager;
+import de.kaojo.ejb.dto.ChatRequest;
 import java.io.Serializable;
 import java.util.List;
+import javax.ejb.EJB;
 import javax.enterprise.context.RequestScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
@@ -27,8 +29,7 @@ public class ChatController implements Serializable {
     @DefaultUser
     private User user;
 
-    @Inject
-    @DefaultChatManager
+    @EJB
     private ChatManager chatManager;
 
     public User getUser() {
@@ -52,14 +53,16 @@ public class ChatController implements Serializable {
 
     public List<String> getChatRooms() {
         if (chatRooms == null) {
-            chatRooms = chatManager.getChatRooms(user);
+            ChatRequest chatRequest = new ChatRequest();
+            chatRooms = chatManager.getChatRooms(chatRequest);
         }
         return chatRooms;
     }
 
     public List<String> getAccessibleRooms() {
         if (accessibleRooms == null) {
-            accessibleRooms = chatManager.getAccessibleChatRooms(user);
+            ChatRequest chatRequest = new ChatRequest();
+            accessibleRooms = chatManager.getAccessibleChatRooms(chatRequest);
         }
         return accessibleRooms;
     }

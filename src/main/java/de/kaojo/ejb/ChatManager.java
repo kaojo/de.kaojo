@@ -5,25 +5,25 @@
  */
 package de.kaojo.ejb;
 
-import de.kaojo.chat.ChatEvent;
-import de.kaojo.chat.JoinedEvent;
-import de.kaojo.chat.LeftEvent;
-import de.kaojo.context.user.User;
+import de.kaojo.ejb.dto.ChatRequest;
 import java.util.List;
-import javax.enterprise.event.Observes;
+import javax.ejb.Local;
 
 /**
  *
  * @author julian.winter
  */
+@Local
 public interface ChatManager {
 
-    public List<String> getChatRooms(User user);
+    public List<String> getChatRooms(ChatRequest chatRequest);
 
-    public List<String> getAccessibleChatRooms(User user);
+    public List<String> getAccessibleChatRooms(ChatRequest chatRequest);
 
-    public void userjoined(@Observes @JoinedEvent ChatEvent chatEvent);
+    public void userjoined(ChatRequest chatRequest);
 
-    public void userleft(@Observes @LeftEvent ChatEvent chatEvent);
+    public void userleft(ChatRequest chatRequest);
+    
+    public void sendMessage(ChatRequest chatRequest);
 
 }

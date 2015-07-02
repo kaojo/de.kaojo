@@ -5,13 +5,15 @@
  */
 package de.kaojo.websocket;
 
-import de.kaojo.chat.ChatRoom;
-import de.kaojo.chat.ChatRoomImpl;
 import de.kaojo.chat.Message;
 import de.kaojo.chat.TextMessageDecoder;
 import de.kaojo.chat.TextMessageEncoder;
+import de.kaojo.ejb.ChatManager;
+import de.kaojo.ejb.dto.ChatRequest;
+import java.io.IOException;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+import javax.inject.Inject;
+import javax.websocket.EncodeException;
 import javax.websocket.EndpointConfig;
 import javax.websocket.OnClose;
 import javax.websocket.OnError;
@@ -22,51 +24,70 @@ import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 
 @ServerEndpoint(
-        value = "/chatrooms/{room-name}",
+        value = "/chatrooms/{room-name}/{chat-user}",
         encoders = {TextMessageEncoder.class},
         decoders = {TextMessageDecoder.class}
 )
 public class ChatEndpoint {
 
-    private ConcurrentHashMap<String, ChatRoomImpl> chatRooms = new ConcurrentHashMap<>();
+    @Inject
+    ChatManager chatManager;
+
     public static final String CHAT_USER_PARAM = "chatUser";
+    public static final String CHAT_ROOM_PARAM = "chatRoom";
 
     @OnOpen
     public void open(Session session,
             EndpointConfig c,
-            @PathParam("room-name") String roomName) {
-        System.out.println("openSession with roomName :" + roomName);
-        ChatRoomImpl chatRoom = chatRooms.get(roomName);
-        Map<String, String> pathParameters = session.getPathParameters();
-        String chatUser = pathParameters.get(CHAT_USER_PARAM);
+            @PathParam("room-name") String chatRoom, @PathParam("chat-user") String chatUser) {
+        System.out.println("openSession with roomName :" + chatRoom);
+        System.out.println("openSession with chatUser :" + chatUser);
 
         if (chatRoom != null && chatUser != null) {
+            ChatRequest chatRequest = new ChatRequest();
             Map<String, Object> userProperties = session.getUserProperties();
             userProperties.put(CHAT_USER_PARAM, chatUser);
-            chatRoom.joinChatRoom(session);
-        } else {
-            chatRoom = new ChatRoomImpl(roomName);
-            chatRoom.joinChatRoom(session);
-            chatRooms.put(roomName, chatRoom);
+            userProperties.put(CHAT_ROOM_PARAM, chatRoom);
+            chatManager.userjoined(chatRequest);
+            for (Session ses : session.getOpenSessions()) {
+                if (ses.isOpen() && chatRoom.equals(ses.getUserProperties().get(CHAT_ROOM_PARAM))) {
+                    try {
+                        ses.getBasicRemote().sendObject(new Message(chatUser, chatUser + " joined chatroom!"));
+                    } catch (IOException | EncodeException ex) {
+                        ex.printStackTrace();
+                    }
+                }
+            }
         }
     }
 
     @OnMessage
-    public void onMessage(Session session, @PathParam("room-name") String roomName, Message message) {
+    public void onMessage(Session session, @PathParam("room-name") String chatRoom, @PathParam("chat-user") String chatUser, Message message) {
         System.out.println("onMessage " + message);
-        ChatRoom chatRoom = chatRooms.get(roomName);
-        chatRoom.sendMessage(message);
+        ChatRequest chatRequest = new ChatRequest();
+        chatManager.sendMessage(chatRequest);
+        for (Session ses : session.getOpenSessions()) {
+            if (ses.isOpen() && chatRoom.equals(ses.getUserProperties().get(CHAT_ROOM_PARAM))) {
+                try {
+                    ses.getBasicRemote().sendObject(message);
+                } catch (IOException | EncodeException ex) {
+                    ex.printStackTrace();
+                }
+            }
+        }
     }
 
     @OnClose
-    public void onClose(Session session, @PathParam("room-name") String roomName) {
-
-        ChatRoom chatRoom = chatRooms.get(roomName);
-
-        if (chatRoom != null) {
-            chatRoom.leaveChatRoom(session);
-            if (chatRoom.isEmpty()) {
-                chatRooms.remove(roomName);
+    public void onClose(Session session, @PathParam("room-name") String chatRoom, @PathParam("chat-user") String chatUser) {
+        ChatRequest chatRequest = new ChatRequest();
+        chatManager.userleft(chatRequest);
+        for (Session ses : session.getOpenSessions()) {
+            if (ses.isOpen() && chatRoom.equals(ses.getUserProperties().get(CHAT_ROOM_PARAM))) {
+                try {
+                    ses.getBasicRemote().sendObject(new Message(chatUser, chatUser + " left chatroom!"));
+                } catch (IOException | EncodeException ex) {
+                    ex.printStackTrace();
+                }
             }
         }
     }

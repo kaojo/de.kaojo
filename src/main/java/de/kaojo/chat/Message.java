@@ -14,14 +14,14 @@ import java.util.Date;
 public class Message {
 
     private Date timestamp;
-    private Author author;
+    private String author;
     private String content;
     
     public Message() {
     
     }
 
-    public Message(Author author, String content) {
+    public Message(String author, String content) {
         this.author = author;
         this.content = content;
         this.timestamp = new Date();
@@ -31,7 +31,7 @@ public class Message {
         return timestamp;
     }
 
-    public Author getAuthor() {
+    public String getAuthor() {
         return author;
     }
 

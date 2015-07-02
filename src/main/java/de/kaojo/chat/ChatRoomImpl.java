@@ -10,9 +10,6 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import javax.enterprise.context.SessionScoped;
-import javax.enterprise.event.Event;
-import javax.inject.Inject;
 import javax.websocket.EncodeException;
 import javax.websocket.Session;
 
@@ -20,19 +17,10 @@ import javax.websocket.Session;
  *
  * @author julian
  */
-@SessionScoped
 public class ChatRoomImpl implements Serializable, ChatRoom {
 
     private String name;
     private List<ChatUser> chatUsers;
-
-    @Inject
-    @JoinedEvent
-    private Event<ChatEvent> joinEvent;
-
-    @Inject
-    @LeftEvent
-    private Event<ChatEvent> leftEvent;
 
     public ChatRoomImpl() {
     }
@@ -60,11 +48,10 @@ public class ChatRoomImpl implements Serializable, ChatRoom {
                 chatUsers.remove(chatUser);
             }
         }
-        broadCastMessage(new Message(new Author(name, name), chatUserName + " hat den Raum verlassen."));
+        broadCastMessage(new Message(name, chatUserName + " hat den Raum verlassen."));
         
         //notify ChatManager
-        ChatEvent chatEvent = new ChatEvent(name, chatUserName);
-        leftEvent.fire(chatEvent);
+        
 
     }
 
@@ -72,11 +59,10 @@ public class ChatRoomImpl implements Serializable, ChatRoom {
     public void joinChatRoom(Session session) {
         String chatUser = getChatUserFromSession(session);
         chatUsers.add(new ChatUserImpl(chatUser, session));
-        broadCastMessage(new Message(new Author(name, name), chatUser + " hat den Raum betreten."));
+        broadCastMessage(new Message(name, chatUser + " hat den Raum betreten."));
 
         //notify ChatManager
-        ChatEvent chatEvent = new ChatEvent(name, chatUser);
-//        joinEvent.fire(chatEvent);
+        
 
     }
 

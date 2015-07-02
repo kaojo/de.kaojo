@@ -5,24 +5,17 @@
  */
 package de.kaojo.ejb;
 
-import de.kaojo.chat.ChatEvent;
-import de.kaojo.chat.JoinedEvent;
-import de.kaojo.chat.LeftEvent;
-import de.kaojo.context.controller.DefaultChatManager;
-import de.kaojo.context.user.User;
-import java.io.Serializable;
+import de.kaojo.ejb.dto.ChatRequest;
 import java.util.Arrays;
 import java.util.List;
-import javax.enterprise.context.SessionScoped;
-import javax.enterprise.event.Observes;
+import javax.ejb.Stateless;
 
 /**
  *
  * @author julian.winter
  */
-@SessionScoped
-@DefaultChatManager
-public class ChatManagerImpl implements Serializable, ChatManager {
+@Stateless
+public class ChatManagerImpl implements ChatManager {
 
     /**
      * Method performs all the necessary task when a user joins a chatRoom
@@ -31,9 +24,8 @@ public class ChatManagerImpl implements Serializable, ChatManager {
      * @param chatEvent
      */
     @Override
-    public void userjoined(@Observes @JoinedEvent ChatEvent chatEvent) {
-        System.out.println("ChatEvent.name : " +chatEvent.getName());
-        System.out.println("ChatEvent.room : " +chatEvent.getChatRoom());
+    public void userjoined(ChatRequest chatRequest) {
+        System.out.println("userJoined, chatRequest : " +chatRequest);
     }
 
     /**
@@ -43,9 +35,8 @@ public class ChatManagerImpl implements Serializable, ChatManager {
      * @param chatEvent
      */
     @Override
-    public void userleft(@Observes @LeftEvent ChatEvent chatEvent) {
-        System.out.println("ChatEvent.name : " +chatEvent.getName());
-        System.out.println("ChatEvent.room : " +chatEvent.getChatRoom());
+    public void userleft(ChatRequest chatRequest) {
+        System.out.println("userLeft, chatRequest : " +chatRequest);
     }
 
     /**
@@ -56,7 +47,7 @@ public class ChatManagerImpl implements Serializable, ChatManager {
      * @return
      */
     @Override
-    public List<String> getChatRooms(User user) {
+    public List<String> getChatRooms(ChatRequest chatRequest) {
         return Arrays.asList("ZimmerA", "ZimmerB");
     }
 
@@ -68,8 +59,13 @@ public class ChatManagerImpl implements Serializable, ChatManager {
      * @return
      */
     @Override
-    public List<String> getAccessibleChatRooms(User user) {
+    public List<String> getAccessibleChatRooms(ChatRequest chatRequest) {
         return Arrays.asList("Zimmer1", "Zimmer2");
+    }
+
+    @Override
+    public void sendMessage(ChatRequest chatRequest) {
+        System.out.println("sendMessage, chatRequest : " +chatRequest);
     }
 
 }
