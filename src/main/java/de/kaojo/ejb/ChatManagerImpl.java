@@ -48,7 +48,7 @@ public class ChatManagerImpl implements ChatManager {
      */
     @Override
     public List<String> getChatRooms(ChatRequest chatRequest) {
-        return Arrays.asList("ZimmerA", "ZimmerB");
+        return Arrays.asList("test", "ZimmerB");
     }
 
     /**
