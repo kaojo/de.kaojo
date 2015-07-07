@@ -5,7 +5,6 @@
  */
 package de.kaojo.chat;
 
-import de.kaojo.websocket.ChatEndpoint;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -92,7 +91,7 @@ public class ChatRoomImpl implements Serializable, ChatRoom {
     }
 
     private String getChatUserFromSession(Session session) {
-        String chatUser = (String) session.getUserProperties().get(ChatEndpoint.CHAT_USER_PARAM);
+        String chatUser = (String) session.getUserProperties().get("");
         return chatUser;
     }
 

@@ -8,6 +8,7 @@ package de.kaojo.ejb;
 import de.kaojo.ejb.dto.ChatRequest;
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 import javax.ejb.Stateless;
 
 /**
@@ -66,6 +67,16 @@ public class ChatManagerImpl implements ChatManager {
     @Override
     public void sendMessage(ChatRequest chatRequest) {
         System.out.println("sendMessage, chatRequest : " +chatRequest);
+    }
+
+    @Override
+    public void createUserToker(String userName) {
+//        create And Store In Cache
+    }
+
+    @Override
+    public String getUserFromToken(String token) {
+        return "julian";
     }
 
 }

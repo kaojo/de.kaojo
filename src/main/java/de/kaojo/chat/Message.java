@@ -38,4 +38,8 @@ public class Message {
     public String getContent() {
         return content;
     }
+    
+    public void setAuthor(String author) {
+        this.author = author;
+    }
 }

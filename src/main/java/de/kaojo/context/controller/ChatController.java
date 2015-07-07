@@ -24,6 +24,7 @@ public class ChatController implements Serializable {
     private String openRoom;
     private List<String> chatRooms;
     private List<String> accessibleRooms;
+    private String userToken;
 
     @Inject
     @DefaultUser
@@ -81,6 +82,14 @@ public class ChatController implements Serializable {
 
     public void setAccessibleRooms(List<String> accessibleRooms) {
         this.accessibleRooms = accessibleRooms;
+    }
+
+    public String getUserToken() {
+        return chatManager.getUserFromToken(user.getUserName());
+    }
+
+    public void setUserToken(String userToken) {
+        this.userToken = userToken;
     }
 
 }

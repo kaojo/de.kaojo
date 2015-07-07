@@ -1,18 +1,52 @@
-var room = "test";
-var user = "julian";
+var serviceLocation = "ws://localhost:8080/kaojo/chatrooms/";
+var websockets = [];
+var chatRooms = [];
 
 $(document).ready(function () {
-    connectToChatserver();
+    getChatRooms();
+    connectToChatRooms();
 });
 
-function connectToChatserver() {
-    wsocket = new WebSocket(serviceLocation + room + '/' + user);
-    wsocket.onmessage = onMessageReceived;
+function getChatRooms() {
+    $("#tabview\\:chatTabView [href]").each(function () {
+        chatRooms.push($(this).text());
+    });
 }
-function getMessageArea(sendButton) {
-    var parentTabElement = sendButton.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode;
-    var messageAreaId = parentTabElement.id.slice(0, parentTabElement.id.lastIndexOf(":")) + ":messageArea";
-    return document.getElementById(messageAreaId);
+
+function connectToChatRooms() {
+    websockets = chatRooms.map(connectToChatRoom);
+}
+
+function connectToChatRoom(chatRoom) {
+    var wsocket = new WebSocket(serviceLocation + chatRoom + '/' + getUserToker());
+    wsocket.onmessage = onMessageReceived;
+    return wsocket;
+}
+function onMessageReceived(evt) {
+    var msg = JSON.parse(evt.data);
+    var author = msg.author;
+    var content = msg.content;
+    var date = new Date(msg.timestamp);
+    var timestamp = getNicelyFormatedTime(date);
+    var url = evt.currentTarget.url;
+    var room = url.split("/")[5];
+    var tabId = $("#tabview\\:chatTabView [href]:contains(" + room + ")").attr("href");
+    displayMessageOnChatBoard(room, timestamp, author, content);
+}
+
+function displayMessageOnChatBoard(room, timestamp, author, content) {
+    $(escape(room + ":chatBoard")).children("div:first")
+            .append("<div>").children("div:last").addClass('ui-grid-row')
+            .append("<div>").children("div:last").addClass('ui-grid-col-3 contentDiv')
+            .append("<table>").children("table:last").attr("cellpadding", "1")
+            .append("<tbody>").children("tbody:last")
+            .append("<tr>").children("tr:last")
+            .append("<td>").children("td:last").text(author)
+            .parent().parent()
+            .append("<tr>").children("tr:last")
+            .append("<td>").children("td:last").text(timestamp)
+            .parent().parent().parent().parent().parent()
+            .append("<div>").children("div:last").addClass("ui-grid-col-9 contentDiv").text(content);
 }
 
 function send(sendButton, chatRoom) {
@@ -26,29 +60,25 @@ function send(sendButton, chatRoom) {
     }
 }
 
+function getMessageArea(sendButton) {
+    var parentTabElement = sendButton.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode;
+    var messageAreaId = parentTabElement.id.slice(0, parentTabElement.id.lastIndexOf(":")) + ":messageArea";
+    return document.getElementById(messageAreaId);
+}
+
 function sendMessage(message, chatRoom) {
-    wsocket.send(message);
+    websockets.filter(function (wsocket) {
+        if (chatRoom === wsocket.url.split("/")[5])
+        {
+            wsocket.send(message);
+        }
+    });
 }
 
-var wsocket;
-var serviceLocation = "ws://localhost:8080/kaojo/chatrooms/";
-
-function onMessageReceived(evt) {
-    var msg = JSON.parse(evt.data);
-    var author = msg.author;
-    var content = msg.content;
-    var date = new Date(msg.timestamp);
-    var timestamp = getNicelyFormatedTime(date);
-    var url = evt.currentTarget.url;
-    var room = url.split("/")[5];
-    var user = url.split("/")[6];
-    var tabId = $("#tabview\\:chatTabView [href]:contains(" + room + ")").attr("href");
-    displayMessageOnChatBoard(room, timestamp, author, content);
-}
 
 
 function convertMessageStringToJson(messageText) {
-    author = '"author":"' + user + '"';
+    author = '"author":"' + "" + '"';
     content = '"content":"' + messageText + '"';
     timestamp = '"timestamp":"' + (new Date()).getTime() + '"';
     return '{' + author + ', ' + content + ', ' + timestamp + '}';
@@ -58,21 +88,6 @@ function escape(myid) {
 
     return "#" + myid.replace(/(:|\.|\[|\]|,)/g, "\\$1");
 
-}
-
-function displayMessageOnChatBoard(room, timestamp, author, content) {
-    $(escape(room + ":chatBoard")).children("div:first")
-            .append("<div>").children("div:last").addClass('ui-grid-row')
-            .append("<div>").children("div:last").addClass('ui-grid-col-4 contentDiv')
-            .append("<table>").children("table:last").attr("cellpadding", "1")
-            .append("<tbody>").children("tbody:last")
-            .append("<tr>").children("tr:last")
-            .append("<td>").children("td:last").text(author)
-            .parent().parent()
-            .append("<tr>").children("tr:last")
-            .append("<td>").children("td:last").text(timestamp)
-            .parent().parent().parent().parent().parent()
-            .append("<div>").children("div:last").addClass("ui-grid-col-8 contentDiv").text(content);
 }
 
 
@@ -91,4 +106,8 @@ function getNicelyFormatedTime(date) {
     minute = m < 10 ? ('0' + m) : m;
 
     return day + "." + month + "." + year + " " + hour + ":" + minute;
+}
+
+function getUserToker() {
+    return $("#userToken").text();
 }

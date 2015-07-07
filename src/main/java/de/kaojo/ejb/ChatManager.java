@@ -25,5 +25,9 @@ public interface ChatManager {
     public void userleft(ChatRequest chatRequest);
     
     public void sendMessage(ChatRequest chatRequest);
+    
+    public void createUserToker(String userName);
+    
+    public String getUserFromToken(String token);
 
 }
