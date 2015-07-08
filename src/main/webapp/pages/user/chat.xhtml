@@ -9,11 +9,12 @@
         <ui:composition template="../templates/template.xhtml">
 
             <ui:define name="title">
-                Basic Chat
+                Chat
             </ui:define>
 
             <ui:define name="content">
                 <h:outputScript library="js" target="head" name="chat.js" />
+                <h:outputStylesheet library="css" name="chat.css" />
                 <h:form>
                     <p:growl id="growl" showDetail="true" life="20000" autoUpdate="true" />
                 </h:form>
@@ -62,7 +63,7 @@
                             <div class="ui-grid  ui-grid-responsive">
                                 <div class="ui-grid-row">
                                     <!--Chatwindow-->
-                                    <div id="#{chatRoom}:chatBoard" class="ui-grid-col-8 contentDiv">
+                                    <div id="#{chatRoom}:chatBoard" class="ui-grid-col-8 contentDiv chatBoard">
                                         <div class="ui-grid  ui-grid-responsive">
                                             <!--                                            <div class="ui-grid-row">
                                                                                             <div class="ui-grid-col-3 contentDiv">
@@ -89,7 +90,7 @@
                                         <div class="ui-grid ui-grid-responsive" >
                                             <div class="ui-grid-row">
                                                 <div class="ui-grid-col-10 contentDiv">
-                                                    <h:inputTextarea id="messageArea" />
+                                                    <h:inputTextarea id="messageArea" class="messageArea"/>
                                                 </div>
                                                 <div class="ui-grid-col-2 contentDiv">
                                                     <p:commandButton type="button" id="messageSendButton" onclick="send(this, '#{chatRoom}')" value="Senden"/>

@@ -1,4 +1,4 @@
-var serviceLocation = "ws://localhost:8080/kaojo/chatrooms/";
+var serviceLocation = "ws://" + window.location.href.split("/")[2] + "/kaojo/chatrooms/";
 var websockets = [];
 var chatRooms = [];
 
@@ -74,8 +74,6 @@ function sendMessage(message, chatRoom) {
         }
     });
 }
-
-
 
 function convertMessageStringToJson(messageText) {
     author = '"author":"' + "" + '"';

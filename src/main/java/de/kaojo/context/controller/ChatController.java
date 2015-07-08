@@ -85,7 +85,8 @@ public class ChatController implements Serializable {
     }
 
     public String getUserToken() {
-        return chatManager.getUserFromToken(user.getUserName());
+//        return chatManager.getUserFromToken(user.getUserName());
+        return user.getDisplayName();
     }
 
     public void setUserToken(String userToken) {

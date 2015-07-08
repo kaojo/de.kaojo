@@ -9,11 +9,15 @@
 
         <ui:component id="userDisplay" >
             <h:form>
-                <p:panelGrid columns="3" >
-                    <h:outputText value="#{userController.user.displayName}" />
-                    <p:button outcome="myProfile" icon="ui-icon-person" title="myProfile" />
-                    <p:commandButton id="logout" action="#{loginController.logoutButton()}" icon="ui-icon-power" />
-                </p:panelGrid>
+                <div class="ui-grid ui-grid-responsive">
+                    <div class="ui-grid-row" >
+                        <div class="contentDiv displayName">
+                            <h:outputText value="#{userController.user.displayName}" />
+                        </div>
+                        <p:button outcome="myProfile" icon="ui-icon-person" title="myProfile" />
+                        <p:commandButton id="logout" action="#{loginController.logoutButton()}" icon="ui-icon-power" />
+                    </div>
+                </div>
             </h:form>
         </ui:component>
 

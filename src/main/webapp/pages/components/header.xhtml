@@ -8,11 +8,18 @@
     <body>
 
         <ui:component id="header" >
-            <p:panelGrid columns="2" layout="grid"> 
-                <ui:include src="tabMenu.xhtml" />
-                <ui:include src="userDisplay.xhtml" />
-            </p:panelGrid>
+            <p:panel>
+                <div class="ui-grid ui-grid-responsive">
+                    <div class="ui-grid-row">
+                        <div class="ui-grid-col-8">
+                            <ui:include src="tabMenu.xhtml" />
+                        </div>
+                        <div class="ui-grid-col-4">
+                            <ui:include src="userDisplay.xhtml" />
+                        </div>
+                    </div>
+                </div>
+            </p:panel>
         </ui:component>
-
     </body>
 </html>
