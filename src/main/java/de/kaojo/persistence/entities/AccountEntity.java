@@ -6,6 +6,7 @@
 package de.kaojo.persistence.entities;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -14,6 +15,10 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 
 /**
  *
@@ -23,82 +28,112 @@ import javax.persistence.Table;
 @Table(name = "ACCOUNT")
 public class AccountEntity extends AbstractEntity<Long> implements Serializable {
 
-	@Column
-	private Boolean active;
+    @Column
+    private Boolean active;
 
-	@Column
-	private String displayName;
+    @OneToOne
+    private ContactEntity contactEntity;
 
-	@Column
-	private String password;
+    @Column
+    @Temporal(javax.persistence.TemporalType.DATE)
+    private Date creationDate;
 
-	@Column
-	private String userName;
+    @Column
+    @Size(max = 32)
+    private String displayName;
 
-	@OneToOne
-	private ContactEntity contactEntity;
+    @Column
+    @Temporal(javax.persistence.TemporalType.DATE)
+    private Date lastModified;
 
-	@OneToOne
-	private PersonEntity personEntity;
+    @Column
+    @Pattern(regexp = "[0-9a-zA-Z@#$%^&+=]")
+    private String password;
 
-	@ManyToMany
-	@JoinTable(name = "ACCOUNT_ROLES")
-	private Set<RolesEntity> roles;
+    @OneToOne
+    private PersonEntity personEntity;
 
-	public Boolean getActive() {
-		return active;
-	}
+    @ManyToMany
+    @JoinTable(name = "ACCOUNT_ROLES")
+    private Set<RolesEntity> roles;
 
-	public void setActive(Boolean active) {
-		this.active = active;
-	}
+    @Column
+    @NotNull
+    @Size(max = 32)
+    @Pattern(regexp = "[0-9a-zA-Z]")
+    private String userName;
 
-	public String getDisplayName() {
-		return displayName;
-	}
+    public Boolean getActive() {
+        return active;
+    }
 
-	public void setDisplayName(String displayName) {
-		this.displayName = displayName;
-	}
+    public void setActive(Boolean active) {
+        this.active = active;
+    }
 
-	public String getPassword() {
-		return password;
-	}
+    public ContactEntity getContactEntity() {
+        return contactEntity;
+    }
 
-	public void setPassword(String password) {
-		this.password = password;
-	}
+    public void setContactEntity(ContactEntity contactEntity) {
+        this.contactEntity = contactEntity;
+    }
 
-	public String getUserName() {
-		return userName;
-	}
+    public Date getCreationDate() {
+        return creationDate;
+    }
 
-	public void setUserName(String userName) {
-		this.userName = userName;
-	}
+    public void setCreationDate(Date creationDate) {
+        this.creationDate = creationDate;
+    }
 
-	public ContactEntity getContactEntity() {
-		return contactEntity;
-	}
+    public String getDisplayName() {
+        return displayName;
+    }
 
-	public void setContactEntity(ContactEntity contactEntity) {
-		this.contactEntity = contactEntity;
-	}
+    public void setDisplayName(String displayName) {
+        this.displayName = displayName;
+    }
 
-	public PersonEntity getPersonEntity() {
-		return personEntity;
-	}
+    public Date getLastModified() {
+        return lastModified;
+    }
 
-	public void setPersonEntity(PersonEntity personEntity) {
-		this.personEntity = personEntity;
-	}
+    public void setLastModified(Date lastModified) {
+        this.lastModified = lastModified;
+    }
 
-	public Set<RolesEntity> getRoles() {
-		return roles;
-	}
+    public String getPassword() {
+        return password;
+    }
 
-	public void setRoles(Set<RolesEntity> roles) {
-		this.roles = roles;
-	}
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
+    public PersonEntity getPersonEntity() {
+        return personEntity;
+    }
+
+    public void setPersonEntity(PersonEntity personEntity) {
+        this.personEntity = personEntity;
+    }
+
+    public Set<RolesEntity> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<RolesEntity> roles) {
+        this.roles = roles;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    
 }

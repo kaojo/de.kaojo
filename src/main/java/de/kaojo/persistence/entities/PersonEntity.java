@@ -10,6 +10,8 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
+import javax.validation.constraints.Past;
+import javax.validation.constraints.Size;
 
 /**
  *
@@ -21,18 +23,22 @@ public class PersonEntity extends AbstractEntity<Long> {
 
     @Column
     @Temporal(javax.persistence.TemporalType.DATE)
+    @Past
     private Date birthday;
     
     @Column
+    @Size(max=32)
     private String firstName;
 
     @Column
+    @Size(max=32)
     private String lastName;
 
     @Column
     private String maritalStatus; // ENUM
 
     @Column
+    @Size(max=32)
     private String middleName;
 
     @Column
