@@ -5,6 +5,8 @@
  */
 package de.kaojo.ejb.dto;
 
+import de.kaojo.ejb.dto.interfaces.Credentials;
+
 /**
  *
  * @author julian

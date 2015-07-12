@@ -13,7 +13,7 @@ Stage 4: Generate Chatrooms depending on relations between users
 
 
 
-
+INSERT INTO roles VALUES ( '1', '1', 'user');
 
 
 TODO:

@@ -8,6 +8,8 @@ package de.kaojo.persistence.entities;
 import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -19,20 +21,32 @@ import javax.persistence.Temporal;
  */
 @Entity
 @Table(name = "CHAT_MESSAGE")
-public class MessageEntity extends AbstractEntity<Long> {
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+public abstract class MessageEntity extends AbstractEntity<Long> {
 
-    @Column
     @ManyToOne
+    @JoinColumn(name = "account_id")
     private AccountEntity author;
-    
-    @Column
+
     @ManyToOne
-    @JoinColumn(name = "room_id")  
+    @JoinColumn(name = "room_id")
     private ChatRoomEntity chatRoom;
 
     @Column
-    @Temporal(javax.persistence.TemporalType.DATE)
+    @Temporal(javax.persistence.TemporalType.TIMESTAMP)
     private Date creationDate;
+
+    public AccountEntity getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(AccountEntity author) {
+        this.author = author;
+    }
+
+    public abstract String getContent();
+
+    public abstract void setContent(String content);
 
     public ChatRoomEntity getChatRoom() {
         return chatRoom;
@@ -41,43 +55,13 @@ public class MessageEntity extends AbstractEntity<Long> {
     public void setChatRoom(ChatRoomEntity chatRoom) {
         this.chatRoom = chatRoom;
     }
-    
-    
 
-    /**
-     * Get the value of timestamp
-     *
-     * @return the value of timestamp
-     */
     public Date getCreationDate() {
         return creationDate;
     }
 
-    /**
-     * Set the value of timestamp
-     *
-     * @param timestamp new value of timestamp
-     */
-    public void setCreationDate(Date timestamp) {
-        this.creationDate = timestamp;
-    }
-
-    /**
-     * Get the value of author
-     *
-     * @return the value of author
-     */
-    public AccountEntity getAuthor() {
-        return author;
-    }
-
-    /**
-     * Set the value of author
-     *
-     * @param author new value of author
-     */
-    public void setAuthor(AccountEntity author) {
-        this.author = author;
+    public void setCreationDate(Date creationDate) {
+        this.creationDate = creationDate;
     }
 
 }

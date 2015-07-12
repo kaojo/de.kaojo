@@ -1,29 +1,30 @@
 package de.kaojo.chat;
 
-import javax.websocket.Session;
-
 /**
  *
  * @author jwinter
  */
 public class ChatUserImpl implements ChatUser {
 
-    private final String name;
-    private final Session session;
+    private String displayName;
+    private Long id;
 
-    public ChatUserImpl(String name, Session session) {
-        this.name = name;
-        this.session = session;
+    @Override
+    public String getDisplayName() {
+        return displayName;
+    }
+
+    public void setDisplayName(String displayName) {
+        this.displayName = displayName;
     }
 
     @Override
-    public String getName() {
-        return this.name;
+    public Long getId() {
+        return id;
     }
 
-    @Override
-    public Session getSession() {
-        return this.session;
+    public void setId(Long id) {
+        this.id = id;
     }
 
 }

@@ -3,12 +3,16 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package de.kaojo.ejb.dto;
+package de.kaojo.ejb.dto.interfaces;
 
 /**
  *
  * @author jwinter
  */
-public class ChatRequest {
+public interface UserTokenChatRequest {
+
+    public UserTokenChatRequest UserTokenChatRequest(String userToken);
     
+    public String getUserToken();
+
 }

@@ -5,12 +5,13 @@
  */
 package de.kaojo.persistence.entities;
 
+import java.util.HashSet;
 import java.util.Set;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -22,6 +23,14 @@ import javax.persistence.Table;
 @Table(name = "CHAT_ROOM")
 public class ChatRoomEntity extends AbstractEntity<Long> {
 
+    public ChatRoomEntity() {
+        unrestricted = false;
+        invites = new HashSet<>();
+        members = new HashSet<>();
+        messages = new HashSet<>();
+        admins = new HashSet<>();
+    }
+
     @ManyToMany
     @JoinTable(name = "CHAT_ROOM_INVITES")
     private Set<AccountEntity> invites;
@@ -30,13 +39,22 @@ public class ChatRoomEntity extends AbstractEntity<Long> {
     @JoinTable(name = "CHAT_ROOM_MEMBERS")
     private Set<AccountEntity> members;
 
-    @Column
-    @OneToMany(mappedBy = "chatRoom", cascade = CascadeType.ALL)
-    Set<MessageEntity> messages;
+    @OneToMany(mappedBy = "chatRoom")
+    private Set<MessageEntity> messages;
+
+    @ManyToOne
+    private AccountEntity owner;
+
+    @ManyToMany
+    @JoinTable(name = "CHAT_ROOM_ADMINS")
+    private Set<AccountEntity> admins;
 
     @Column
     private String roomName;
 
+    @Column
+    private boolean unrestricted;
+    
     public Set<AccountEntity> getInvites() {
         return invites;
     }
@@ -67,6 +85,30 @@ public class ChatRoomEntity extends AbstractEntity<Long> {
 
     public void setRoomName(String roomName) {
         this.roomName = roomName;
+    }
+
+    public AccountEntity getOwner() {
+        return owner;
+    }
+
+    public void setOwner(AccountEntity owner) {
+        this.owner = owner;
+    }
+
+    public Set<AccountEntity> getAdmins() {
+        return admins;
+    }
+
+    public void setAdmins(Set<AccountEntity> admins) {
+        this.admins = admins;
+    }
+
+    public boolean isUnrestricted() {
+        return unrestricted;
+    }
+
+    public void setUnrestricted(boolean unrestricted) {
+        this.unrestricted = unrestricted;
     }
 
     

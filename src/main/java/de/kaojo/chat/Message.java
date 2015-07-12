@@ -22,9 +22,13 @@ public class Message {
     }
 
     public Message(String author, String content) {
+        this(author, content, new Date());
+    }
+    
+    public Message(String author, String content, Date date) {
         this.author = author;
         this.content = content;
-        this.timestamp = new Date();
+        this.timestamp = date;
     }
 
     public Date getTimestamp() {
@@ -39,7 +43,4 @@ public class Message {
         return content;
     }
     
-    public void setAuthor(String author) {
-        this.author = author;
-    }
 }

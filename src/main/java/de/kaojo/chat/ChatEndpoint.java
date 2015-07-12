@@ -6,7 +6,7 @@
 package de.kaojo.chat;
 
 import de.kaojo.ejb.ChatManager;
-import de.kaojo.ejb.dto.ChatRequest;
+import de.kaojo.ejb.dto.ChatRequestImpl;
 import java.io.IOException;
 import java.util.Map;
 import javax.inject.Inject;
@@ -36,42 +36,36 @@ public class ChatEndpoint {
     @OnOpen
     public void open(Session session,
             EndpointConfig c,
-            @PathParam("room-name") String chatRoom, @PathParam("user-toker") String userToker) {
+            @PathParam("room-name") String chatRoom, @PathParam("user-toker") String userToken) {
         System.out.println("openSession with roomName :" + chatRoom);
-        System.out.println("openSession with userToker :" + userToker);
+        System.out.println("openSession with userToken :" + userToken);
 
-        if (chatRoom != null && userToker != null) {
-            initSessionUserProperties(session, userToker, chatRoom);
+        if (chatRoom != null && userToken != null) {
+            initSessionUserProperties(session, userToken, chatRoom);
             
-            ChatRequest chatRequest = new ChatRequest();
-            chatManager.userjoined(chatRequest);
-
-            sendMessageToChatRoom(session, chatRoom, new Message(userToker, userToker + " joined chatroom!"));
+            sendMessageToChatRoom(session, chatRoom, new Message(userToken, userToken + " joined chatroom!"));
         }
     }
 
     @OnMessage
-    public void onMessage(Session session, @PathParam("room-name") String chatRoom, @PathParam("user-toker") String userToker, Message message) {
+    public void onMessage(Session session, @PathParam("room-name") String chatRoom, @PathParam("user-toker") String userToken, Message message) {
         System.out.println("onMessage " + message);
-        
-        String chatUser = (String) session.getUserProperties().get(CHAT_USER_PARAM);
-        message.setAuthor(chatUser);
 
-        ChatRequest chatRequest = new ChatRequest();
-        chatManager.sendMessage(chatRequest);
+        String chatUser = (String) session.getUserProperties().get(CHAT_USER_PARAM);
+        
+        ChatRequestImpl chatRequest = new ChatRequestImpl();
+        chatRequest.MessageChatRequest(chatRoom, message, chatUser);
+        chatManager.receiveMessage(chatRequest);
 
         sendMessageToChatRoom(session, chatRoom, message);
     }
 
     @OnClose
-    public void onClose(Session session, @PathParam("room-name") String chatRoom, @PathParam("user-toker") String userToker) {
+    public void onClose(Session session, @PathParam("room-name") String chatRoom, @PathParam("user-toker") String userToken) {
         System.out.println("onClose with roomName: " + chatRoom);
-        System.out.println("onClose with userToker: " + userToker);
+        System.out.println("onClose with userToken: " + userToken);
 
         String chatUser = (String) session.getUserProperties().get(CHAT_USER_PARAM);
-        
-        ChatRequest chatRequest = new ChatRequest();
-        chatManager.userleft(chatRequest);
 
         sendMessageToChatRoom(session, chatRoom, new Message(chatUser, chatUser + " left chatroom!"));
 
@@ -94,9 +88,12 @@ public class ChatEndpoint {
         }
     }
 
-    private void initSessionUserProperties(Session session, String userToker, String chatRoom) {
+    private void initSessionUserProperties(Session session, String userToken, String chatRoom) {
+        ChatRequestImpl chatRequest = new ChatRequestImpl();
+        chatRequest.setUserToken(userToken);
+        String chatUser = chatManager.getUserFromToken(chatRequest);
+        
         Map<String, Object> userProperties = session.getUserProperties();
-        String chatUser = chatManager.getUserFromToken(userToker);
         userProperties.put(CHAT_USER_PARAM, chatUser);
         userProperties.put(CHAT_ROOM_PARAM, chatRoom);
     }

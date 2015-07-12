@@ -8,7 +8,6 @@ package de.kaojo.persistence.entities;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
-import javax.validation.constraints.Pattern;
 
 /**
  *
@@ -25,8 +24,6 @@ public class ContactEntity extends AbstractEntity<Long> {
     private String countryCode;
 
     @Column
-    @Pattern(regexp = "^[_A-Za-z0-9-\\\\+]+(\\\\.[_A-Za-z0-9-]+)*"
-            + "@[A-Za-z0-9-]+(\\\\.[A-Za-z0-9]+)*(\\\\.[A-Za-z]{2,})$;")
     private String email;
 
     @Column

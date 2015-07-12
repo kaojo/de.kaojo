@@ -5,13 +5,14 @@
  */
 package de.kaojo.ejb;
 
-import de.kaojo.ejb.dto.Credentials;
+import de.kaojo.ejb.dto.interfaces.Credentials;
 import de.kaojo.ejb.dto.NewUserRequest;
 import de.kaojo.ejb.dto.UserDTO;
 import de.kaojo.persistence.entities.AccountEntity;
 import de.kaojo.persistence.entities.ContactEntity;
 import de.kaojo.persistence.entities.RolesEntity;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -25,13 +26,14 @@ import javax.persistence.Query;
  * @author julian
  */
 @Stateless
-public class UserManagerBean {
+public class UserManagerImpl implements UserManager {
 
     @PersistenceContext(unitName = "postgres")
     EntityManager em;
 
     private static final String DEFAULT_ROLE = "user";
 
+    @Override
     public UserDTO getUserFromDB(Credentials credentials) {
         AccountEntity userEntity = getUserByName(credentials.getLoginId());
         if (userEntity == null) {
@@ -45,6 +47,7 @@ public class UserManagerBean {
 
     }
 
+    @Override
     public boolean userAllreadyExists(String userName) {
         List<AccountEntity> users = getUsersByName(userName);
         if (users.isEmpty()) {
@@ -57,6 +60,7 @@ public class UserManagerBean {
         return user.getUserName().equals(userName);
     }
 
+    @Override
     public boolean emailAllreadyExists(String email) {
         List<ContactEntity> contacts = getContactsByEmail(email);
         if (contacts.isEmpty()) {
@@ -69,21 +73,36 @@ public class UserManagerBean {
         return contact.getEmail().equals(email);
     }
 
+    @Override
     public UserDTO createNewUser(NewUserRequest newUserRequest) {
         AccountEntity accountEntity = new AccountEntity();
         accountEntity.setUserName(newUserRequest.getUserName());
         accountEntity.setActive(Boolean.FALSE);
         accountEntity.setDisplayName(newUserRequest.getDisplayName());
         accountEntity.setPassword(newUserRequest.getPassword());
-
+        accountEntity.setCreationDate(new Date());
+        accountEntity.setLastModified(new Date());
+        accountEntity.setLastLogin(new Date());
         try {
             em.persist(accountEntity);
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             e.printStackTrace();
             return null;
         }
         Set<RolesEntity> rolesEntitys = getDefaultRolesEntities();
         accountEntity.setRoles(rolesEntitys);
+
+        ContactEntity contactEntity = new ContactEntity();
+        contactEntity.setEmail(newUserRequest.getEmail());
+        try {
+            em.persist(contactEntity);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+        accountEntity.setContactEntity(contactEntity);
         return mapUserEntityToUserDTO(accountEntity);
     }
 
@@ -94,6 +113,7 @@ public class UserManagerBean {
                 = userDTOBuilder.withActive(userEntity.getActive() == null ? false : userEntity.getActive())
                 .withDisplayName(userEntity.getDisplayName())
                 .withUserName(userEntity.getUserName())
+                .withUserId(userEntity.getId())
                 .build();
 
         return userDTO;
@@ -126,6 +146,28 @@ public class UserManagerBean {
         query.setParameter("defaultRole", DEFAULT_ROLE);
         query.setMaxResults(10);
         Set resultList = new HashSet(query.getResultList());
+        if (resultList.isEmpty()) {
+            resultList = createDefaultRoles();
+        }
         return resultList;
     }
+
+    private Set<RolesEntity> createDefaultRoles() {
+        Set<RolesEntity> rolesEntitys = new HashSet<>();
+        RolesEntity rolesEntity = new RolesEntity();
+        rolesEntity.setRoles(DEFAULT_ROLE);
+
+        try {
+            em.persist(rolesEntity);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+        //create maybe more default Roles
+
+        rolesEntitys.add(rolesEntity);
+        return rolesEntitys;
+    }
+
 }

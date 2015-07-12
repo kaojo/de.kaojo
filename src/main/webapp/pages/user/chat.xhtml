@@ -16,7 +16,7 @@
                 <h:outputScript library="js" target="head" name="chat.js" />
                 <h:outputStylesheet library="css" name="chat.css" />
                 <h:form>
-                    <p:growl id="growl" showDetail="true" life="20000" autoUpdate="true" />
+                    <p:growl id="growl" showDetail="true" life="2000" autoUpdate="true" />
                 </h:form>
                 <h:form id="topForm">
                     <p:panel>
@@ -40,13 +40,15 @@
                             </div>
                             <div class="ui-grid-row">
                                 <div class="ui-grid-col-4 contentDiv">
-                                    <p:outputLabel for="accessibleRoomsListBox"/>
+                                    <p:outputLabel for="accessibleRooms"/>
                                 </div>
                                 <div class="ui-grid-col-4 contentDiv">
-                                    <p:selectOneListbox id="accessibleRoomsListBox" value="#{chatController.accessibleRooms}"/>
+                                    <p:selectOneMenu id="accessibleRooms" value="#{chatController.joinRoom}">
+                                        <f:selectItems value="#{chatController.accessibleRooms}" />
+                                    </p:selectOneMenu>
                                 </div>
                                 <div class="ui-grid-col-4 contentDiv">
-                                    <p:commandButton id="joinChatButton" action="#{chatController.joinChatRoom()}" value="Join" update=":tabview accessibleRoomsListBox " />
+                                    <p:commandButton id="joinChatButton" action="#{chatController.joinChatRoom()}" value="Join" update=":tabview accessibleRooms " />
                                 </div>
                             </div>
                             <div class="ui-grid-row">
@@ -59,11 +61,11 @@
                 </h:form>
                 <h:form id="tabview">
                     <p:tabView id="chatTabView" scrollable="true" value="#{chatController.chatRooms}" var="chatRoom">
-                        <p:tab id="chatRoom" title="#{chatRoom}" >
+                        <p:tab id="chatRoom" title="#{chatRoom.name}" >
                             <div class="ui-grid  ui-grid-responsive">
                                 <div class="ui-grid-row">
                                     <!--Chatwindow-->
-                                    <div id="#{chatRoom}:chatBoard" class="ui-grid-col-8 contentDiv chatBoard">
+                                    <div id="#{chatRoom.name}:chatBoard" class="ui-grid-col-8 contentDiv chatBoard">
                                         <div class="ui-grid  ui-grid-responsive">
                                             <!--                                            <div class="ui-grid-row">
                                                                                             <div class="ui-grid-col-3 contentDiv">
@@ -80,8 +82,8 @@
                                     </div>
                                     <!--Userlist-->
                                     <div class="ui-grid-col-4">
-                                        <p:dataScroller value="#{chatRoom}" var="chatUser" scrollHeight="300" mode="inline" >
-                                            <h:outputText value="#{chatUser}" />
+                                        <p:dataScroller value="#{chatRoom.chatUsers}" var="chatUser" scrollHeight="300" mode="inline" >
+                                            <h:outputText value="#{chatUser.displayName}" />
                                         </p:dataScroller>
                                     </div>
                                 </div>
@@ -93,13 +95,13 @@
                                                     <h:inputTextarea id="messageArea" class="messageArea"/>
                                                 </div>
                                                 <div class="ui-grid-col-2 contentDiv">
-                                                    <p:commandButton type="button" id="messageSendButton" onclick="send(this, '#{chatRoom}')" value="Senden"/>
+                                                    <p:commandButton type="button" id="messageSendButton" onclick="send(this, '#{chatRoom.name}')" value="Senden"/>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="ui-grid-col-4 contentDiv">
-                                        <p:commandButton id="leaveButton" value="Leave" action="#{chatRoom.leaveChatRoom}" update="@all"/>
+                                        <p:commandButton id="leaveButton" value="Leave" action="#{chatController.leaveChatRoom(chatRoom.name)}" update="@all"/>
                                     </div>
                                 </div>
                             </div>

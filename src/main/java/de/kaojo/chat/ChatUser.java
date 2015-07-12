@@ -5,16 +5,14 @@
  */
 package de.kaojo.chat;
 
-import javax.websocket.Session;
-
 /**
  *
  * @author julian
  */
 public interface ChatUser {
 
-    public String getName();
+    public String getDisplayName();
 
-    public Session getSession();
+    public Long getId();
 
 }

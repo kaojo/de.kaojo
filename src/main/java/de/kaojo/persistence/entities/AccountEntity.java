@@ -13,6 +13,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -31,11 +32,20 @@ public class AccountEntity extends AbstractEntity<Long> implements Serializable 
     @Column
     private Boolean active;
 
-    @OneToOne
+    @ManyToMany(mappedBy = "invites")
+    private Set<ChatRoomEntity> invitedChatRooms;
+
+    @ManyToMany(mappedBy = "members")
+    private Set<ChatRoomEntity> memberChatRooms;
+
+    @ManyToMany(mappedBy = "owner")
+    private Set<ChatRoomEntity> ownedChatRooms;
+
+    @OneToOne(orphanRemoval = true)
     private ContactEntity contactEntity;
 
     @Column
-    @Temporal(javax.persistence.TemporalType.DATE)
+    @Temporal(javax.persistence.TemporalType.TIMESTAMP)
     private Date creationDate;
 
     @Column
@@ -43,14 +53,20 @@ public class AccountEntity extends AbstractEntity<Long> implements Serializable 
     private String displayName;
 
     @Column
-    @Temporal(javax.persistence.TemporalType.DATE)
-    private Date lastModified;
+    @Temporal(javax.persistence.TemporalType.TIMESTAMP)
+    private Date lastLogin;
 
     @Column
-    @Pattern(regexp = "[0-9a-zA-Z@#$%^&+=]")
+    @Temporal(javax.persistence.TemporalType.TIMESTAMP)
+    private Date lastModified;
+
+    @OneToMany(mappedBy = "author")
+    Set<MessageEntity> messages;
+
+    @Column
     private String password;
 
-    @OneToOne
+    @OneToOne(orphanRemoval = true)
     private PersonEntity personEntity;
 
     @ManyToMany
@@ -60,8 +76,11 @@ public class AccountEntity extends AbstractEntity<Long> implements Serializable 
     @Column
     @NotNull
     @Size(max = 32)
-    @Pattern(regexp = "[0-9a-zA-Z]")
+    @Pattern(regexp = "^[0-9a-zA-Z]*$")
     private String userName;
+
+    @Column
+    private String userToken;
 
     public Boolean getActive() {
         return active;
@@ -91,8 +110,48 @@ public class AccountEntity extends AbstractEntity<Long> implements Serializable 
         return displayName;
     }
 
+    public Set<ChatRoomEntity> getInvitedChatRooms() {
+        return invitedChatRooms;
+    }
+
+    public void setInvitedChatRooms(Set<ChatRoomEntity> invitedChatRooms) {
+        this.invitedChatRooms = invitedChatRooms;
+    }
+
+    public Set<ChatRoomEntity> getMemberChatRooms() {
+        return memberChatRooms;
+    }
+
+    public void setMemberChatRooms(Set<ChatRoomEntity> memberChatRooms) {
+        this.memberChatRooms = memberChatRooms;
+    }
+
+    public Set<MessageEntity> getMessages() {
+        return messages;
+    }
+
+    public void setMessages(Set<MessageEntity> messages) {
+        this.messages = messages;
+    }
+
+    public Set<ChatRoomEntity> getOwnedChatRooms() {
+        return ownedChatRooms;
+    }
+
+    public void setOwnedChatRooms(Set<ChatRoomEntity> ownedChatRooms) {
+        this.ownedChatRooms = ownedChatRooms;
+    }
+
     public void setDisplayName(String displayName) {
         this.displayName = displayName;
+    }
+
+    public Date getLastLogin() {
+        return lastLogin;
+    }
+
+    public void setLastLogin(Date lastLogin) {
+        this.lastLogin = lastLogin;
     }
 
     public Date getLastModified() {
@@ -135,5 +194,12 @@ public class AccountEntity extends AbstractEntity<Long> implements Serializable 
         this.userName = userName;
     }
 
-    
+    public String getUserToken() {
+        return userToken;
+    }
+
+    public void setUserToken(String userToken) {
+        this.userToken = userToken;
+    }
+
 }

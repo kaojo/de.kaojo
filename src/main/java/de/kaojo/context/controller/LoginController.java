@@ -7,8 +7,8 @@ package de.kaojo.context.controller;
 
 import de.kaojo.context.user.User;
 import de.kaojo.context.user.DefaultUser;
-import de.kaojo.ejb.UserManagerBean;
-import de.kaojo.ejb.dto.Credentials;
+import de.kaojo.ejb.UserManager;
+import de.kaojo.ejb.dto.interfaces.Credentials;
 import de.kaojo.ejb.dto.CredentialsImpl;
 import de.kaojo.ejb.dto.NewUserRequest;
 import de.kaojo.ejb.dto.UserDTO;
@@ -46,7 +46,7 @@ public class LoginController {
     private User user;
     
     @EJB
-    private UserManagerBean userManager;
+    private UserManager userManager;
 
     public String getPass() {
         return pass;
@@ -112,14 +112,6 @@ public class LoginController {
 
     public void setEmailConfirm(String emailConfirm) {
         this.emailConfirm = emailConfirm;
-    }
-
-    public UserManagerBean getUserManager() {
-        return userManager;
-    }
-
-    public void setUserManager(UserManagerBean userManager) {
-        this.userManager = userManager;
     }
 
     public String loginButton() throws ServletException, NoSuchAlgorithmException {

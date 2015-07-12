@@ -24,6 +24,7 @@ public class UserImpl implements User, Serializable {
     private String firstName;
     private String lastName;
     private String email;
+    private Long userId;
     private String userName;
 
     public UserImpl() {
@@ -83,6 +84,7 @@ public class UserImpl implements User, Serializable {
             this.firstName = userDTO.getFirstName();
             this.lastName = userDTO.getLastName();
             this.email = userDTO.getEmail();
+            this.userId = userDTO.getUserId();
             this.userName = userDTO.getUserName();
 
             return this;
@@ -144,6 +146,11 @@ public class UserImpl implements User, Serializable {
     @Override
     public void setEmail(String mail) {
         this.email = mail;
+    }
+
+    @Override
+    public Long getUserId() {
+        return userId;
     }
 
 }

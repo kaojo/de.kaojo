@@ -5,69 +5,90 @@
  */
 package de.kaojo.chat;
 
-import java.io.IOException;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import javax.websocket.EncodeException;
-import javax.websocket.Session;
 
 /**
  *
  * @author julian
  */
-public class ChatRoomImpl implements Serializable, ChatRoom {
+public class ChatRoomImpl implements ChatRoom {
 
     private String name;
-    private List<ChatUser> chatUsers;
+    private Long id;
+    private List<ChatUser> chatUsers = new ArrayList<>();
+    private List<Message> messageHistory = new ArrayList<>();
+    private ChatUser owner;
+    private boolean unrestricted = false;
 
-    public ChatRoomImpl() {
+    public ChatRoomImpl(Long id, String name, List<ChatUser> chatUsers) {
+        this.id = id;
+        this.name = name;
+        this.chatUsers = chatUsers;
     }
 
-    public ChatRoomImpl(String name) {
-        this.chatUsers = new ArrayList<>();
+    public ChatRoomImpl(Long id, String name, List<ChatUser> chatUsers, List<Message> messages, ChatUser owner, boolean unrestricted) {
+        this.owner = owner;
+        this.unrestricted = unrestricted;
+        this.id = id;
+        this.name = name;
+        this.chatUsers.addAll(chatUsers);
+        this.messageHistory.addAll(messages);
+    }
+
+    @Override
+    public String getName() {
+        return name;
+    }
+
+    @Override
+    public ChatUser getOwner() {
+        return owner;
+    }
+
+    public void setOwner(ChatUser owner) {
+        this.owner = owner;
+    }
+
+    @Override
+    public boolean isUnrestricted() {
+        return unrestricted;
+    }
+
+    public void setUnrestricted(boolean unrestricted) {
+        this.unrestricted = unrestricted;
+    }
+
+
+    public void setName(String name) {
         this.name = name;
     }
 
     @Override
-    public List<ChatUser> getAllChatUsers() {
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    @Override
+    public List<ChatUser> getChatUsers() {
         return chatUsers;
     }
 
-    @Override
-    public void sendMessage(Message message) {
-        broadCastMessage(message);
-    }
-
-    @Override
-    public void leaveChatRoom(Session session) {
-        String chatUserName = getChatUserFromSession(session);
-        for (ChatUser chatUser: chatUsers) {
-            if (chatUserName != null && chatUserName.equals(chatUser.getName())) {
-                chatUsers.remove(chatUser);
-            }
-        }
-        broadCastMessage(new Message(name, chatUserName + " hat den Raum verlassen."));
-        
-        //notify ChatManager
-        
-
-    }
-
-    @Override
-    public void joinChatRoom(Session session) {
-        String chatUser = getChatUserFromSession(session);
-        chatUsers.add(new ChatUserImpl(chatUser, session));
-        broadCastMessage(new Message(name, chatUser + " hat den Raum betreten."));
-
-        //notify ChatManager
-        
-
+    public void setChatUsers(List<ChatUser> chatUsers) {
+        this.chatUsers = chatUsers;
     }
 
     @Override
     public List<Message> getMessageHistory() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return messageHistory;
+    }
+
+    public void setMessageHistory(List<Message> messageHistory) {
+        this.messageHistory = messageHistory;
     }
 
     @Override
@@ -76,23 +97,8 @@ public class ChatRoomImpl implements Serializable, ChatRoom {
     }
 
     @Override
-    public String getName() {
-        return name;
-    }
-
-    private void broadCastMessage(Message message) {
-        for (ChatUser chatUser : chatUsers) {
-            try {
-                chatUser.getSession().getBasicRemote().sendObject(message);
-            } catch (IOException | EncodeException ex) {
-                ex.printStackTrace();
-            }
-        }
-    }
-
-    private String getChatUserFromSession(Session session) {
-        String chatUser = (String) session.getUserProperties().get("");
-        return chatUser;
+    public String toString() {
+        return unrestricted ? name + " (public)" : name;
     }
 
 }

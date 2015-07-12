@@ -5,7 +5,12 @@
  */
 package de.kaojo.ejb;
 
-import de.kaojo.ejb.dto.ChatRequest;
+import de.kaojo.chat.ChatRoom;
+import de.kaojo.ejb.dto.interfaces.ChatRoomChatRequest;
+import de.kaojo.ejb.dto.interfaces.MessageChatRequest;
+import de.kaojo.ejb.dto.interfaces.UserIdChatRequest;
+import de.kaojo.ejb.dto.interfaces.UserNameChatRequest;
+import de.kaojo.ejb.dto.interfaces.UserTokenChatRequest;
 import java.util.List;
 import javax.ejb.Local;
 
@@ -16,18 +21,18 @@ import javax.ejb.Local;
 @Local
 public interface ChatManager {
 
-    public List<String> getChatRooms(ChatRequest chatRequest);
+    public List<ChatRoom> getChatRooms(UserIdChatRequest chatRequest);
 
-    public List<String> getAccessibleChatRooms(ChatRequest chatRequest);
+    public List<ChatRoom> getAccessibleChatRooms(UserIdChatRequest chatRequest);
 
-    public void userjoined(ChatRequest chatRequest);
+    public void userjoined(ChatRoomChatRequest chatRequest);
 
-    public void userleft(ChatRequest chatRequest);
+    public void userleft(ChatRoomChatRequest chatRequest);
     
-    public void sendMessage(ChatRequest chatRequest);
+    public void receiveMessage(MessageChatRequest chatRequest);
     
-    public void createUserToker(String userName);
+    public void createUserToken(UserNameChatRequest chatRequest);
     
-    public String getUserFromToken(String token);
+    public String getUserFromToken(UserTokenChatRequest chatRequest);
 
 }
