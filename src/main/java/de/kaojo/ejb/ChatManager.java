@@ -25,13 +25,19 @@ public interface ChatManager {
 
     public List<ChatRoom> getAccessibleChatRooms(UserIdChatRequest chatRequest);
 
-    public void userjoined(ChatRoomChatRequest chatRequest);
+    public boolean addUserToChatRoom(ChatRoomChatRequest chatRequest);
 
-    public void userleft(ChatRoomChatRequest chatRequest);
+    public boolean removeUserFromChatRoom(ChatRoomChatRequest chatRequest);
     
-    public void receiveMessage(MessageChatRequest chatRequest);
+    public boolean inviteUserToChatRoom();
     
-    public void createUserToken(UserNameChatRequest chatRequest);
+    public boolean addAdminToChatRoom();
+    
+    public boolean deleteChatRoom();
+    
+    public boolean receiveMessage(MessageChatRequest chatRequest);
+    
+    public boolean createUserToken(UserNameChatRequest chatRequest);
     
     public String getUserFromToken(UserTokenChatRequest chatRequest);
 

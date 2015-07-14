@@ -62,7 +62,7 @@ public class ChatController implements Serializable {
         }
         if (chatRoomId != null) {
             chatRequestImpl.ChatRoomChatRequest(chatRoomId, user.getUserId());
-            chatManager.userjoined(chatRequestImpl);
+            chatManager.addUserToChatRoom(chatRequestImpl);
             return "chat?faces-redirect=true;";
         }
         return "chat";

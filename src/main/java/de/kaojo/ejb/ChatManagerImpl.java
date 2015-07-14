@@ -56,32 +56,18 @@ public class ChatManagerImpl implements ChatManager {
     }
 
     @Override
-    public void userjoined(ChatRoomChatRequest chatRequest) {
+    public boolean addUserToChatRoom(ChatRoomChatRequest chatRequest) {
         Long chatRoomId = chatRequest.getChatRoomId();
         Long userId = chatRequest.getUserId();
         AccountEntity accountEntity = em.find(AccountEntity.class, userId);
         ChatRoomEntity chatRoomEntity = em.find(ChatRoomEntity.class, chatRoomId);
         chatRoomEntity.getMembers().add(accountEntity);
-    }
-
-    @Override
-    public void userleft(ChatRoomChatRequest chatRequest) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public void receiveMessage(MessageChatRequest chatRequest) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public void createUserToken(UserNameChatRequest chatRequest) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return true;
     }
 
     @Override
     public String getUserFromToken(UserTokenChatRequest chatRequest) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return "julian";
     }
 
     private List<ChatRoomEntity> getMemberedChatRooms(UserIdChatRequest chatRequest) {
@@ -186,6 +172,36 @@ public class ChatManagerImpl implements ChatManager {
 
         chatRoomEntitys.add(chatRoomEntity);
         return chatRoomEntitys;
+    }
+
+    @Override
+    public boolean removeUserFromChatRoom(ChatRoomChatRequest chatRequest) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public boolean inviteUserToChatRoom() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public boolean addAdminToChatRoom() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public boolean deleteChatRoom() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public boolean receiveMessage(MessageChatRequest chatRequest) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public boolean createUserToken(UserNameChatRequest chatRequest) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

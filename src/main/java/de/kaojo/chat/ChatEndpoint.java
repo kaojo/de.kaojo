@@ -21,7 +21,7 @@ import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 
 @ServerEndpoint(
-        value = "/chatrooms/{room-name}/{user-toker}",
+        value = "/chatrooms/{room-name}/{user-token}",
         encoders = {TextMessageEncoder.class},
         decoders = {TextMessageDecoder.class}
 )
@@ -36,7 +36,7 @@ public class ChatEndpoint {
     @OnOpen
     public void open(Session session,
             EndpointConfig c,
-            @PathParam("room-name") String chatRoom, @PathParam("user-toker") String userToken) {
+            @PathParam("room-name") String chatRoom, @PathParam("user-token") String userToken) {
         System.out.println("openSession with roomName :" + chatRoom);
         System.out.println("openSession with userToken :" + userToken);
 
@@ -48,7 +48,7 @@ public class ChatEndpoint {
     }
 
     @OnMessage
-    public void onMessage(Session session, @PathParam("room-name") String chatRoom, @PathParam("user-toker") String userToken, Message message) {
+    public void onMessage(Session session, @PathParam("room-name") String chatRoom, @PathParam("user-token") String userToken, Message message) {
         System.out.println("onMessage " + message);
 
         String chatUser = (String) session.getUserProperties().get(CHAT_USER_PARAM);
@@ -61,7 +61,7 @@ public class ChatEndpoint {
     }
 
     @OnClose
-    public void onClose(Session session, @PathParam("room-name") String chatRoom, @PathParam("user-toker") String userToken) {
+    public void onClose(Session session, @PathParam("room-name") String chatRoom, @PathParam("user-token") String userToken) {
         System.out.println("onClose with roomName: " + chatRoom);
         System.out.println("onClose with userToken: " + userToken);
 
