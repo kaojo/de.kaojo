@@ -79,15 +79,16 @@ public class ChatManagerImpl implements ChatManager {
 
     private List<ChatRoomEntity> getInvitedChatRooms(UserIdChatRequest chatRequest) {
         Long userId = chatRequest.getUserId();
-        Query query = em.createQuery("SELECT DISTINCT cr FROM ChatRoomEntity cr JOIN cr.invites i WHERE i.id = :userId AND :userId != ALL (SELECT m.id from cr.members m)");
+        Query query = em.createQuery("SELECT DISTINCT cr FROM ChatRoomEntity cr JOIN cr.invites i WHERE i.id = :userId");
         query.setParameter("userId", userId);
         return new ArrayList<>(query.getResultList());
     }
 
     private List<ChatRoomEntity> getPublicChatRooms(UserIdChatRequest chatRequest) {
         Long userId = chatRequest.getUserId();
-        Query query = em.createQuery("SELECT DISTINCT cr from ChatRoomEntity cr WHERE cr.unrestricted = true AND :userId != ALL (SELECT m.id from cr.members m)");
-        query.setParameter("userId", userId);
+        Query query = em.createQuery("SELECT DISTINCT cr from ChatRoomEntity cr WHERE cr.unrestricted = true");
+//        query.setParameter("userId", userId);
+//        query.setParameter("stringUserId", userId.toString());
         List<ChatRoomEntity> result = new ArrayList<>(query.getResultList());
         if (result.isEmpty()) {
             query = em.createQuery("SELECT DISTINCT cr from ChatRoomEntity cr WHERE cr.unrestricted = true");

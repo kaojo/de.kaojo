@@ -65,6 +65,7 @@ public class ChatController implements Serializable {
             chatManager.addUserToChatRoom(chatRequestImpl);
             return "chat?faces-redirect=true;";
         }
+        addMessage("Error happend!");
         return "chat";
     }
 

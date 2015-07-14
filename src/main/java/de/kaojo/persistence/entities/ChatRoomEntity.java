@@ -9,6 +9,7 @@ import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
@@ -32,11 +33,17 @@ public class ChatRoomEntity extends AbstractEntity<Long> {
     }
 
     @ManyToMany
-    @JoinTable(name = "CHAT_ROOM_INVITES")
+    @JoinTable(name = "CHAT_ROOM_INVITES",
+            joinColumns = @JoinColumn(name = "chatroom_id"),
+            inverseJoinColumns = @JoinColumn(name = "account_id")
+    )
     private Set<AccountEntity> invites;
 
     @ManyToMany
-    @JoinTable(name = "CHAT_ROOM_MEMBERS")
+    @JoinTable(name = "CHAT_ROOM_MEMBERS",
+            joinColumns = @JoinColumn(name = "chatroom_id"),
+            inverseJoinColumns = @JoinColumn(name = "account_id")
+    )
     private Set<AccountEntity> members;
 
     @OneToMany(mappedBy = "chatRoom")
@@ -46,7 +53,10 @@ public class ChatRoomEntity extends AbstractEntity<Long> {
     private AccountEntity owner;
 
     @ManyToMany
-    @JoinTable(name = "CHAT_ROOM_ADMINS")
+    @JoinTable(name = "CHAT_ROOM_ADMINS",
+            joinColumns = @JoinColumn(name = "chatroom_id"),
+            inverseJoinColumns = @JoinColumn(name = "account_id")
+    )
     private Set<AccountEntity> admins;
 
     @Column
@@ -54,7 +64,7 @@ public class ChatRoomEntity extends AbstractEntity<Long> {
 
     @Column
     private boolean unrestricted;
-    
+
     public Set<AccountEntity> getInvites() {
         return invites;
     }
@@ -111,5 +121,4 @@ public class ChatRoomEntity extends AbstractEntity<Long> {
         this.unrestricted = unrestricted;
     }
 
-    
 }

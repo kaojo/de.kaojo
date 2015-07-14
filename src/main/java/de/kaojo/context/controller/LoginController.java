@@ -32,6 +32,8 @@ import javax.servlet.http.HttpSession;
 @Named("loginController")
 @RequestScoped
 public class LoginController {
+    
+    private static final String CHAT_PAGE_REDIRECT = "/pages/user/chat?faces-redirect=true;";
 
     private String loginPass;
     private String loginName;
@@ -115,6 +117,9 @@ public class LoginController {
     }
 
     public String loginButton() throws ServletException, NoSuchAlgorithmException {
+        if (!isLoginRequired()) {
+            return CHAT_PAGE_REDIRECT;
+        }
         Credentials credentials = new CredentialsImpl();
         if (loginName != null && loginPass != null) {
             String hashedPassword = getHashedPassword(loginPass);
@@ -151,7 +156,7 @@ public class LoginController {
         this.user.build(userDTO);
         HttpServletRequest request = getRequest();
         request.login(userName, password);
-        return "/pages/user/chat?faces-redirect=true;";
+        return CHAT_PAGE_REDIRECT;
     }
 
     private boolean checkRegisterInput() {
@@ -198,7 +203,7 @@ public class LoginController {
                 .getExternalContext()
                 .getRequest();
         if (request == null) {
-            throw new RuntimeException("Sorry. Got a null request from faces context");
+            throw new RuntimeException("Sorry. Got a null request from FacesContext");
         }
         return request;
     }
@@ -208,6 +213,10 @@ public class LoginController {
         request.logout();
         HttpSession session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(false);
         session.invalidate();
-        return "/pages/public/logout?faces-redirect=true;";
+        return CHAT_PAGE_REDIRECT;
+    }
+
+    private boolean isLoginRequired() {
+        return !getRequest().isUserInRole("user");
     }
 }
