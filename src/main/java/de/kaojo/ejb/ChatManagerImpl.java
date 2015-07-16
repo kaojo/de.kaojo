@@ -11,9 +11,9 @@ import de.kaojo.chat.ChatUser;
 import de.kaojo.chat.ChatUserImpl;
 import de.kaojo.chat.Message;
 import de.kaojo.ejb.dto.interfaces.ChatRoomChatRequest;
+import de.kaojo.ejb.dto.interfaces.ChatRoomNameChatRequest;
 import de.kaojo.ejb.dto.interfaces.MessageChatRequest;
 import de.kaojo.ejb.dto.interfaces.UserIdChatRequest;
-import de.kaojo.ejb.dto.interfaces.UserNameChatRequest;
 import de.kaojo.ejb.dto.interfaces.UserTokenChatRequest;
 import de.kaojo.persistence.entities.AccountEntity;
 import de.kaojo.persistence.entities.ChatRoomEntity;
@@ -63,11 +63,6 @@ public class ChatManagerImpl implements ChatManager {
         ChatRoomEntity chatRoomEntity = em.find(ChatRoomEntity.class, chatRoomId);
         chatRoomEntity.getMembers().add(accountEntity);
         return true;
-    }
-
-    @Override
-    public String getUserFromToken(UserTokenChatRequest chatRequest) {
-        return "julian";
     }
 
     private List<ChatRoomEntity> getMemberedChatRooms(UserIdChatRequest chatRequest) {
@@ -181,17 +176,17 @@ public class ChatManagerImpl implements ChatManager {
     }
 
     @Override
-    public boolean inviteUserToChatRoom() {
+    public boolean inviteUserToChatRoom(ChatRoomChatRequest chatRequest) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public boolean addAdminToChatRoom() {
+    public boolean addAdminToChatRoom(ChatRoomChatRequest chatRequest) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public boolean deleteChatRoom() {
+    public boolean deleteChatRoom(ChatRoomChatRequest chatRequest) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
@@ -201,7 +196,17 @@ public class ChatManagerImpl implements ChatManager {
     }
 
     @Override
-    public boolean createUserToken(UserNameChatRequest chatRequest) {
+    public boolean createUserToken(UserIdChatRequest chatRequest) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Long getAccountIdFromToken(UserTokenChatRequest chatRequest) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Long getChatRoomIdFromChatRoomName(ChatRoomNameChatRequest chatRequest) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

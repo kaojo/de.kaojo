@@ -4,7 +4,6 @@ import de.kaojo.chat.ChatRoom;
 import de.kaojo.context.user.User;
 import de.kaojo.context.user.DefaultUser;
 import de.kaojo.ejb.ChatManager;
-import de.kaojo.ejb.dto.ChatRequestImpl;
 import java.io.Serializable;
 import java.util.List;
 import javax.ejb.EJB;

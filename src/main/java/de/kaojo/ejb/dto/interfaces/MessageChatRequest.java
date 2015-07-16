@@ -12,13 +12,11 @@ import de.kaojo.chat.Message;
  * @author jwinter
  */
 public interface MessageChatRequest {
-    
-    public MessageChatRequest MessageChatRequest(String chatRoomName, Message message, String userName);
-    
-    public String getUserName();
-    
-    public String getChatRoomName();
-    
+
+    public Long getUserId();
+
+    public Long getChatRoomId();
+
     public Message getMessage();
 
 }

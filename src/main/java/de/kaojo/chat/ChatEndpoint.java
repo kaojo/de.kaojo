@@ -6,7 +6,6 @@
 package de.kaojo.chat;
 
 import de.kaojo.ejb.ChatManager;
-import de.kaojo.ejb.dto.ChatRequestImpl;
 import java.io.IOException;
 import java.util.Map;
 import javax.inject.Inject;
@@ -42,7 +41,7 @@ public class ChatEndpoint {
 
         if (chatRoom != null && userToken != null) {
             initSessionUserProperties(session, userToken, chatRoom);
-            
+
             sendMessageToChatRoom(session, chatRoom, new Message(userToken, userToken + " joined chatroom!"));
         }
     }
@@ -52,7 +51,7 @@ public class ChatEndpoint {
         System.out.println("onMessage " + message);
 
         String chatUser = (String) session.getUserProperties().get(CHAT_USER_PARAM);
-        
+
         ChatRequestImpl chatRequest = new ChatRequestImpl();
         chatRequest.MessageChatRequest(chatRoom, message, chatUser);
         chatManager.receiveMessage(chatRequest);
@@ -92,7 +91,7 @@ public class ChatEndpoint {
         ChatRequestImpl chatRequest = new ChatRequestImpl();
         chatRequest.setUserToken(userToken);
         String chatUser = chatManager.getUserFromToken(chatRequest);
-        
+
         Map<String, Object> userProperties = session.getUserProperties();
         userProperties.put(CHAT_USER_PARAM, chatUser);
         userProperties.put(CHAT_ROOM_PARAM, chatRoom);
