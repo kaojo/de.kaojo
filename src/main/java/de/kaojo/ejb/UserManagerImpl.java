@@ -11,6 +11,7 @@ import de.kaojo.ejb.dto.UserDTO;
 import de.kaojo.persistence.entities.AccountEntity;
 import de.kaojo.persistence.entities.ContactEntity;
 import de.kaojo.persistence.entities.RolesEntity;
+import de.kaojo.persistence.entities.enums.Roles;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
@@ -30,8 +31,6 @@ public class UserManagerImpl implements UserManager {
 
     @PersistenceContext(unitName = "postgres")
     EntityManager em;
-
-    private static final String DEFAULT_ROLE = "user";
 
     @Override
     public UserDTO getUserFromDB(Credentials credentials) {
@@ -143,7 +142,7 @@ public class UserManagerImpl implements UserManager {
 
     private Set<RolesEntity> getDefaultRolesEntities() {
         Query query = em.createQuery("SELECT re FROM RolesEntity re WHERE re.roles = :defaultRole");
-        query.setParameter("defaultRole", DEFAULT_ROLE);
+        query.setParameter("defaultRole", Roles.user);
         query.setMaxResults(10);
         Set resultList = new HashSet(query.getResultList());
         if (resultList.isEmpty()) {
@@ -155,7 +154,7 @@ public class UserManagerImpl implements UserManager {
     private Set<RolesEntity> createDefaultRoles() {
         Set<RolesEntity> rolesEntitys = new HashSet<>();
         RolesEntity rolesEntity = new RolesEntity();
-        rolesEntity.setRoles(DEFAULT_ROLE);
+        rolesEntity.setRoles(Roles.user);
 
         try {
             em.persist(rolesEntity);

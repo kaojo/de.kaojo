@@ -5,9 +5,13 @@
  */
 package de.kaojo.persistence.entities;
 
+import de.kaojo.persistence.entities.enums.MaritalStatus;
+import de.kaojo.persistence.entities.enums.Salutation;
 import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.validation.constraints.Past;
@@ -25,27 +29,24 @@ public class PersonEntity extends AbstractEntity<Long> {
     @Temporal(javax.persistence.TemporalType.DATE)
     @Past
     private Date birthday;
-    
+
     @Column
-    @Size(max=32)
+    @Size(max = 32)
     private String firstName;
 
     @Column
-    @Size(max=32)
+    @Size(max = 32)
     private String lastName;
 
-    @Column
-    private String maritalStatus; // ENUM
+    @Enumerated(EnumType.STRING)
+    private MaritalStatus maritalStatus; // ENUM
 
     @Column
-    @Size(max=32)
+    @Size(max = 32)
     private String middleName;
 
     @Column
     private String salutation; // ENUM
-
-    @Column
-    private String title; // ENUM    
 
     public Date getBirthday() {
         return birthday;
@@ -71,11 +72,11 @@ public class PersonEntity extends AbstractEntity<Long> {
         this.lastName = lastName;
     }
 
-    public String getMaritalStatus() {
+    public MaritalStatus getMaritalStatus() {
         return maritalStatus;
     }
 
-    public void setMaritalStatus(String maritalStatus) {
+    public void setMaritalStatus(MaritalStatus maritalStatus) {
         this.maritalStatus = maritalStatus;
     }
 
@@ -87,20 +88,17 @@ public class PersonEntity extends AbstractEntity<Long> {
         this.middleName = middleName;
     }
 
-    public String getSalutation() {
-        return salutation;
+    public Salutation getPosition() {
+        return Salutation.getType(this.salutation);
     }
 
-    public void setSalutation(String salutation) {
-        this.salutation = salutation;
-    }
+    public void setPosition(Salutation position) {
 
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
+        if (position == null) {
+            this.salutation = null;
+        } else {
+            this.salutation = position.getSalutation();
+        }
     }
 
 }

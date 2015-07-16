@@ -5,8 +5,10 @@
  */
 package de.kaojo.persistence.entities;
 
-import javax.persistence.Column;
+import de.kaojo.persistence.entities.enums.Roles;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.Table;
 
 /**
@@ -16,16 +18,16 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "ROLES")
 public class RolesEntity extends AbstractEntity<Long>{
-    
-    @Column
-    private String roles; //enum list
 
-    public String getRoles() {
+    @Enumerated(EnumType.STRING)
+    private Roles roles; //enum list
+
+    public Roles getRoles() {
         return roles;
     }
 
-    public void setRoles(String roles) {
+    public void setRoles(Roles roles) {
         this.roles = roles;
     }
-    
+
 }

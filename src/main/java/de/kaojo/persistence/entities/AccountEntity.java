@@ -73,13 +73,13 @@ public class AccountEntity extends AbstractEntity<Long> implements Serializable 
     @JoinTable(name = "ACCOUNT_ROLES")
     private Set<RolesEntity> roles;
 
-    @Column
+    @Column(unique = true)
     @NotNull
     @Size(max = 32)
     @Pattern(regexp = "^[0-9a-zA-Z]*$")
     private String userName;
 
-    @Column
+    @Column(unique = true)
     private String userToken;
 
     public Boolean getActive() {

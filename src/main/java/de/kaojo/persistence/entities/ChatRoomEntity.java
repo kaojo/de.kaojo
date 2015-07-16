@@ -59,7 +59,7 @@ public class ChatRoomEntity extends AbstractEntity<Long> {
     )
     private Set<AccountEntity> admins;
 
-    @Column
+    @Column(unique = true)
     private String roomName;
 
     @Column
