@@ -39,6 +39,8 @@ public interface ChatManager {
 
     public boolean createUserToken(UserIdChatRequest chatRequest);
 
+    public String getDisplayNameFromToken(UserTokenChatRequest chatRequest);
+
     public Long getAccountIdFromToken(UserTokenChatRequest chatRequest);
 
     public Long getChatRoomIdFromChatRoomName(ChatRoomNameChatRequest chatRequest);

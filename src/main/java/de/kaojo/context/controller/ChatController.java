@@ -4,6 +4,10 @@ import de.kaojo.chat.ChatRoom;
 import de.kaojo.context.user.User;
 import de.kaojo.context.user.DefaultUser;
 import de.kaojo.ejb.ChatManager;
+import de.kaojo.ejb.dto.ChatRoomChatRequestImpl;
+import de.kaojo.ejb.dto.UserIdChatRequestImpl;
+import de.kaojo.ejb.dto.interfaces.ChatRoomChatRequest;
+import de.kaojo.ejb.dto.interfaces.UserIdChatRequest;
 import java.io.Serializable;
 import java.util.List;
 import javax.ejb.EJB;
@@ -44,10 +48,9 @@ public class ChatController implements Serializable {
     }
 
     public String joinChatRoom() {
-        if (joinRoom == null ) {
+        if (joinRoom == null) {
             return "chat";
         }
-        ChatRequestImpl chatRequestImpl = new ChatRequestImpl();
         Long chatRoomId = null;
         int lastIndexOf = joinRoom.lastIndexOf(" (public)");
         String parsedRoom = joinRoom;
@@ -55,13 +58,13 @@ public class ChatController implements Serializable {
             parsedRoom = joinRoom.substring(0, lastIndexOf);
         }
         for (ChatRoom chatRoom : accessibleRooms) {
-            if ( parsedRoom.equals(chatRoom.getName())) {
+            if (parsedRoom.equals(chatRoom.getName())) {
                 chatRoomId = chatRoom.getId();
             }
         }
         if (chatRoomId != null) {
-            chatRequestImpl.ChatRoomChatRequest(chatRoomId, user.getUserId());
-            chatManager.addUserToChatRoom(chatRequestImpl);
+            ChatRoomChatRequest chatRequest = new ChatRoomChatRequestImpl(chatRoomId, user.getUserId());
+            chatManager.addUserToChatRoom(chatRequest);
             return "chat?faces-redirect=true;";
         }
         addMessage("Error happend!");
@@ -79,15 +82,13 @@ public class ChatController implements Serializable {
     }
 
     public List<ChatRoom> getChatRooms() {
-        ChatRequestImpl chatRequest = new ChatRequestImpl();
-        chatRequest.UserIdChatRequest(user.getUserId());
+        UserIdChatRequest chatRequest = new UserIdChatRequestImpl(user.getUserId());
         chatRooms = chatManager.getChatRooms(chatRequest);
         return chatRooms;
     }
 
     public List<ChatRoom> getAccessibleRooms() {
-        ChatRequestImpl chatRequest = new ChatRequestImpl();
-        chatRequest.UserIdChatRequest(user.getUserId());
+        UserIdChatRequest chatRequest = new UserIdChatRequestImpl(user.getUserId());
         accessibleRooms = chatManager.getAccessibleChatRooms(chatRequest);
         return accessibleRooms;
     }

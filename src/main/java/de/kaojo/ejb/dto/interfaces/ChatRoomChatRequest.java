@@ -10,8 +10,6 @@ package de.kaojo.ejb.dto.interfaces;
  * @author jwinter
  */
 public interface ChatRoomChatRequest {
-    
-    public ChatRoomChatRequest ChatRoomChatRequest(Long chatRoomId, Long userId);
 
     public Long getChatRoomId();
 

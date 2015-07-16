@@ -6,6 +6,12 @@
 package de.kaojo.chat;
 
 import de.kaojo.ejb.ChatManager;
+import de.kaojo.ejb.dto.interfaces.ChatRoomNameChatRequest;
+import de.kaojo.ejb.dto.ChatRoomNameChatRequestImpl;
+import de.kaojo.ejb.dto.interfaces.UserTokenChatRequest;
+import de.kaojo.ejb.dto.UserTokenChatRequestImpl;
+import de.kaojo.ejb.dto.interfaces.MessageChatRequest;
+import de.kaojo.ejb.dto.MessageChatRequestImpl;
 import java.io.IOException;
 import java.util.Map;
 import javax.inject.Inject;
@@ -30,7 +36,9 @@ public class ChatEndpoint {
     ChatManager chatManager;
 
     public static final String CHAT_USER_PARAM = "chatUser";
+    public static final String CHAT_USER_ID_PARAM = "userId";
     public static final String CHAT_ROOM_PARAM = "chatRoom";
+    public static final String CHAT_ROOM_ID_PARAM = "chatRoomId";
 
     @OnOpen
     public void open(Session session,
@@ -50,10 +58,10 @@ public class ChatEndpoint {
     public void onMessage(Session session, @PathParam("room-name") String chatRoom, @PathParam("user-token") String userToken, Message message) {
         System.out.println("onMessage " + message);
 
-        String chatUser = (String) session.getUserProperties().get(CHAT_USER_PARAM);
+        Long userId = (long) session.getUserProperties().get(CHAT_USER_ID_PARAM);
+        Long chatRoomId = (long) session.getUserProperties().get(CHAT_ROOM_ID_PARAM);
 
-        ChatRequestImpl chatRequest = new ChatRequestImpl();
-        chatRequest.MessageChatRequest(chatRoom, message, chatUser);
+        MessageChatRequest chatRequest = new MessageChatRequestImpl(userId, chatRoomId, message);
         chatManager.receiveMessage(chatRequest);
 
         sendMessageToChatRoom(session, chatRoom, message);
@@ -88,12 +96,17 @@ public class ChatEndpoint {
     }
 
     private void initSessionUserProperties(Session session, String userToken, String chatRoom) {
-        ChatRequestImpl chatRequest = new ChatRequestImpl();
-        chatRequest.setUserToken(userToken);
-        String chatUser = chatManager.getUserFromToken(chatRequest);
+
+        UserTokenChatRequest tokenChatRequest = new UserTokenChatRequestImpl(userToken);
+        Long userId = chatManager.getAccountIdFromToken(tokenChatRequest);
+        String userName = chatManager.getDisplayNameFromToken(tokenChatRequest);
+        ChatRoomNameChatRequest chatRoomNameChatRequest = new ChatRoomNameChatRequestImpl(chatRoom);
+        Long chatRoomId = chatManager.getChatRoomIdFromChatRoomName(chatRoomNameChatRequest);
 
         Map<String, Object> userProperties = session.getUserProperties();
-        userProperties.put(CHAT_USER_PARAM, chatUser);
+        userProperties.put(CHAT_USER_PARAM, userName);
+        userProperties.put(CHAT_USER_ID_PARAM, userId);
         userProperties.put(CHAT_ROOM_PARAM, chatRoom);
+        userProperties.put(CHAT_ROOM_ID_PARAM, chatRoomId);
     }
 }

@@ -210,4 +210,9 @@ public class ChatManagerImpl implements ChatManager {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
+    @Override
+    public String getDisplayNameFromToken(UserTokenChatRequest chatRequest) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
 }

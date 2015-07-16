@@ -11,8 +11,6 @@ package de.kaojo.ejb.dto.interfaces;
  */
 public interface UserTokenChatRequest {
 
-    public UserTokenChatRequest UserTokenChatRequest(String userToken);
-    
     public String getUserToken();
 
 }
