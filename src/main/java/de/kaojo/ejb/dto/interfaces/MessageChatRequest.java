@@ -5,7 +5,7 @@
  */
 package de.kaojo.ejb.dto.interfaces;
 
-import de.kaojo.chat.Message;
+import de.kaojo.chat.model.Message;
 
 /**
  *

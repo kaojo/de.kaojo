@@ -3,7 +3,7 @@
  * Alle Rechte sind vorbehalten.
  * Copyright 2015.
  */
-package de.kaojo.chat;
+package de.kaojo.chat.model;
 
 /**
  *

@@ -1,6 +1,6 @@
 package de.kaojo.ejb.dto;
 
-import de.kaojo.chat.Message;
+import de.kaojo.chat.model.Message;
 import de.kaojo.ejb.dto.interfaces.MessageChatRequest;
 
 /**

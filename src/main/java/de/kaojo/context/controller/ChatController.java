@@ -1,8 +1,8 @@
 package de.kaojo.context.controller;
 
-import de.kaojo.chat.ChatRoom;
-import de.kaojo.context.user.User;
-import de.kaojo.context.user.DefaultUser;
+import de.kaojo.chat.model.ChatRoom;
+import de.kaojo.context.model.user.User;
+import de.kaojo.context.model.user.DefaultUser;
 import de.kaojo.ejb.ChatManager;
 import de.kaojo.ejb.dto.ChatRoomChatRequestImpl;
 import de.kaojo.ejb.dto.UserIdChatRequestImpl;

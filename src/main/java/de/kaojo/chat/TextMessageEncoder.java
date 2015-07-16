@@ -5,6 +5,7 @@
  */
 package de.kaojo.chat;
 
+import de.kaojo.chat.model.Message;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import javax.websocket.EncodeException;

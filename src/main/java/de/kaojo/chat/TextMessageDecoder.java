@@ -5,6 +5,7 @@
  */
 package de.kaojo.chat;
 
+import de.kaojo.chat.model.Message;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import javax.websocket.DecodeException;

@@ -3,7 +3,7 @@
  * Alle Rechte sind vorbehalten.
  * Copyright 2015.
  */
-package de.kaojo.context.user;
+package de.kaojo.context.model.user;
 
 import de.kaojo.ejb.dto.UserDTO;
 import java.io.Serializable;

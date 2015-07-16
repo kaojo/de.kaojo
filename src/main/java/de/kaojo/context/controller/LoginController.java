@@ -5,8 +5,8 @@
  */
 package de.kaojo.context.controller;
 
-import de.kaojo.context.user.User;
-import de.kaojo.context.user.DefaultUser;
+import de.kaojo.context.model.user.User;
+import de.kaojo.context.model.user.DefaultUser;
 import de.kaojo.ejb.UserManager;
 import de.kaojo.ejb.dto.interfaces.Credentials;
 import de.kaojo.ejb.dto.CredentialsImpl;

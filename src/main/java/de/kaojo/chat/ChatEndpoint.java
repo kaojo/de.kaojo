@@ -5,6 +5,7 @@
  */
 package de.kaojo.chat;
 
+import de.kaojo.chat.model.Message;
 import de.kaojo.ejb.ChatManager;
 import de.kaojo.ejb.dto.interfaces.ChatRoomNameChatRequest;
 import de.kaojo.ejb.dto.ChatRoomNameChatRequestImpl;

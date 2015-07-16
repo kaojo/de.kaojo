@@ -3,7 +3,7 @@
  * Alle Rechte sind vorbehalten.
  * Copyright 2015.
  */
-package de.kaojo.context.user;
+package de.kaojo.context.model.user;
 
 import static java.lang.annotation.ElementType.TYPE;
 import static java.lang.annotation.ElementType.FIELD;

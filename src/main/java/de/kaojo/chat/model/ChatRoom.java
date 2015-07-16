@@ -1,4 +1,4 @@
-package de.kaojo.chat;
+package de.kaojo.chat.model;
 
 import java.util.List;
 

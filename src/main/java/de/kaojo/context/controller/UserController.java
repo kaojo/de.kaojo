@@ -5,8 +5,8 @@
  */
 package de.kaojo.context.controller;
 
-import de.kaojo.context.user.User;
-import de.kaojo.context.user.DefaultUser;
+import de.kaojo.context.model.user.User;
+import de.kaojo.context.model.user.DefaultUser;
 import java.io.Serializable;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
