@@ -10,6 +10,7 @@ import de.kaojo.ejb.dto.interfaces.ChatRoomChatRequest;
 import de.kaojo.ejb.dto.interfaces.ChatRoomNameChatRequest;
 import de.kaojo.ejb.dto.interfaces.MessageChatRequest;
 import de.kaojo.ejb.dto.interfaces.AccountIdChatRequest;
+import de.kaojo.ejb.dto.interfaces.NewChatRoomChatRequest;
 import de.kaojo.ejb.dto.interfaces.UserNameChatRequest;
 import de.kaojo.ejb.exceptions.ChatManagerException;
 import java.util.List;
@@ -35,6 +36,8 @@ public interface ChatManager {
     public boolean addAdminToChatRoom(ChatRoomChatRequest chatRequest) throws ChatManagerException;
 
     public boolean deleteChatRoom(ChatRoomChatRequest chatRequest) throws ChatManagerException;
+
+    public boolean createNewChatRoom(NewChatRoomChatRequest chatRequest) throws ChatManagerException;
 
     public boolean receiveMessage(MessageChatRequest chatRequest) throws ChatManagerException;
 

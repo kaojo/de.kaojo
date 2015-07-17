@@ -7,14 +7,18 @@ package de.kaojo.ejb;
 
 import de.kaojo.chat.model.ChatRoom;
 import de.kaojo.chat.model.ChatRoomImpl;
+import de.kaojo.chat.model.Message;
 import de.kaojo.ejb.exceptions.ChatManagerException;
 import de.kaojo.ejb.dto.interfaces.ChatRoomChatRequest;
 import de.kaojo.ejb.dto.interfaces.ChatRoomNameChatRequest;
 import de.kaojo.ejb.dto.interfaces.MessageChatRequest;
 import de.kaojo.ejb.dto.interfaces.AccountIdChatRequest;
+import de.kaojo.ejb.dto.interfaces.NewChatRoomChatRequest;
 import de.kaojo.ejb.dto.interfaces.UserNameChatRequest;
 import de.kaojo.persistence.entities.AccountEntity;
 import de.kaojo.persistence.entities.ChatRoomEntity;
+import de.kaojo.persistence.entities.MessageEntity;
+import de.kaojo.persistence.entities.TextMessageEntity;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -63,28 +67,83 @@ public class ChatManagerImpl implements ChatManager {
     }
 
     @Override
-    public boolean removeUserFromChatRoom(ChatRoomChatRequest chatRequest) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public boolean removeUserFromChatRoom(ChatRoomChatRequest chatRequest) throws ChatManagerException {
+        ChatRoomEntity chatRoomE = em.find(ChatRoomEntity.class, chatRequest.getChatRoomId());
+        AccountEntity accountE = em.find(AccountEntity.class, chatRequest.getUserId());
+        if (chatRoomE == null | accountE == null) {
+            throw new ChatManagerException("Could not remove User from chatroom.");
+        }
+        return chatRoomE.getMembers().remove(accountE);
     }
 
     @Override
-    public boolean inviteUserToChatRoom(ChatRoomChatRequest chatRequest) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public boolean inviteUserToChatRoom(ChatRoomChatRequest chatRequest) throws ChatManagerException {
+        ChatRoomEntity chatRoomE = em.find(ChatRoomEntity.class, chatRequest.getChatRoomId());
+        AccountEntity accountE = em.find(AccountEntity.class, chatRequest.getUserId());
+        if (chatRoomE == null | accountE == null) {
+            throw new ChatManagerException("Could not invite User to chatroom.");
+        }
+        return chatRoomE.getInvites().add(accountE);
     }
 
     @Override
-    public boolean addAdminToChatRoom(ChatRoomChatRequest chatRequest) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public boolean addAdminToChatRoom(ChatRoomChatRequest chatRequest) throws ChatManagerException {
+        ChatRoomEntity chatRoomE = em.find(ChatRoomEntity.class, chatRequest.getChatRoomId());
+        AccountEntity accountE = em.find(AccountEntity.class, chatRequest.getUserId());
+        if (chatRoomE == null | accountE == null) {
+            throw new ChatManagerException("Could not add User as admin to chatroom.");
+        }
+        return chatRoomE.getAdmins().add(accountE);
     }
 
     @Override
     public boolean deleteChatRoom(ChatRoomChatRequest chatRequest) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        ChatRoomEntity chatRoomE = em.find(ChatRoomEntity.class, chatRequest.getChatRoomId());
+        em.remove(chatRoomE);
+        return true;
     }
 
     @Override
-    public boolean receiveMessage(MessageChatRequest chatRequest) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public boolean createNewChatRoom(NewChatRoomChatRequest chatRequest) throws ChatManagerException {
+        ChatRoomEntity existingCR = getChatRoomByName(chatRequest.getRoomName());
+        AccountEntity accountE = em.find(AccountEntity.class, chatRequest.getAccountId());
+        if (existingCR != null | accountE == null) {
+            return false;
+        }
+        ChatRoomEntity chatRoomE = new ChatRoomEntity();
+        chatRoomE.setRoomName(chatRequest.getRoomName());
+        try {
+            em.persist(chatRoomE);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+        chatRoomE.setOwner(accountE);
+        chatRoomE.getMembers().add(accountE);
+        chatRoomE.getAdmins().add(accountE);
+        return true;
+    }
+
+    @Override
+    public boolean receiveMessage(MessageChatRequest chatRequest) throws ChatManagerException {
+        ChatRoomEntity chatRoomE = em.find(ChatRoomEntity.class, chatRequest.getChatRoomId());
+        AccountEntity accountE = em.find(AccountEntity.class, chatRequest.getUserId());
+        if (chatRoomE == null | accountE == null) {
+            throw new ChatManagerException("Could not receive Message.");
+        }
+        Message message = chatRequest.getMessage();
+        MessageEntity messageE = new TextMessageEntity();
+        messageE.setCreationDate(message.getTimestamp());
+        messageE.setContent(message.getContent());
+        try {
+            em.persist(messageE);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+        messageE.setAuthor(accountE);
+        messageE.setChatRoom(chatRoomE);
+        return true;
     }
 
     @Override
@@ -181,7 +240,7 @@ public class ChatManagerImpl implements ChatManager {
             em.persist(chatRoomEntity);
         } catch (Exception e) {
             e.printStackTrace();
-            return null;
+            return chatRoomEntitys;
         }
         //create maybe more default ChatRooms
 
