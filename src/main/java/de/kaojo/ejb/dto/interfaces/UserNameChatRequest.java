@@ -9,8 +9,8 @@ package de.kaojo.ejb.dto.interfaces;
  *
  * @author jwinter
  */
-public interface UserTokenChatRequest {
+public interface UserNameChatRequest {
 
-    public String getUserToken();
+    public String getUserName();
 
 }

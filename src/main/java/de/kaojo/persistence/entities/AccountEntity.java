@@ -79,9 +79,6 @@ public class AccountEntity extends AbstractEntity<Long> implements Serializable 
     @Pattern(regexp = "^[0-9a-zA-Z]*$")
     private String userName;
 
-    @Column(unique = true)
-    private String userToken;
-
     public Boolean getActive() {
         return active;
     }
@@ -192,14 +189,6 @@ public class AccountEntity extends AbstractEntity<Long> implements Serializable 
 
     public void setUserName(String userName) {
         this.userName = userName;
-    }
-
-    public String getUserToken() {
-        return userToken;
-    }
-
-    public void setUserToken(String userToken) {
-        this.userToken = userToken;
     }
 
 }

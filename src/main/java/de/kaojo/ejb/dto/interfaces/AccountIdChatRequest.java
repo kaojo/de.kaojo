@@ -9,8 +9,8 @@ package de.kaojo.ejb.dto.interfaces;
  *
  * @author jwinter
  */
-public interface UserIdChatRequest {
+public interface AccountIdChatRequest {
 
-    public Long getUserId();
+    public Long getAccountId();
 
 }

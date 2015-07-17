@@ -18,7 +18,7 @@ function connectToChatRooms() {
 }
 
 function connectToChatRoom(chatRoom) {
-    var wsocket = new WebSocket(serviceLocation + chatRoom + '/' + getUserToken());
+    var wsocket = new WebSocket(serviceLocation + chatRoom);
     wsocket.onmessage = onMessageReceived;
     return wsocket;
 }
@@ -104,8 +104,4 @@ function getNicelyFormatedTime(date) {
     minute = m < 10 ? ('0' + m) : m;
 
     return day + "." + month + "." + year + " " + hour + ":" + minute;
-}
-
-function getUserToken() {
-    return $("#userToken").text();
 }

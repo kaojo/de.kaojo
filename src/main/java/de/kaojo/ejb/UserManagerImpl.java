@@ -105,6 +105,15 @@ public class UserManagerImpl implements UserManager {
         return mapUserEntityToUserDTO(accountEntity);
     }
 
+    @Override
+    public UserDTO getUserWithoutPassword(String userName) {
+        AccountEntity account = getUserByName(userName);
+        if (account == null) {
+            return null;
+        }
+        return mapUserEntityToUserDTO(account);
+    }
+
     private UserDTO mapUserEntityToUserDTO(AccountEntity userEntity) {
 
         UserDTO.UserDTOBuilder userDTOBuilder = new UserDTO.UserDTOBuilder();

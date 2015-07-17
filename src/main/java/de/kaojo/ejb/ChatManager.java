@@ -9,8 +9,9 @@ import de.kaojo.chat.model.ChatRoom;
 import de.kaojo.ejb.dto.interfaces.ChatRoomChatRequest;
 import de.kaojo.ejb.dto.interfaces.ChatRoomNameChatRequest;
 import de.kaojo.ejb.dto.interfaces.MessageChatRequest;
-import de.kaojo.ejb.dto.interfaces.UserIdChatRequest;
-import de.kaojo.ejb.dto.interfaces.UserTokenChatRequest;
+import de.kaojo.ejb.dto.interfaces.AccountIdChatRequest;
+import de.kaojo.ejb.dto.interfaces.UserNameChatRequest;
+import de.kaojo.ejb.exceptions.ChatManagerException;
 import java.util.List;
 import javax.ejb.Local;
 
@@ -21,28 +22,26 @@ import javax.ejb.Local;
 @Local
 public interface ChatManager {
 
-    public List<ChatRoom> getChatRooms(UserIdChatRequest chatRequest);
+    public List<ChatRoom> getChatRooms(AccountIdChatRequest chatRequest) throws ChatManagerException;
 
-    public List<ChatRoom> getAccessibleChatRooms(UserIdChatRequest chatRequest);
+    public List<ChatRoom> getAccessibleChatRooms(AccountIdChatRequest chatRequest) throws ChatManagerException;
 
-    public boolean addUserToChatRoom(ChatRoomChatRequest chatRequest);
+    public boolean addUserToChatRoom(ChatRoomChatRequest chatRequest) throws ChatManagerException;
 
-    public boolean removeUserFromChatRoom(ChatRoomChatRequest chatRequest);
+    public boolean removeUserFromChatRoom(ChatRoomChatRequest chatRequest) throws ChatManagerException;
 
-    public boolean inviteUserToChatRoom(ChatRoomChatRequest chatRequest);
+    public boolean inviteUserToChatRoom(ChatRoomChatRequest chatRequest) throws ChatManagerException;
 
-    public boolean addAdminToChatRoom(ChatRoomChatRequest chatRequest);
+    public boolean addAdminToChatRoom(ChatRoomChatRequest chatRequest) throws ChatManagerException;
 
-    public boolean deleteChatRoom(ChatRoomChatRequest chatRequest);
+    public boolean deleteChatRoom(ChatRoomChatRequest chatRequest) throws ChatManagerException;
 
-    public boolean receiveMessage(MessageChatRequest chatRequest);
+    public boolean receiveMessage(MessageChatRequest chatRequest) throws ChatManagerException;
 
-    public boolean createUserToken(UserIdChatRequest chatRequest);
+    public String getDisplayNameFromAccountId(AccountIdChatRequest chatRequest) throws ChatManagerException;
 
-    public String getDisplayNameFromToken(UserTokenChatRequest chatRequest);
+    public Long getAccountIdFromUserName(UserNameChatRequest chatRequest) throws ChatManagerException;
 
-    public Long getAccountIdFromToken(UserTokenChatRequest chatRequest);
-
-    public Long getChatRoomIdFromChatRoomName(ChatRoomNameChatRequest chatRequest);
+    public Long getChatRoomIdFromChatRoomName(ChatRoomNameChatRequest chatRequest) throws ChatManagerException;
 
 }

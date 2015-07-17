@@ -7,12 +7,15 @@ package de.kaojo.chat;
 
 import de.kaojo.chat.model.Message;
 import de.kaojo.ejb.ChatManager;
+import de.kaojo.ejb.dto.AccountIdChatRequestImpl;
 import de.kaojo.ejb.dto.interfaces.ChatRoomNameChatRequest;
 import de.kaojo.ejb.dto.ChatRoomNameChatRequestImpl;
-import de.kaojo.ejb.dto.interfaces.UserTokenChatRequest;
-import de.kaojo.ejb.dto.UserTokenChatRequestImpl;
+import de.kaojo.ejb.dto.interfaces.UserNameChatRequest;
+import de.kaojo.ejb.dto.UserNameChatRequestImpl;
 import de.kaojo.ejb.dto.interfaces.MessageChatRequest;
 import de.kaojo.ejb.dto.MessageChatRequestImpl;
+import de.kaojo.ejb.dto.interfaces.AccountIdChatRequest;
+import de.kaojo.ejb.exceptions.ChatManagerException;
 import java.io.IOException;
 import java.util.Map;
 import javax.inject.Inject;
@@ -27,7 +30,7 @@ import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 
 @ServerEndpoint(
-        value = "/chatrooms/{room-name}/{user-token}",
+        value = "/chatrooms/{room-name}",
         encoders = {TextMessageEncoder.class},
         decoders = {TextMessageDecoder.class}
 )
@@ -37,41 +40,45 @@ public class ChatEndpoint {
     ChatManager chatManager;
 
     public static final String CHAT_USER_PARAM = "chatUser";
-    public static final String CHAT_USER_ID_PARAM = "userId";
+    public static final String ACCOUNT_ID_PARAM = "accountId";
     public static final String CHAT_ROOM_PARAM = "chatRoom";
     public static final String CHAT_ROOM_ID_PARAM = "chatRoomId";
 
     @OnOpen
     public void open(Session session,
             EndpointConfig c,
-            @PathParam("room-name") String chatRoom, @PathParam("user-token") String userToken) {
+            @PathParam("room-name") String chatRoom) {
+        String name = session.getUserPrincipal().getName();
         System.out.println("openSession with roomName :" + chatRoom);
-        System.out.println("openSession with userToken :" + userToken);
+        if (chatRoom != null) {
+            initSessionUserProperties(session, name, chatRoom);
 
-        if (chatRoom != null && userToken != null) {
-            initSessionUserProperties(session, userToken, chatRoom);
-
-            sendMessageToChatRoom(session, chatRoom, new Message(userToken, userToken + " joined chatroom!"));
+            sendMessageToChatRoom(session, chatRoom, new Message(name, name + " joined chatroom!"));
         }
     }
 
     @OnMessage
-    public void onMessage(Session session, @PathParam("room-name") String chatRoom, @PathParam("user-token") String userToken, Message message) {
+    public void onMessage(Session session, @PathParam("room-name") String chatRoom, Message message) {
         System.out.println("onMessage " + message);
 
-        Long userId = (long) session.getUserProperties().get(CHAT_USER_ID_PARAM);
-        Long chatRoomId = (long) session.getUserProperties().get(CHAT_ROOM_ID_PARAM);
+        String userName = (String) session.getUserProperties().get(CHAT_USER_PARAM);
+        message.setAuthor(userName);
+        Long userId = (Long) session.getUserProperties().get(ACCOUNT_ID_PARAM);
+        Long chatRoomId = (Long) session.getUserProperties().get(CHAT_ROOM_ID_PARAM);
 
         MessageChatRequest chatRequest = new MessageChatRequestImpl(userId, chatRoomId, message);
-        chatManager.receiveMessage(chatRequest);
+//        try {
+//            chatManager.receiveMessage(chatRequest);
+//        } catch (ChatManagerException ex) {
+//            System.out.println(ex.getMessage());
+//        }
 
         sendMessageToChatRoom(session, chatRoom, message);
     }
 
     @OnClose
-    public void onClose(Session session, @PathParam("room-name") String chatRoom, @PathParam("user-token") String userToken) {
+    public void onClose(Session session, @PathParam("room-name") String chatRoom) {
         System.out.println("onClose with roomName: " + chatRoom);
-        System.out.println("onClose with userToken: " + userToken);
 
         String chatUser = (String) session.getUserProperties().get(CHAT_USER_PARAM);
 
@@ -96,18 +103,25 @@ public class ChatEndpoint {
         }
     }
 
-    private void initSessionUserProperties(Session session, String userToken, String chatRoom) {
+    private void initSessionUserProperties(Session session, String name, String chatRoom) {
 
-        UserTokenChatRequest tokenChatRequest = new UserTokenChatRequestImpl(userToken);
-        Long userId = chatManager.getAccountIdFromToken(tokenChatRequest);
-        String userName = chatManager.getDisplayNameFromToken(tokenChatRequest);
-        ChatRoomNameChatRequest chatRoomNameChatRequest = new ChatRoomNameChatRequestImpl(chatRoom);
-        Long chatRoomId = chatManager.getChatRoomIdFromChatRoomName(chatRoomNameChatRequest);
+        try {
+            UserNameChatRequest uChatRequest = new UserNameChatRequestImpl(name);
+            Long accountId = chatManager.getAccountIdFromUserName(uChatRequest);
 
-        Map<String, Object> userProperties = session.getUserProperties();
-        userProperties.put(CHAT_USER_PARAM, userName);
-        userProperties.put(CHAT_USER_ID_PARAM, userId);
-        userProperties.put(CHAT_ROOM_PARAM, chatRoom);
-        userProperties.put(CHAT_ROOM_ID_PARAM, chatRoomId);
+            AccountIdChatRequest aChatRequest = new AccountIdChatRequestImpl(accountId);
+            String displayName = chatManager.getDisplayNameFromAccountId(aChatRequest);
+
+            ChatRoomNameChatRequest chatRoomNameChatRequest = new ChatRoomNameChatRequestImpl(chatRoom);
+            Long chatRoomId = chatManager.getChatRoomIdFromChatRoomName(chatRoomNameChatRequest);
+
+            Map<String, Object> userProperties = session.getUserProperties();
+            userProperties.put(CHAT_USER_PARAM, displayName);
+            userProperties.put(ACCOUNT_ID_PARAM, accountId);
+            userProperties.put(CHAT_ROOM_PARAM, chatRoom);
+            userProperties.put(CHAT_ROOM_ID_PARAM, chatRoomId);
+        } catch (ChatManagerException ex) {
+            System.out.println(ex.getMessage());
+        }
     }
 }

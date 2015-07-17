@@ -24,5 +24,7 @@ public interface UserManager {
     UserDTO getUserFromDB(Credentials credentials);
 
     boolean userAllreadyExists(String userName);
-    
+
+    UserDTO getUserWithoutPassword(String userName);
+
 }

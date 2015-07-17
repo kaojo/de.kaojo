@@ -1,5 +1,7 @@
 package de.kaojo.chat.model;
 
+import de.kaojo.persistence.entities.AccountEntity;
+
 /**
  *
  * @author jwinter
@@ -8,6 +10,11 @@ public class ChatUserImpl implements ChatUser {
 
     private String displayName;
     private Long id;
+
+    ChatUserImpl(AccountEntity accountEntity) {
+        id = accountEntity.getId();
+        displayName = accountEntity.getDisplayName() == null ? accountEntity.getUserName() : accountEntity.getDisplayName();
+    }
 
     @Override
     public String getDisplayName() {

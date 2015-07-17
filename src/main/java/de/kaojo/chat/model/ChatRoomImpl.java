@@ -5,8 +5,12 @@
  */
 package de.kaojo.chat.model;
 
+import de.kaojo.persistence.entities.AccountEntity;
+import de.kaojo.persistence.entities.ChatRoomEntity;
+import de.kaojo.persistence.entities.MessageEntity;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 /**
  *
@@ -21,12 +25,6 @@ public class ChatRoomImpl implements ChatRoom {
     private ChatUser owner;
     private boolean unrestricted = false;
 
-    public ChatRoomImpl(Long id, String name, List<ChatUser> chatUsers) {
-        this.id = id;
-        this.name = name;
-        this.chatUsers = chatUsers;
-    }
-
     public ChatRoomImpl(Long id, String name, List<ChatUser> chatUsers, List<Message> messages, ChatUser owner, boolean unrestricted) {
         this.owner = owner;
         this.unrestricted = unrestricted;
@@ -34,6 +32,16 @@ public class ChatRoomImpl implements ChatRoom {
         this.name = name;
         this.chatUsers.addAll(chatUsers);
         this.messageHistory.addAll(messages);
+    }
+
+    public ChatRoomImpl(ChatRoomEntity chatRoomEntity) {
+        id = chatRoomEntity.getId();
+        name = chatRoomEntity.getRoomName();
+        Set<AccountEntity> members = chatRoomEntity.getMembers();
+        chatUsers = mapMembers(members);
+        owner = chatRoomEntity.getOwner() != null ? new ChatUserImpl(chatRoomEntity.getOwner()) : null;
+        Set<MessageEntity> messages = chatRoomEntity.getMessages();
+        messageHistory = mapMessages(messages);
     }
 
     @Override
@@ -101,4 +109,19 @@ public class ChatRoomImpl implements ChatRoom {
         return unrestricted ? name + " (public)" : name;
     }
 
+    private List<ChatUser> mapMembers(Set<AccountEntity> members) {
+        List<ChatUser> result = new ArrayList<>();
+        for (AccountEntity accountEntity : members) {
+            result.add(new ChatUserImpl(accountEntity));
+        }
+        return result;
+    }
+
+    private List<Message> mapMessages(Set<MessageEntity> messages) {
+        List<Message> result = new ArrayList<>();
+        for (MessageEntity messageEntity : messages) {
+            result.add(new Message(messageEntity));
+        }
+        return result;
+    }
 }

@@ -7,6 +7,7 @@ package de.kaojo.context.controller;
 
 import de.kaojo.context.model.user.User;
 import de.kaojo.context.model.user.DefaultUser;
+import static de.kaojo.context.util.FacesContextHelper.getRequest;
 import de.kaojo.ejb.UserManager;
 import de.kaojo.ejb.dto.interfaces.Credentials;
 import de.kaojo.ejb.dto.CredentialsImpl;
@@ -32,8 +33,9 @@ import javax.servlet.http.HttpSession;
 @Named("loginController")
 @RequestScoped
 public class LoginController {
-    
+
     private static final String CHAT_PAGE_REDIRECT = "/pages/user/chat?faces-redirect=true;";
+    private static final String LOGOUT_PAGE_REDIRECT = "/pages/public/logout?faces-redirect=true;";
 
     private String loginPass;
     private String loginName;
@@ -46,7 +48,7 @@ public class LoginController {
     @Inject
     @DefaultUser
     private User user;
-    
+
     @EJB
     private UserManager userManager;
 
@@ -196,24 +198,12 @@ public class LoginController {
         return SecureHashingAlgorithmHelper.hashSHA256(pass);
     }
 
-    public static HttpServletRequest getRequest() {
-        HttpServletRequest request
-                = (HttpServletRequest) FacesContext
-                .getCurrentInstance()
-                .getExternalContext()
-                .getRequest();
-        if (request == null) {
-            throw new RuntimeException("Sorry. Got a null request from FacesContext");
-        }
-        return request;
-    }
-    
     public String logoutButton() throws ServletException {
         HttpServletRequest request = getRequest();
         request.logout();
         HttpSession session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(false);
         session.invalidate();
-        return CHAT_PAGE_REDIRECT;
+        return LOGOUT_PAGE_REDIRECT;
     }
 
     private boolean isLoginRequired() {

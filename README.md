@@ -23,7 +23,6 @@ Basic funcitionalities:
 
 Chat:
 * implement all ChatManager methods
-* create userToken/uuid/sessionId concept
 * Implement persisting Messages and ChatRooms to DB
 * Implement Creation of new ChatRooms
 * Implement chatRoom administration (create chatRoom-administration lightbox or separate page)
