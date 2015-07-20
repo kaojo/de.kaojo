@@ -67,17 +67,19 @@
                                     <!--Chatwindow-->
                                     <div id="#{chatRoom.name}:chatBoard" class="ui-grid-col-8 contentDiv chatBoard">
                                         <div class="ui-grid  ui-grid-responsive">
-                                            <!--                                            <div class="ui-grid-row">
-                                                                                            <div class="ui-grid-col-3 contentDiv">
-                                                                                                <h:panelGrid columns="1" cellpadding="1" >
-                                                                                                    <h:outputText value="author"/>
-                                                                                                    <h:outputText value="timestamp"/>
-                                                                                                </h:panelGrid>
-                                                                                            </div>
-                                                                                            <div class="ui-grid-col-9 contentDiv">
-                                                                                                <h:outputText value="content"/>
-                                                                                            </div>
-                                                                                        </div>-->
+                                            <ui:repeat value="#{chatRoom.messageHistory}" var="message">
+                                                <div class="ui-grid-row">
+                                                    <div class="ui-grid-col-3 contentDiv">
+                                                        <h:panelGrid columns="1" cellpadding="1" >
+                                                            <h:outputText value="#{message.author}"/>
+                                                            <h:outputText value="#{message.timestamp}" />
+                                                        </h:panelGrid>
+                                                    </div>
+                                                    <div class="ui-grid-col-9 contentDiv">
+                                                        <h:outputText value="#{message.content}"/>
+                                                    </div>
+                                                </div>
+                                            </ui:repeat>
                                         </div>
                                     </div>
                                     <!--Userlist-->

@@ -67,11 +67,11 @@ public class ChatEndpoint {
         Long chatRoomId = (Long) session.getUserProperties().get(CHAT_ROOM_ID_PARAM);
 
         MessageChatRequest chatRequest = new MessageChatRequestImpl(userId, chatRoomId, message);
-//        try {
-//            chatManager.receiveMessage(chatRequest);
-//        } catch (ChatManagerException ex) {
-//            System.out.println(ex.getMessage());
-//        }
+        try {
+            chatManager.receiveMessage(chatRequest);
+        } catch (ChatManagerException ex) {
+            System.out.println(ex.getMessage());
+        }
 
         sendMessageToChatRoom(session, chatRoom, message);
     }
