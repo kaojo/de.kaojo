@@ -7,6 +7,7 @@ package de.kaojo.persistence.entities;
 
 import java.util.HashSet;
 import java.util.Set;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
@@ -14,6 +15,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
 /**
@@ -46,7 +48,8 @@ public class ChatRoomEntity extends AbstractEntity<Long> {
     )
     private Set<AccountEntity> members;
 
-    @OneToMany(mappedBy = "chatRoom")
+    @OneToMany(mappedBy = "chatRoom", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OrderBy(value = "creationDate ASC")
     private Set<MessageEntity> messages;
 
     @ManyToOne
