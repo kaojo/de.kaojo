@@ -10,10 +10,12 @@ public class NewChatRoomChatRequestImpl implements NewChatRoomChatRequest {
 
     private final Long AccountId;
     private final String roomName;
+    private final boolean publicChatRoom;
 
-    public NewChatRoomChatRequestImpl(Long AccountId, String roomName) {
+    public NewChatRoomChatRequestImpl(Long AccountId, String roomName, boolean publicChatRoom) {
         this.AccountId = AccountId;
         this.roomName = roomName;
+        this.publicChatRoom = publicChatRoom;
     }
 
     @Override
@@ -24,6 +26,11 @@ public class NewChatRoomChatRequestImpl implements NewChatRoomChatRequest {
     @Override
     public String getRoomName() {
         return roomName;
+    }
+
+    @Override
+    public boolean isPublicChatRoom() {
+        return this.publicChatRoom;
     }
 
 }

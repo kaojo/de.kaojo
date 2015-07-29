@@ -21,5 +21,7 @@ public interface ChatRoom {
     public ChatUser getOwner();
     
     public boolean isUnrestricted();
+    
+    public void setMessageHistory(List<Message> messages);
 
 }

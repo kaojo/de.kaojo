@@ -25,23 +25,12 @@ public class ChatRoomImpl implements ChatRoom {
     private ChatUser owner;
     private boolean unrestricted = false;
 
-    public ChatRoomImpl(Long id, String name, List<ChatUser> chatUsers, List<Message> messages, ChatUser owner, boolean unrestricted) {
-        this.owner = owner;
-        this.unrestricted = unrestricted;
-        this.id = id;
-        this.name = name;
-        this.chatUsers.addAll(chatUsers);
-        this.messageHistory.addAll(messages);
-    }
-
     public ChatRoomImpl(ChatRoomEntity chatRoomEntity) {
         id = chatRoomEntity.getId();
         name = chatRoomEntity.getRoomName();
         Set<AccountEntity> members = chatRoomEntity.getMembers();
         chatUsers = mapMembers(members);
         owner = chatRoomEntity.getOwner() != null ? new ChatUserImpl(chatRoomEntity.getOwner()) : null;
-        Set<MessageEntity> messages = chatRoomEntity.getMessages();
-        messageHistory = mapMessages(messages);
     }
 
     @Override
@@ -117,11 +106,4 @@ public class ChatRoomImpl implements ChatRoom {
         return result;
     }
 
-    private List<Message> mapMessages(Set<MessageEntity> messages) {
-        List<Message> result = new ArrayList<>();
-        for (MessageEntity messageEntity : messages) {
-            result.add(new Message(messageEntity));
-        }
-        return result;
-    }
 }

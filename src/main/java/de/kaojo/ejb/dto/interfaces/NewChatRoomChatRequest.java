@@ -9,4 +9,6 @@ public interface NewChatRoomChatRequest {
     public String getRoomName();
 
     public Long getAccountId();
+    
+    public boolean isPublicChatRoom();
 }

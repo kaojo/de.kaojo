@@ -10,6 +10,6 @@ postgres:
   image: kaojo/postgres
   environment:
   - POSTGRES_USER=kaojo
-  - POSTGRES_PASSWORD=admin
+  - POSTGRES_PASSWORD
   volumes:
    - /home/jwinter/workspace/postgres-data:/var/lib/postgresql/data

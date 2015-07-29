@@ -105,22 +105,23 @@ public class ChatManagerImpl implements ChatManager {
 
     @Override
     public boolean createNewChatRoom(NewChatRoomChatRequest chatRequest) throws ChatManagerException {
-        ChatRoomEntity existingCR = getChatRoomByName(chatRequest.getRoomName());
-        AccountEntity accountE = em.find(AccountEntity.class, chatRequest.getAccountId());
-        if (existingCR != null | accountE == null) {
+        List<ChatRoomEntity> chatRoomEntities = getChatRoomsByName(chatRequest.getRoomName());
+        AccountEntity accountEntity = em.find(AccountEntity.class, chatRequest.getAccountId());
+        if (!chatRoomEntities.isEmpty() || accountEntity == null) {
             return false;
         }
         ChatRoomEntity chatRoomE = new ChatRoomEntity();
         chatRoomE.setRoomName(chatRequest.getRoomName());
+        chatRoomE.setUnrestricted(chatRequest.isPublicChatRoom());
         try {
             em.persist(chatRoomE);
         } catch (Exception e) {
             e.printStackTrace();
             return false;
         }
-        chatRoomE.setOwner(accountE);
-        chatRoomE.getMembers().add(accountE);
-        chatRoomE.getAdmins().add(accountE);
+        chatRoomE.setOwner(accountEntity);
+        chatRoomE.getMembers().add(accountEntity);
+        chatRoomE.getAdmins().add(accountEntity);
         return true;
     }
 
@@ -153,7 +154,11 @@ public class ChatManagerImpl implements ChatManager {
 
     @Override
     public Long getChatRoomIdFromChatRoomName(ChatRoomNameChatRequest chatRequest) throws ChatManagerException {
-        return getChatRoomByName(chatRequest.getChatRoomName()).getId();
+        List<ChatRoomEntity> resultList = getChatRoomsByName(chatRequest.getChatRoomName());
+        if (resultList.isEmpty() | resultList.size() != 1) {
+            throw new ChatManagerException("Invalid chatRoomName supplied, chatRoomName: " + chatRequest.getChatRoomName());
+        }
+        return resultList.get(0).getId();
     }
 
     @Override
@@ -204,14 +209,10 @@ public class ChatManagerImpl implements ChatManager {
         return (AccountEntity) resultList.get(0);
     }
 
-    private ChatRoomEntity getChatRoomByName(String chatRoomName) throws ChatManagerException {
+    private List<ChatRoomEntity> getChatRoomsByName(String chatRoomName) throws ChatManagerException {
         Query query = em.createQuery("SELECT cr FROM ChatRoomEntity cr WHERE cr.roomName = :chatRoomName");
         query.setParameter("chatRoomName", chatRoomName);
-        List resultList = query.getResultList();
-        if (resultList.isEmpty() | resultList.size() != 1) {
-            throw new ChatManagerException("Invalid chatRoomName supplied, chatRoomName: " + chatRoomName);
-        }
-        return (ChatRoomEntity) resultList.get(0);
+        return query.getResultList();
     }
 
     private List<ChatRoom> mapChatRooms(List<ChatRoomEntity> chatRoomsentities) {
@@ -224,7 +225,8 @@ public class ChatManagerImpl implements ChatManager {
     }
 
     private ChatRoom mapChatRoomEntityToChatRoom(ChatRoomEntity chatRoomEntity) {
-        return new ChatRoomImpl(chatRoomEntity);
+        ChatRoomImpl chatRoomImpl = new ChatRoomImpl(chatRoomEntity);
+        return chatRoomImpl;
     }
 
     private String getDisplayName(AccountEntity accountEntity) {
@@ -246,5 +248,23 @@ public class ChatManagerImpl implements ChatManager {
 
         chatRoomEntitys.add(chatRoomEntity);
         return chatRoomEntitys;
+    }
+    
+    
+    private List<Message> mapMessages(List<MessageEntity> messages) {
+        List<Message> result = new ArrayList<>();
+        for (MessageEntity messageEntity : messages) {
+            result.add(new Message(messageEntity));
+        }
+        return result;
+    }
+
+    @Override
+    public List<Message> getOldMessages(ChatRoomNameChatRequest chatRequest) throws ChatManagerException {
+        String chatRoomName = chatRequest.getChatRoomName();
+        Query query = em.createQuery("SELECT me FROM MessageEntity me JOIN me.chatRoom cr WHERE cr.roomName = :chatRoomName ORDER BY me.creationDate");
+        query.setParameter("chatRoomName", chatRoomName);
+        List resultList = (List<MessageEntity>) query.getResultList();
+        return mapMessages(resultList);
     }
 }
