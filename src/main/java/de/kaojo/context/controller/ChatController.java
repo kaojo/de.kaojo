@@ -16,10 +16,8 @@ import de.kaojo.ejb.exceptions.ChatManagerException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.ejb.EJB;
-import javax.enterprise.context.RequestScoped;
+import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
@@ -30,7 +28,7 @@ import javax.inject.Named;
  * @author julian
  */
 @Named("chatController")
-@RequestScoped
+@SessionScoped
 public class ChatController implements Serializable {
 
     private static final String CHAT_PAGE_REDIRECT = "chat?faces-redirect=true;";
@@ -107,7 +105,7 @@ public class ChatController implements Serializable {
         try {
             oldMessages = chatManager.getOldMessages(chatRequest);
         } catch (ChatManagerException ex) {
-            //
+            addMessage("Old Messages couldn't get loaded");
         }
         ChatRoom room = getChatRoomByName(chatRoom);
         if (room != null) {

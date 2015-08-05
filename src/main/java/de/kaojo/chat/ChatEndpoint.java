@@ -49,7 +49,7 @@ public class ChatEndpoint {
             EndpointConfig c,
             @PathParam("room-name") String chatRoom) {
         String name = session.getUserPrincipal().getName();
-        System.out.println("openSession with roomName :" + chatRoom);
+        System.out.println("openSession with roomName: " + chatRoom);
         if (chatRoom != null) {
             initSessionUserProperties(session, name, chatRoom);
 

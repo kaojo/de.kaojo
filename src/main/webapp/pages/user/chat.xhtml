@@ -71,14 +71,14 @@
                     </p:panel>
                 </h:form>
                 <h:form id="tabview">
-                    <p:tabView id="chatTabView" scrollable="true" value="#{chatController.chatRooms}" var="chatRoom">
+                    <p:tabView id="chatTabView" scrollable="true" value="#{chatController.chatRooms}" var="chatRoom" cache="true">
                         <p:tab id="chatRoom" title="#{chatRoom.name}" >
                             <div class="ui-grid  ui-grid-responsive">
                                 <div class="ui-grid-row">
-                                    <div class="ui-grid-col-8 contentDiv">
+                                    <div class="ui-grid-col-8 contentDiv moreMessages">
                                         <c:set var="roomVar" value="#{chatRoom.name}"/>
-                                        <p:commandLink id="loadMoreMessages" update="tabview" actionListener="#{chatController.loadMoreMessages([roomVar])}">
-                                            <h:outputText value="old messages" />
+                                        <p:commandLink id="loadMoreMessages" update="@form" actionListener="#{chatController.loadMoreMessages(roomVar)}">
+                                            <h:outputText value="old messages"/>
                                         </p:commandLink>
                                     </div>
                                     <div class="ui-grid-col-4 contentDiv">
@@ -94,7 +94,9 @@
                                                     <div class="ui-grid-col-3 contentDiv">
                                                         <h:panelGrid columns="1" cellpadding="1" >
                                                             <h:outputText value="#{message.author}"/>
-                                                            <h:outputText value="#{message.timestamp}" />
+                                                            <h:outputText value="#{message.timestamp}" >
+                                                                <f:convertDateTime pattern="dd.MM.yy HH:mm"/>
+                                                            </h:outputText>
                                                         </h:panelGrid>
                                                     </div>
                                                     <div class="ui-grid-col-9 contentDiv">

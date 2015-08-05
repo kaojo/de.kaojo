@@ -7,6 +7,8 @@ web:
    - "9999:9999"
    - "8080:8080"
    - "8787:8787"
+   volumes_from:
+    - jbossLog
 postgres:
   image: kaojo/postgres
   environment:
@@ -14,3 +16,7 @@ postgres:
   - POSTGRES_PASSWORD=admin
   volumes:
    - /home/jwinter/workspace/postgres-data:/var/lib/postgresql/data
+jbossLog:
+  image: kaojo/jboss-log
+  volumes:
+    - /home/jwinter/workspace/jbossLog:/logs/jboss

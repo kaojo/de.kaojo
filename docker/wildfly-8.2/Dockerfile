@@ -19,4 +19,8 @@ COPY commands.cli execute.sh postgresql-9.4-1201.jdbc4.jar $CONFIG/
 RUN $CONFIG/execute.sh && \
     rm -rf $JBOSS_CONFIG/standalone_xml_history/current 
 
-CMD ["/opt/jboss/wildfly/bin/standalone.sh", "-b", "0.0.0.0", "-bmanagement", "0.0.0.0"]
+ENTRYPOINT ["/opt/jboss/wildfly/bin/standalone.sh"]
+
+VOLUME /logs/jboss
+
+CMD ["-b","0.0.0.0","-bmanagement","0.0.0.0"]

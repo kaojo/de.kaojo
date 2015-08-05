@@ -8,7 +8,7 @@ $(document).ready(function () {
 });
 
 function getChatRooms() {
-  $("#tabview\\:chatTabView [href]").each(function () {
+  $("#tabview\\:chatTabView [href][tabindex='-1']").each(function () {
     chatRooms.push($(this).text());
   });
 }

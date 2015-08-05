@@ -20,3 +20,7 @@ and open the template in the editor.
     height: 50vh;
     overflow-y: scroll;
 }
+
+.moreMessages {
+    text-align: center;
+}

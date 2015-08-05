@@ -15,6 +15,8 @@ import de.kaojo.ejb.dto.NewUserRequest;
 import de.kaojo.ejb.dto.UserDTO;
 import de.kaojo.security.util.SecureHashingAlgorithmHelper;
 import java.security.NoSuchAlgorithmException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.ejb.EJB;
 import javax.enterprise.context.RequestScoped;
 import javax.faces.application.FacesMessage;
@@ -158,6 +160,8 @@ public class LoginController {
         this.user.build(userDTO);
         HttpServletRequest request = getRequest();
         request.login(userName, password);
+
+        Logger.getLogger(ChatController.class.getName()).log(Level.INFO, "User {0} logged in.", userName);
         return CHAT_PAGE_REDIRECT;
     }
 

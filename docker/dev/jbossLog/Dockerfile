@@ -1,0 +1,1 @@
+VOLUME /logs/jbossLog

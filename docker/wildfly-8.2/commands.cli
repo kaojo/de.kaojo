@@ -9,16 +9,10 @@ xa-data-source add \
 --user-name=kaojo \
 --password=admin \
 --enabled=true \
---use-ccm=false \
---validate-on-match=false \
---background-validation=false \
---share-prepared-statements=false \
 --max-pool-size=20 \
---same-rm-override=false \
---transaction-isolation= TRANSACTION_READ_UNCOMMITTED \
---interleaving=false \
---pad-xid=false \
---wrap-xa-resource=false
+--transaction-isolation= TRANSACTION_READ_COMMITTED
 /subsystem=security/security-domain=kaojoSecurityDomain:add(cache-type=default)
 /subsystem=security/security-domain=kaojoSecurityDomain/authentication=classic:add(login-modules=[{"code"=>"Database","flag"=>"required","module-options"=>[("hashAlgorithm"=>"SHA-256"),("hashEncoding"=>"base64"),("dsJndiName"=>"java:/jdbc/kaojoDB"),("principalsQuery"=>"SELECT password FROM account WHERE username=?"),("rolesQuery"=>"SELECT roles, 'Roles' FROM roles WHERE roles.id= (SELECT roles_id FROM account_roles WHERE account_id = (SELECT id FROM account WHERE username=?))")]}]
-
+/path=jbossLog:add(path=server.log)
+/path=jboss.log:add(path=/logs/jboss)
+/subsystem=logging/periodic-rotating-file-handler=FILE:change-file(file={path=jbossLog,relative-to=jboss.log})
