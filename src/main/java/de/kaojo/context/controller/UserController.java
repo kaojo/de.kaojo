@@ -1,19 +1,13 @@
-/*
- * Diese Software ist Eigentum von Julian Winter
- * Alle Rechte sind vorbehalten.
- * Copyright 2015.
- */
 package de.kaojo.context.controller;
 
 import de.kaojo.context.model.user.User;
 import de.kaojo.context.model.user.DefaultUser;
-import de.kaojo.context.model.user.UserImpl;
 import static de.kaojo.context.util.FacesContextHelper.getRequest;
 import de.kaojo.ejb.UserManager;
 import de.kaojo.ejb.dto.UserDTO;
 import java.io.Serializable;
 import javax.ejb.EJB;
-import javax.enterprise.context.RequestScoped;
+import javax.enterprise.context.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -24,7 +18,7 @@ import javax.servlet.http.HttpServletRequest;
  * @author julian
  */
 @Named("userController")
-@RequestScoped
+@SessionScoped
 public class UserController implements Serializable {
 
     @Inject

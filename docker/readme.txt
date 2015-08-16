@@ -2,7 +2,7 @@
 
 ### Docker Images bauen ###
 > cd docker/wildfly-8.2
-> sudo docker build --tag=kaojo/wildfly-db .
+> sudo docker build --tag=kaojo/wildfly .
 > cd ../postgres-9.4
 > sudo docker build --tag=kaojo/postgres .
 
