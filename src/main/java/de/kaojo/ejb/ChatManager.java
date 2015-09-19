@@ -49,4 +49,8 @@ public interface ChatManager {
     public Long getChatRoomIdFromChatRoomName(ChatRoomNameChatRequest chatRequest) throws ChatManagerException;
 
     public List<Message> getOldMessages(ChatRoomNameChatRequest chatRequest) throws ChatManagerException;
+    
+    public ChatRoom getChatRoomByChatRoomId(ChatRoomChatRequest chatRequest) throws ChatManagerException;
+    
+    public ChatRoom getChatRoomByChatRoomName(ChatRoomNameChatRequest chatRequest) throws ChatManagerException;
 }

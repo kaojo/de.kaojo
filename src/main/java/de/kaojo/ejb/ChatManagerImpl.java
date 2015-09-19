@@ -267,4 +267,23 @@ public class ChatManagerImpl implements ChatManager {
         List resultList = (List<MessageEntity>) query.getResultList();
         return mapMessages(resultList);
     }
+
+    @Override
+    public ChatRoom getChatRoomByChatRoomId(ChatRoomChatRequest chatRequest) throws ChatManagerException {
+        Long chatRoomId = chatRequest.getChatRoomId();
+        ChatRoomEntity chatRoomEntity = em.find(ChatRoomEntity.class, chatRoomId);
+        return mapChatRoomEntityToChatRoom(chatRoomEntity);
+    }
+
+    @Override
+    public ChatRoom getChatRoomByChatRoomName(ChatRoomNameChatRequest chatRequest) throws ChatManagerException {
+        String chatRoomName = chatRequest.getChatRoomName();
+        Query query = em.createQuery("SELECT cr FROM ChatRoomEntity cr WHERE cr.roomName = :chatRoomName");
+        query.setParameter("chatRoomName", chatRoomName);
+        List resultList = (List<ChatRoomEntity>) query.getResultList();
+        if (resultList.isEmpty() | resultList.size() != 1) {
+            throw new ChatManagerException("Invalid chatRoomName supplied, chatRoomName: " + chatRequest.getChatRoomName());
+        }
+        return mapChatRoomEntityToChatRoom((ChatRoomEntity) resultList.get(0));
+    }
 }

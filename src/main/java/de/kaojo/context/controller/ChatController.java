@@ -16,6 +16,8 @@ import de.kaojo.ejb.exceptions.ChatManagerException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
@@ -37,8 +39,8 @@ public class ChatController implements Serializable {
     private String openRoom;
     private boolean openPublicRoom;
     private String joinRoom;
-    private List<ChatRoom> chatRooms;
-    private List<ChatRoom> accessibleRooms;
+    private List<ChatRoom> chatRooms = new ArrayList();
+    private List<ChatRoom> accessibleRooms = new ArrayList();
 
     @Inject
     @DefaultUser
@@ -61,6 +63,14 @@ public class ChatController implements Serializable {
             return CHAT_PAGE_NO_REDIRECT;
         }
         if (result) {
+            ChatRoomNameChatRequestImpl chatRequest = new ChatRoomNameChatRequestImpl(openRoom);
+            try {
+                ChatRoom chatRoom = chatManager.getChatRoomByChatRoomName(chatRequest);
+                chatRooms.add(chatRoom);
+            } catch (ChatManagerException ex) {
+                addMessage("Error opening ChatRoom '" + openRoom + "'");
+                Logger.getLogger(ChatController.class.getName()).log(Level.SEVERE, null, ex);
+            }
             return CHAT_PAGE_REDIRECT;
         }
         return CHAT_PAGE_NO_REDIRECT;
@@ -84,9 +94,13 @@ public class ChatController implements Serializable {
         if (chatRoomId != null) {
             ChatRoomChatRequest chatRequest = new ChatRoomChatRequestImpl(chatRoomId, user.getUserId());
             try {
-                chatManager.addUserToChatRoom(chatRequest);
+                if (chatManager.addUserToChatRoom(chatRequest)) {
+                    ChatRoom chatRoom = getChatRoomFromDB(chatRoomId);
+                    chatRooms.add(chatRoom);
+                }
             } catch (ChatManagerException ex) {
-                System.out.println(ex.getMessage());
+                Logger.getLogger(ChatController.class.getName()).log(Level.SEVERE, null, ex);
+                addMessage("Can't join ChatRoom with name '" + joinRoom + "'");
             }
             return "chat?faces-redirect=true;";
         }
@@ -119,7 +133,7 @@ public class ChatController implements Serializable {
     }
 
     public List<ChatRoom> getChatRooms() {
-        if (chatRooms == null) {
+        if (chatRooms.isEmpty()) {
             AccountIdChatRequest chatRequest = new AccountIdChatRequestImpl(user.getUserId());
             try {
                 chatRooms = chatManager.getChatRooms(chatRequest);
@@ -179,6 +193,11 @@ public class ChatController implements Serializable {
             }
         }
         return null;
+    }
+
+    private ChatRoom getChatRoomFromDB(Long chatRoomId) throws ChatManagerException {
+        ChatRoomChatRequestImpl chatRequest = new ChatRoomChatRequestImpl(chatRoomId, user.getUserId());
+        return chatManager.getChatRoomByChatRoomId(chatRequest);
     }
 
 }
