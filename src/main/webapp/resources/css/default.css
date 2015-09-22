@@ -8,6 +8,39 @@ Copyright 2015.
     Author     : julian
 */
 
+.body {
+    height:100vh;
+}
+
 .displayName {
     margin: auto auto;
+}
+
+.chatTopRoomInput {
+    width:100%;
+}
+
+.atomicContent {
+    margin:2px 5px !important;
+}
+
+.headerBackground {
+    background-attachment: scroll;
+    background-clip: border-box;
+    background-color: rgb(196, 196, 196);
+    background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(rgba(255, 255, 255, 0.8)), to(rgba(255, 255, 255, 0)));
+    background-origin: padding-box;
+    background-size: auto;
+}
+
+.ui-selectonemenu-panel {
+    width:222px
+}
+
+#footerGrid {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: 0px 8px;
 }

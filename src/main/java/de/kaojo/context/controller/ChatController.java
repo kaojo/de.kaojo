@@ -200,4 +200,11 @@ public class ChatController implements Serializable {
         return chatManager.getChatRoomByChatRoomId(chatRequest);
     }
 
+    public String joinRoomVisible() {
+        if (accessibleRooms.isEmpty()) {
+            return "display:none";
+        }
+        return null;
+    }
+
 }

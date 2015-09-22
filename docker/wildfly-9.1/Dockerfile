@@ -15,6 +15,9 @@ RUN $JBOSS_HOME/bin/add-user.sh admin admin --silent
 # Add Postgres Driver, add Scripts for configuration of Jboss Server
 COPY commands.cli execute.sh postgresql-9.4-1201.jdbc4.jar $CONFIG/
 
+# Add custome welcome-app context
+COPY index.html $JBOSS_HOME/welcome-content/
+
 # Run execute.sh --> configures Jboss
 RUN $CONFIG/execute.sh && \
     rm -rf $JBOSS_CONFIG/standalone_xml_history/current 

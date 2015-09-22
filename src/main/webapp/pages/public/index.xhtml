@@ -25,28 +25,28 @@ Copyright 2015.
                     <div class="ui-grid headerDiv ui-grid-responsive">
                         <div class="ui-grid-row">
                             <div class="ui-grid-col-4 contentDiv">
-                                <h:outputText  value="Log in" />
+                                <h3 class="atomicContent">Log in</h3>
                             </div>
                         </div>
                         <div class="ui-grid-row">
                             <div class="ui-grid-col-6 contentDiv">
-                                <p:outputLabel for="loginName" value="Username"/>
+                                <p:outputLabel for="loginName" value="Username" class="atomicContent"/>
                             </div>
                             <div class="ui-grid-col-6">
-                                <p:inputText value="#{loginController.loginName}" id="loginName" autocomplete="false" />
+                                <p:inputText value="#{loginController.loginName}" id="loginName" autocomplete="false" class="atomicContent"/>
                             </div>
                         </div>
                         <div class="ui-grid-row">
                             <div class="ui-grid-col-6 contentDiv">
-                                <p:outputLabel for="loginPass" value="Password"/>
+                                <p:outputLabel for="loginPass" value="Password" class="atomicContent"/>
                             </div>
                             <div class="ui-grid-col-6">
-                                <h:inputSecret value="#{loginController.loginPass}" id="loginPass"/>
+                                <p:password value="#{loginController.loginPass}" id="loginPass" class="atomicContent"/>
                             </div>
                         </div>
                         <div class="ui-grid-row">
                             <div class="ui-grid-col-6">
-                                <p:commandButton id="login" action="#{loginController.loginButton()}" value="Login"/>
+                                <p:commandButton id="login" action="#{loginController.loginButton()}" value="Login" class="atomicContent"/>
                             </div>
                         </div>
                     </div>
@@ -56,52 +56,52 @@ Copyright 2015.
                     <div class="ui-grid headerDiv ui-grid-responsive">
                         <div class="ui-grid-row">
                             <div class="ui-grid-col-4 contentDiv">
-                                <h:outputText  value="Register" />
+                                <h3 class="atomicContent">Register</h3>
                             </div>
                         </div>
                         <div class="ui-grid-row">
                             <div class="ui-grid-col-6 contentDiv">
-                                <p:outputLabel for="userName" value="Username"/>
+                                <p:outputLabel for="userName" value="Username" class="atomicContent"/>
                             </div>
                             <div class="ui-grid-col-6">
-                                <p:inputText value="#{loginController.userName}" id="userName" autocomplete="false"/>
+                                <p:inputText value="#{loginController.userName}" id="userName" autocomplete="false" class="atomicContent"/>
                             </div>
                         </div>
                         <div class="ui-grid-row">
                             <div class="ui-grid-col-6 contentDiv">
-                                <p:outputLabel for="pass" value="Password"/>
+                                <p:outputLabel for="pass" value="Password" class="atomicContent"/>
                             </div>
                             <div class="ui-grid-col-6">
-                                <h:inputSecret value="#{loginController.pass}" id="pass"/>
+                                <p:password value="#{loginController.pass}" id="pass" class="atomicContent"/>
                             </div>
                         </div>
                         <div class="ui-grid-row">
                             <div class="ui-grid-col-6 contentDiv">
-                                <p:outputLabel for="passConfirm" value="Confirm password"/>
+                                <p:outputLabel for="passConfirm" value="Confirm password" class="atomicContent"/>
                             </div>
                             <div class="ui-grid-col-6">
-                                <h:inputSecret value="#{loginController.passConfirm}" id="passConfirm"/>
+                                <p:password value="#{loginController.passConfirm}" id="passConfirm" class="atomicContent"/>
                             </div>
                         </div>
                         <div class="ui-grid-row">
                             <div class="ui-grid-col-6 contentDiv">
-                                <p:outputLabel for="email" value="Mail"/>
+                                <p:outputLabel for="email" value="Mail" class="atomicContent"/>
                             </div>
                             <div class="ui-grid-col-6">
-                                <p:inputText value="#{loginController.email}" id="email"/>
+                                <p:inputText value="#{loginController.email}" id="email" class="atomicContent"/>
                             </div>
                         </div>
                         <div class="ui-grid-row">
                             <div class="ui-grid-col-6 contentDiv">
-                                <p:outputLabel for="emailConfirm" value="Confirm Mail"/>
+                                <p:outputLabel for="emailConfirm" value="Confirm Mail" class="atomicContent"/>
                             </div>
                             <div class="ui-grid-col-6">
-                                <p:inputText value="#{loginController.emailConfirm}" id="emailConfirm"/>
+                                <p:inputText value="#{loginController.emailConfirm}" id="emailConfirm" class="atomicContent"/>
                             </div>
                         </div>
                         <div class="ui-grid-row">
                             <div class="ui-grid-col-6">
-                                <p:commandButton id="register" action="#{loginController.register()}" value="Register"/>
+                                <p:commandButton id="register" action="#{loginController.register()}" value="Register" class="atomicContent"/>
                             </div>
                         </div>
                     </div>

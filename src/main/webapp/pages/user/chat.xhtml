@@ -17,54 +17,46 @@
                 <h:outputScript library="js" target="head" name="chat.js" />
                 <h:outputStylesheet library="css" name="chat.css" />
                 <h:form>
-                    <p:growl id="growl" showDetail="true" life="2000" autoUpdate="true" />
+                    <p:growl id="growl" showDetail="true" life="20000" autoUpdate="true" />
                 </h:form>
                 <h:form id="topForm">
                     <p:panel>
                         <div class="ui-grid  ui-grid-responsive">
                             <div class="ui-grid-row">
                                 <div class="ui-grid-col-4 contentDiv">
-                                    <h:outputText  value="Hallo #{userController.user.displayName}" />
+                                    <h:outputText  value="Hallo #{userController.user.displayName}" class="atomicContent"/>
                                 </div>
                             </div>
                             <p:separator />
                             <div class="ui-grid-row">
                                 <div class="ui-grid-col-4 contentDiv">
-                                    <p:outputLabel for="inputOpenRoom" value="Add a Chatroom"/>
+                                    <p:outputLabel for="inputOpenRoom" value="Add a Chatroom" class="atomicContent"/>
                                 </div>
-                                <div class="ui-grid-col-6 contentDiv">
-                                    <h:panelGrid columns="3" style="margin-bottom:10px" cellpadding="5">
-                                        <p:inputText id="inputOpenRoom" value="#{chatController.openRoom}" maxlength="30"/>
-                                        <p:selectBooleanCheckbox value="#{chatController.openPublicRoom}" />
-                                        <h:outputText value="Public" />
-                                    </h:panelGrid>
+                                <div class="ui-grid-col-6 contentDiv" >
+                                    <p:inputText id="inputOpenRoom" value="#{chatController.openRoom}" maxlength="30" class="atomicContent" />
+                                    <p:selectBooleanCheckbox value="#{chatController.openPublicRoom}" class="atomicContent" />
+                                    <h:outputText value="Public" class="atomicContent" />
                                 </div>
                                 <div class="ui-grid-col-2 contentDiv">
-                                    <h:panelGrid columns="1" style="margin-bottom:10px" cellpadding="5">
-                                        <p:commandButton id="openRoomButton" action="#{chatController.openChatRoom()}" value="Open" update=":tabview inputOpenRoom"/>
-                                    </h:panelGrid>
+                                    <p:commandButton id="openRoomButton" action="#{chatController.openChatRoom()}" value="Open" update=":tabview inputOpenRoom" class="atomicContent"/>
+                                </div>
+                            </div>
+                            <div class="ui-grid-row" style="#{chatController.joinRoomVisible()}">
+                                <div class="ui-grid-col-4 contentDiv">
+                                    <p:outputLabel for="accessibleRooms" class="atomicContent"/>
+                                </div>
+                                <div class="ui-grid-col-6 contentDiv">
+                                    <p:selectOneMenu id="accessibleRooms" value="#{chatController.joinRoom}"  class="atomicContent">
+                                        <f:selectItems value="#{chatController.accessibleRooms}" />
+                                    </p:selectOneMenu>
+                                </div>
+                                <div class="ui-grid-col-2 contentDiv">
+                                    <p:commandButton id="joinChatButton" action="#{chatController.joinChatRoom()}" value="Join" update=":tabview accessibleRooms " class="atomicContent" />
                                 </div>
                             </div>
                             <div class="ui-grid-row">
                                 <div class="ui-grid-col-4 contentDiv">
-                                    <p:outputLabel for="accessibleRooms"/>
-                                </div>
-                                <div class="ui-grid-col-6 contentDiv">
-                                    <h:panelGrid columns="1" style="margin-bottom:10px" cellpadding="5">
-                                        <p:selectOneMenu id="accessibleRooms" value="#{chatController.joinRoom}">
-                                            <f:selectItems value="#{chatController.accessibleRooms}" />
-                                        </p:selectOneMenu>
-                                    </h:panelGrid>
-                                </div>
-                                <div class="ui-grid-col-2 contentDiv">
-                                    <h:panelGrid columns="1" style="margin-bottom:10px" cellpadding="5">
-                                        <p:commandButton id="joinChatButton" action="#{chatController.joinChatRoom()}" value="Join" update=":tabview accessibleRooms " />
-                                    </h:panelGrid>
-                                </div>
-                            </div>
-                            <div class="ui-grid-row">
-                                <div class="ui-grid-col-4 contentDiv">
-                                    <p:commandButton id="refresh" update="@all" icon="ui-icon ui-icon-arrowrefresh-1-e"/>
+                                    <p:commandButton id="refresh" update="@all" icon="ui-icon ui-icon-arrowrefresh-1-e" class="atomicContent"/>
                                 </div>
                             </div>
                         </div>

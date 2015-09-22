@@ -8,18 +8,28 @@
     <body>
 
         <ui:component id="header" >
-            <p:panel>
-                <div class="ui-grid ui-grid-responsive">
-                    <div class="ui-grid-row">
-                        <div class="ui-grid-col-8">
-                            <ui:include src="tabMenu.xhtml" />
-                        </div>
-                        <div class="ui-grid-col-4">
-                            <ui:include src="userDisplay.xhtml" />
+            <h:form>
+                <p:panel class="headerBackground">
+                    <div class="ui-grid ui-grid-responsive">
+                        <div class="ui-grid-row" >
+                            <div class="ui-grid-col-3 contentDiv">
+                                <p:link outcome="/pages/user/chat" value="Chat" />
+                            </div>
+                            <div class="ui-grid-col-3 contentDiv">
+                                <p:link outcome="/pages/user/chat" value="Kontakte" />
+                            </div>
+                            <div class="ui-grid-col-3 contentDiv">
+                                <p:link outcome="/pages/user/chat" value="Verwaltung" />
+                            </div>
+                            <div class="ui-grid-col-3 contentDiv ">
+                                <h:outputText value="#{userController.user.displayName}" class="atomicContent" />
+                                <p:button outcome="myProfile" icon="ui-icon-person" title="myProfile" class="atomicContent" />
+                                <p:commandButton id="logout" action="#{loginController.logoutButton()}" icon="ui-icon-power" class="atomicContent" />
+                            </div>
                         </div>
                     </div>
-                </div>
-            </p:panel>
+                </p:panel>
+            </h:form>
         </ui:component>
     </body>
 </html>
