@@ -1,5 +1,5 @@
 web:
-  build: wildfly-debug/
+  image: kaojo/wildfly-debug
   links:
    - postgres
   ports:

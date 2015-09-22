@@ -16,10 +16,6 @@ Copyright 2015.
     margin: auto auto;
 }
 
-.chatTopRoomInput {
-    width:100%;
-}
-
 .atomicContent {
     margin:2px 5px !important;
 }
@@ -31,10 +27,6 @@ Copyright 2015.
     background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(rgba(255, 255, 255, 0.8)), to(rgba(255, 255, 255, 0)));
     background-origin: padding-box;
     background-size: auto;
-}
-
-.ui-selectonemenu-panel {
-    width:222px
 }
 
 #footerGrid {

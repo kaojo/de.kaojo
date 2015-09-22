@@ -18,4 +18,4 @@ postgres:
 jbossLog:
   image: kaojo/jboss-log
   volumes:
-    - /home/jwinter/workspace/jbossLog:/logs/jboss
+    - /tmp/de.kaojo/logs:/logs/jboss
