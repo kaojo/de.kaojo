@@ -4,6 +4,7 @@ import de.kaojo.chat.model.ChatRoom;
 import de.kaojo.chat.model.Message;
 import de.kaojo.context.model.user.User;
 import de.kaojo.context.model.user.DefaultUser;
+import de.kaojo.context.util.FacesContextHelper;
 import de.kaojo.ejb.ChatManager;
 import de.kaojo.ejb.dto.ChatRoomChatRequestImpl;
 import de.kaojo.ejb.dto.AccountIdChatRequestImpl;
@@ -149,7 +150,8 @@ public class ChatController implements Serializable {
         try {
             accessibleRooms = chatManager.getAccessibleChatRooms(chatRequest);
         } catch (ChatManagerException ex) {
-            System.out.println(ex.getMessage());
+            FacesContextHelper.manageException(ex);
+            Logger.getLogger(ChatController.class.getName()).log(Level.SEVERE, null, ex);
         }
         return accessibleRooms;
     }

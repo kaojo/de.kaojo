@@ -10,6 +10,7 @@ public class ChatUserImpl implements ChatUser {
 
     private String displayName;
     private Long id;
+    private boolean joined = false;
 
     ChatUserImpl(AccountEntity accountEntity) {
         id = accountEntity.getId();
@@ -32,6 +33,15 @@ public class ChatUserImpl implements ChatUser {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    @Override
+    public boolean isJoined() {
+        return joined;
+    }
+
+    public void setJoined(boolean joined) {
+        this.joined = joined;
     }
 
 }

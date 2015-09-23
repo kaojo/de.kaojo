@@ -41,6 +41,15 @@ public class ChatManagerImpl implements ChatManager {
     EntityManager em;
 
     @Override
+    public List<ChatRoom> getAllChatRooms(AccountIdChatRequest chatRequest) throws ChatManagerException {
+        Long accountId = chatRequest.getAccountId();
+        Query query = em.createQuery("SELECT cr FROM ChatRoomEntity cr WHERE (SELECT ac FROM AccountEntity ac WHERE ac.id = :accountId) MEMBER OF cr.invites OR (SELECT ac FROM AccountEntity ac WHERE ac.id = :accountId) MEMBER OF cr.members");
+        query.setParameter("accountId", accountId);
+        List<ChatRoomEntity> result = new ArrayList<>(query.getResultList());
+        return mapChatRooms(result);
+    }
+
+    @Override
     public List<ChatRoom> getChatRooms(AccountIdChatRequest chatRequest) {
         List<ChatRoomEntity> memberedChatRooms = getMemberedChatRooms(chatRequest);
         return mapChatRooms(memberedChatRooms);

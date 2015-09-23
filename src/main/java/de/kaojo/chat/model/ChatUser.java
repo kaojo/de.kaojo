@@ -14,5 +14,7 @@ public interface ChatUser {
     public String getDisplayName();
 
     public Long getId();
+    
+    public boolean isJoined();
 
 }

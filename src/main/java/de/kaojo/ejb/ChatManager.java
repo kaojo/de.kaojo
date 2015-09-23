@@ -24,6 +24,8 @@ import javax.ejb.Local;
 @Local
 public interface ChatManager {
 
+    public List<ChatRoom> getAllChatRooms(AccountIdChatRequest chatRequest) throws ChatManagerException;
+
     public List<ChatRoom> getChatRooms(AccountIdChatRequest chatRequest) throws ChatManagerException;
 
     public List<ChatRoom> getAccessibleChatRooms(AccountIdChatRequest chatRequest) throws ChatManagerException;

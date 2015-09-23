@@ -7,7 +7,6 @@ package de.kaojo.chat.model;
 
 import de.kaojo.persistence.entities.AccountEntity;
 import de.kaojo.persistence.entities.ChatRoomEntity;
-import de.kaojo.persistence.entities.MessageEntity;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -28,8 +27,7 @@ public class ChatRoomImpl implements ChatRoom {
     public ChatRoomImpl(ChatRoomEntity chatRoomEntity) {
         id = chatRoomEntity.getId();
         name = chatRoomEntity.getRoomName();
-        Set<AccountEntity> members = chatRoomEntity.getMembers();
-        chatUsers = mapMembers(members);
+        chatUsers = mapInvitesAndMembers(chatRoomEntity);
         owner = chatRoomEntity.getOwner() != null ? new ChatUserImpl(chatRoomEntity.getOwner()) : null;
     }
 
@@ -55,7 +53,6 @@ public class ChatRoomImpl implements ChatRoom {
     public void setUnrestricted(boolean unrestricted) {
         this.unrestricted = unrestricted;
     }
-
 
     public void setName(String name) {
         this.name = name;
@@ -84,6 +81,7 @@ public class ChatRoomImpl implements ChatRoom {
         return messageHistory;
     }
 
+    @Override
     public void setMessageHistory(List<Message> messageHistory) {
         this.messageHistory = messageHistory;
     }
@@ -98,10 +96,22 @@ public class ChatRoomImpl implements ChatRoom {
         return unrestricted ? name + " (public)" : name;
     }
 
-    private List<ChatUser> mapMembers(Set<AccountEntity> members) {
+    private List<ChatUser> mapInvitesAndMembers(ChatRoomEntity chatRoomEntity) {
         List<ChatUser> result = new ArrayList<>();
-        for (AccountEntity accountEntity : members) {
-            result.add(new ChatUserImpl(accountEntity));
+        Set<AccountEntity> members = chatRoomEntity.getMembers();
+        Set<AccountEntity> invites = chatRoomEntity.getInvites();
+        if (chatRoomEntity.isUnrestricted()) {
+            for (AccountEntity accountEntity : members) {
+                ChatUserImpl chatUser = new ChatUserImpl(accountEntity);
+                chatUser.setJoined(true);
+                result.add(chatUser);
+            }
+        } else {
+            for (AccountEntity accountEntity : invites) {
+                ChatUserImpl chatUser = new ChatUserImpl(accountEntity);
+                chatUser.setJoined(members.contains(accountEntity));
+                result.add(chatUser);
+            }
         }
         return result;
     }
