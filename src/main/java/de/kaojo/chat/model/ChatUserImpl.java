@@ -44,4 +44,9 @@ public class ChatUserImpl implements ChatUser {
         this.joined = joined;
     }
 
+    @Override
+    public String toString() {
+        return this.displayName;
+    }
+
 }

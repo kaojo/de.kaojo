@@ -14,30 +14,73 @@
       </ui:define>
 
       <ui:define name="content">
-        <h:outputScript library="js" target="head" name="administration.js" />
-        <h:outputStylesheet library="css" name="administration.css" />
+        <h:outputScript library="js" target="head" name="administration.js"/>
+        <h:outputStylesheet library="css" name="administration.css"/>
         <h:form id="growlForm">
-          <p:growl id="growl" showDetail="true" life="20000" autoUpdate="true" />
+          <p:growl id="growl" showDetail="true" life="20000" autoUpdate="true"/>
         </h:form>
         <h:form>
           <p:dashboard id="board" model="#{administrationController.model}">
-            <p:ajax event="reorder" listener="#{administrationController.handleReorder}" update=":growlForm" />
+            <p:ajax event="reorder" listener="#{administrationController.handleReorder}" update=":growlForm"/>
 
             <p:panel id="chatAdministrationPanel" header="Manage your Chatrooms" toggleable="true" toggleSpeed="500" widgetVar="panel" style="margin-bottom:20px">
               <p:ajax event="toggle" listener="#{administrationController.handleToggle}" update=":growlForm" />
               <p:accordionPanel dynamic="true" value="#{administrationChatController.allChatRooms}" var="chatRoom" cache="true" multiple="true" >
-                <p:tab title="Chatraum - #{chatRoom.name}">
-                  <p:dataTable var="chatUser" value="#{chatRoom.chatUsers}">
-                    <p:column headerText="Id">
-                      <h:outputText value="#{chatUser.id}" />
-                    </p:column>
+                <p:tab title="#{chatRoom.name}">
+                  <div class="ui-grid  ui-grid-responsive">
+                    <div class="ui-grid-row">
+                      <div class="ui-grid-col-12 contentDiv">
+                        <h:outputLabel for="public" value="Public: "/>
+                        <h:outputText id="public" value="#{chatRoom.unrestricted}"/>
+                      </div>
+                    </div>
+                    <div class="ui-grid-row">
+                      <div class="ui-grid-col-12 contentDiv">
+                        <h:outputLabel for="owner" value="Owner: " />
+                        <h:outputText id="owner" value="#{chatRoom.owner.displayName}"/>
+                      </div>
+                    </div>
+                    <div class="ui-grid-row">
+                      <div class="ui-grid-col-12 contentDiv">
+                        <h:outputLabel for="messageHistory" value="Number of posts: "/>
+                        <h:outputText id="messageHistory" value="#{chatRoom.getMessageHistorySize()}"/>
+                      </div>
+                    </div>
+                  </div>
 
-                    <p:column headerText="Name">
-                      <h:outputText value="#{chatUser.displayName}" />
+                  <p:dataTable var="chatUser" value="#{chatRoom.chatUsers}" editable="true">
+                    <p:ajax event="rowEdit" listener="#{administrationChatController.onRowEdit}" update=":growlForm:growl"/>
+                    <p:ajax event="rowEditCancel" listener="#{administrationChatController.onRowCancel}" update=":growlForm:growl"/>
+                    <p:column headerText="Id">
+                      <h:outputText value="#{chatUser.id}"/>
                     </p:column>
-                    
-                    <p:column headerText="Joined">
-                      <h:outputText value="#{chatUser.isJoined()}" />
+                    <p:column headerText="User">
+                      <h:outputText value="#{chatUser.displayName}"/>
+                    </p:column>
+                    <p:column headerText="Is joined" styleClass="centeredColumn">
+                      <p:cellEditor>
+                        <f:facet name="output">
+                          <p:selectBooleanCheckbox value="#{chatUser.isJoined()}" disabled="true"/>
+                        </f:facet>
+                        <f:facet name="input">
+                          <h:inputHidden value="#{chatUser.joined}"/>
+                          <p:selectBooleanCheckbox value="#{chatUser.joined}" disabled="#{chatRoom.owner.id != userController.user.userId}"/>
+                        </f:facet>
+                      </p:cellEditor>
+                    </p:column>
+                    <p:column headerText="Delete" styleClass="centeredColumn">
+                      <p:cellEditor>
+                        <f:facet name="output">
+                          <p:commandButton id="deleteConfirmation" icon="ui-icon-cancel" title="Delete"/>
+                        </f:facet>
+                        <f:facet name="input">
+                          <p:commandButton id="deleteConfirmation" icon="ui-icon-cancel" title="Delete"
+                                           action="#{administrationChatController.prepareRemove(chatUser)}" update=""/>
+                        </f:facet>
+                      </p:cellEditor>
+                    </p:column>
+                    <p:column headerText="Edit">
+                      <p:rowEditor/>
                     </p:column>
                   </p:dataTable>
                 </p:tab>

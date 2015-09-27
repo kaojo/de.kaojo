@@ -6,6 +6,7 @@
 package de.kaojo.context.controller;
 
 import de.kaojo.chat.model.ChatRoom;
+import de.kaojo.chat.model.ChatUser;
 import de.kaojo.context.model.user.DefaultUser;
 import de.kaojo.context.model.user.User;
 import de.kaojo.ejb.ChatManager;
@@ -19,8 +20,11 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ejb.EJB;
 import javax.enterprise.context.RequestScoped;
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
+import org.primefaces.event.RowEditEvent;
 
 /**
  *
@@ -51,4 +55,17 @@ public class AdministrationChatController implements Serializable {
         return allChatRooms;
     }
 
+    public void onRowEdit(RowEditEvent event) {
+        FacesMessage msg = new FacesMessage("Joined member edited", ((ChatUser) event.getObject()).toString());
+        FacesContext.getCurrentInstance().addMessage(null, msg);
+    }
+
+    public void onRowCancel(RowEditEvent event) {
+        FacesMessage msg = new FacesMessage("Edit Cancelled", ((ChatUser) event.getObject()).toString());
+        FacesContext.getCurrentInstance().addMessage(null, msg);
+    }
+
+    public void prepareRemove(ChatUser chatUser) {
+
+    }
 }

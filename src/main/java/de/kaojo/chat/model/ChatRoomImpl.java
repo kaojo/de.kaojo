@@ -21,6 +21,7 @@ public class ChatRoomImpl implements ChatRoom {
     private Long id;
     private List<ChatUser> chatUsers = new ArrayList<>();
     private List<Message> messageHistory = new ArrayList<>();
+    private int messageHistorySize;
     private ChatUser owner;
     private boolean unrestricted = false;
 
@@ -29,6 +30,8 @@ public class ChatRoomImpl implements ChatRoom {
         name = chatRoomEntity.getRoomName();
         chatUsers = mapInvitesAndMembers(chatRoomEntity);
         owner = chatRoomEntity.getOwner() != null ? new ChatUserImpl(chatRoomEntity.getOwner()) : null;
+        unrestricted = chatRoomEntity.isUnrestricted();
+        messageHistorySize = chatRoomEntity.getMessages().size();
     }
 
     @Override
@@ -38,16 +41,25 @@ public class ChatRoomImpl implements ChatRoom {
 
     @Override
     public ChatUser getOwner() {
-        return owner;
+        if (this.owner == null) {
+            ChatUserMinimalImpl noneOwner = new ChatUserMinimalImpl();
+            noneOwner.setDisplayName("none");
+            return noneOwner;
+        }
+        return this.owner;
     }
 
     public void setOwner(ChatUser owner) {
         this.owner = owner;
     }
 
+    public int getMessageHistorySize() {
+        return this.messageHistorySize;
+    }
+
     @Override
     public boolean isUnrestricted() {
-        return unrestricted;
+        return this.unrestricted;
     }
 
     public void setUnrestricted(boolean unrestricted) {
@@ -60,7 +72,7 @@ public class ChatRoomImpl implements ChatRoom {
 
     @Override
     public Long getId() {
-        return id;
+        return this.id;
     }
 
     public void setId(Long id) {
@@ -81,6 +93,10 @@ public class ChatRoomImpl implements ChatRoom {
         return messageHistory;
     }
 
+    /**
+     *
+     * @param messageHistory
+     */
     @Override
     public void setMessageHistory(List<Message> messageHistory) {
         this.messageHistory = messageHistory;
@@ -93,7 +109,7 @@ public class ChatRoomImpl implements ChatRoom {
 
     @Override
     public String toString() {
-        return unrestricted ? name + " (public)" : name;
+        return this.name;
     }
 
     private List<ChatUser> mapInvitesAndMembers(ChatRoomEntity chatRoomEntity) {
