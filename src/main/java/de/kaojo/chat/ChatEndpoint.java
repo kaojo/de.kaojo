@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package de.kaojo.chat;
 
 import de.kaojo.chat.model.Message;
@@ -18,6 +13,8 @@ import de.kaojo.ejb.dto.interfaces.AccountIdChatRequest;
 import de.kaojo.ejb.exceptions.ChatManagerException;
 import java.io.IOException;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.inject.Inject;
 import javax.websocket.EncodeException;
 import javax.websocket.EndpointConfig;
@@ -39,17 +36,24 @@ public class ChatEndpoint {
     @Inject
     ChatManager chatManager;
 
+    private static final Logger LOG = Logger.getLogger(ChatEndpoint.class.getName());
     public static final String CHAT_USER_PARAM = "chatUser";
     public static final String ACCOUNT_ID_PARAM = "accountId";
     public static final String CHAT_ROOM_PARAM = "chatRoom";
     public static final String CHAT_ROOM_ID_PARAM = "chatRoomId";
 
+    /**
+     * Is always invoked after loading the chat
+     *
+     * @param session
+     * @param c
+     * @param chatRoom
+     */
     @OnOpen
     public void open(Session session,
             EndpointConfig c,
             @PathParam("room-name") String chatRoom) {
         String name = session.getUserPrincipal().getName();
-        System.out.println("openSession with roomName: " + chatRoom);
         if (chatRoom != null) {
             initSessionUserProperties(session, name, chatRoom);
 
@@ -57,9 +61,15 @@ public class ChatEndpoint {
         }
     }
 
+    /**
+     * Is invoked via JS on chat page
+     *
+     * @param session
+     * @param chatRoom
+     * @param message
+     */
     @OnMessage
     public void onMessage(Session session, @PathParam("room-name") String chatRoom, Message message) {
-        System.out.println("onMessage " + message);
 
         String userName = (String) session.getUserProperties().get(CHAT_USER_PARAM);
         message.setAuthor(userName);
@@ -70,15 +80,20 @@ public class ChatEndpoint {
         try {
             chatManager.receiveMessage(chatRequest);
         } catch (ChatManagerException ex) {
-            System.out.println(ex.getMessage());
+            LOG.log(Level.SEVERE, null, ex);
         }
 
         sendMessageToChatRoom(session, chatRoom, message);
     }
 
+    /**
+     * Is invoked when Client closes the websocket session
+     *
+     * @param session
+     * @param chatRoom
+     */
     @OnClose
     public void onClose(Session session, @PathParam("room-name") String chatRoom) {
-        System.out.println("onClose with roomName: " + chatRoom);
 
         String chatUser = (String) session.getUserProperties().get(CHAT_USER_PARAM);
 
@@ -88,7 +103,7 @@ public class ChatEndpoint {
 
     @OnError
     public void onError(Throwable t) {
-        t.printStackTrace();
+        LOG.log(Level.SEVERE, null, t);
     }
 
     private void sendMessageToChatRoom(Session session, String chatRoom, Message message) {
@@ -97,7 +112,7 @@ public class ChatEndpoint {
                 try {
                     ses.getBasicRemote().sendObject(message);
                 } catch (IOException | EncodeException ex) {
-                    ex.printStackTrace();
+                    LOG.log(Level.SEVERE, null, ex);
                 }
             }
         }
@@ -121,7 +136,7 @@ public class ChatEndpoint {
             userProperties.put(CHAT_ROOM_PARAM, chatRoom);
             userProperties.put(CHAT_ROOM_ID_PARAM, chatRoomId);
         } catch (ChatManagerException ex) {
-            System.out.println(ex.getMessage());
+            LOG.log(Level.SEVERE, null, ex);
         }
     }
 }

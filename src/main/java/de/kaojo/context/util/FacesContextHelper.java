@@ -28,4 +28,9 @@ public class FacesContextHelper {
         FacesContext.getCurrentInstance().addMessage(null, message);
     }
 
+    public static void postMessage(String summary, String detail) {
+        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, summary, detail);
+        FacesContext.getCurrentInstance().addMessage(null, message);
+    }
+
 }

@@ -47,7 +47,6 @@
                       </div>
                     </div>
                   </div>
-
                   <p:dataTable var="chatUser" value="#{chatRoom.chatUsers}" editable="true">
                     <p:ajax event="rowEdit" listener="#{administrationChatController.onRowEdit}" update=":growlForm:growl"/>
                     <p:ajax event="rowEditCancel" listener="#{administrationChatController.onRowCancel}" update=":growlForm:growl"/>
@@ -60,22 +59,22 @@
                     <p:column headerText="Is joined" styleClass="centeredColumn">
                       <p:cellEditor>
                         <f:facet name="output">
-                          <p:selectBooleanCheckbox value="#{chatUser.isJoined()}" disabled="true"/>
+                          <p:selectBooleanCheckbox value="#{chatUser.joined}" disabled="true"/>
                         </f:facet>
                         <f:facet name="input">
                           <h:inputHidden value="#{chatUser.joined}"/>
-                          <p:selectBooleanCheckbox value="#{chatUser.joined}" disabled="#{chatRoom.owner.id != userController.user.userId}"/>
+                          <p:selectBooleanCheckbox value="#{chatUser.joined}" disabled="#{!(chatRoom.owner.id == userController.user.userId or chatUser.id == userController.user.userId) }"/>
                         </f:facet>
                       </p:cellEditor>
                     </p:column>
                     <p:column headerText="Delete" styleClass="centeredColumn">
                       <p:cellEditor>
                         <f:facet name="output">
-                          <p:commandButton id="deleteConfirmation" icon="ui-icon-cancel" title="Delete"/>
+                          <p:commandButton icon="ui-icon-cancel" title="Delete" disabled="true"/>
                         </f:facet>
                         <f:facet name="input">
-                          <p:commandButton id="deleteConfirmation" icon="ui-icon-cancel" title="Delete"
-                                           action="#{administrationChatController.prepareRemove(chatUser)}" update=""/>
+                          <p:commandButton id="prepareDeleteInput" icon="ui-icon-cancel" title="Delete" process="@this"
+                                           actionListener="#{administrationChatController.prepareRemove(chatUser)}" update=":growlForm:growl"/>
                         </f:facet>
                       </p:cellEditor>
                     </p:column>

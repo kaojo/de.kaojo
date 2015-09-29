@@ -9,6 +9,7 @@ import de.kaojo.chat.model.ChatRoom;
 import de.kaojo.chat.model.ChatUser;
 import de.kaojo.context.model.user.DefaultUser;
 import de.kaojo.context.model.user.User;
+import de.kaojo.context.util.FacesContextHelper;
 import de.kaojo.ejb.ChatManager;
 import de.kaojo.ejb.dto.AccountIdChatRequestImpl;
 import de.kaojo.ejb.dto.interfaces.AccountIdChatRequest;
@@ -18,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.enterprise.context.RequestScoped;
 import javax.faces.application.FacesMessage;
@@ -43,15 +45,17 @@ public class AdministrationChatController implements Serializable {
 
     List<ChatRoom> allChatRooms = new ArrayList();
 
-    public List<ChatRoom> getAllChatRooms() {
-        if (allChatRooms.isEmpty()) {
-            AccountIdChatRequest accountIdChatRequest = new AccountIdChatRequestImpl(user.getUserId());
-            try {
-                this.allChatRooms = chatManager.getAllChatRooms(accountIdChatRequest);
-            } catch (ChatManagerException ex) {
-                Logger.getLogger(AdministrationChatController.class.getName()).log(Level.SEVERE, null, ex);
-            }
+    @PostConstruct
+    public void init() {
+        AccountIdChatRequest accountIdChatRequest = new AccountIdChatRequestImpl(user.getUserId());
+        try {
+            this.allChatRooms = chatManager.getAllChatRooms(accountIdChatRequest);
+        } catch (ChatManagerException ex) {
+            Logger.getLogger(AdministrationChatController.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+
+    public List<ChatRoom> getAllChatRooms() {
         return allChatRooms;
     }
 
@@ -66,6 +70,6 @@ public class AdministrationChatController implements Serializable {
     }
 
     public void prepareRemove(ChatUser chatUser) {
-
+        FacesContextHelper.postMessage("prepareRemove", "i were here");
     }
 }

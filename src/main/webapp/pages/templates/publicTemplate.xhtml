@@ -5,23 +5,26 @@
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:p="http://primefaces.org/ui">
 
-    <h:head>
-        <meta http-equiv="Content-Type"
-              content="text/html; charset=UTF-8" />
-        <h:outputStylesheet library="css" name="default.css"/>
-        <h:outputStylesheet name="grid/grid.css" library="primefaces" />
-        <link rel="shortcut icon" href="#{resource['images/favicon.png']}" type="image/x-icon" />
+  <h:head>
+    <meta http-equiv="Content-Type"
+          content="text/html; charset=UTF-8" />
+    <h:outputStylesheet library="css" name="default.css"/>
+    <h:outputStylesheet name="grid/grid.css" library="primefaces" />
+    <link rel="shortcut icon" href="#{resource['images/favicon.png']}" type="image/x-icon" />
 
-        <title><ui:insert name="title">Basic Template</ui:insert></title>
-    </h:head>
+    <title><ui:insert name="title">Basic Template</ui:insert></title>
+  </h:head>
 
-    <h:body>
-        <ui:debug />
-        <p:panelGrid columns="1" layout="grid" >
-            <ui:insert name="content">ContentDiv</ui:insert>
-        </p:panelGrid>
+  <h:body>
+    <ui:debug />
+    <div class="wrapper">
+      <p:panelGrid columns="1" layout="grid" >
+        <ui:insert name="content">ContentDiv</ui:insert>
+      </p:panelGrid>
+      <div class="push"></div>
+    </div>
 
-        <!-- footer -->
-        <ui:include src="./../components/footer.xhtml" />
-    </h:body>
+    <!-- footer -->
+    <ui:include src="./../components/footer.xhtml" />
+  </h:body>
 </html>

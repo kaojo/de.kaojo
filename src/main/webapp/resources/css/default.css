@@ -3,14 +3,25 @@ Diese Software ist Eigentum von Julian Winter
 Alle Rechte sind vorbehalten.
 Copyright 2015.
 */
-/* 
+/*
     Created on : Feb 16, 2015, 12:58:51 AM
     Author     : julian
 */
-
-.body {
-    height:100vh;
+html, body {
+    height: 100%;
 }
+.wrapper {
+    min-height: 100%;
+    height: auto !important; /* This line and the next line are not necessary unless you need IE6 support */
+    height: 100%;
+    margin: 0 auto -36px; /* the bottom margin is the negative value of the footer's height */
+}
+.footer, .push {
+    height: 36px; /* .push must be the same height as .footer */
+}
+/*.body {
+    height:100vh;
+}*/
 
 .displayName {
     margin: auto auto;
@@ -29,7 +40,7 @@ Copyright 2015.
     background-size: auto;
 }
 
-#footerGrid {
+.footerGrid {
     position: absolute;
     bottom: 0;
     left: 0;
