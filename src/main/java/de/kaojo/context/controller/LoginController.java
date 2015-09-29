@@ -38,6 +38,7 @@ public class LoginController {
 
     private static final String CHAT_PAGE_REDIRECT = "/pages/user/chat?faces-redirect=true;";
     private static final String LOGOUT_PAGE_REDIRECT = "/pages/public/logout?faces-redirect=true;";
+    private static final Logger LOG = Logger.getLogger(LoginController.class.getName());
 
     private String loginPass;
     private String loginName;
@@ -161,7 +162,7 @@ public class LoginController {
         HttpServletRequest request = getRequest();
         request.login(userName, password);
 
-        Logger.getLogger(ChatController.class.getName()).log(Level.INFO, "User {0} logged in.", userName);
+        LOG.log(Level.INFO, "User {0} logged in.", userName);
         return CHAT_PAGE_REDIRECT;
     }
 

@@ -43,6 +43,8 @@ public class AdministrationChatController implements Serializable {
     @EJB
     private ChatManager chatManager;
 
+    private static final Logger LOG = Logger.getLogger(AdministrationChatController.class.getName());
+
     List<ChatRoom> allChatRooms = new ArrayList();
 
     @PostConstruct
@@ -51,7 +53,7 @@ public class AdministrationChatController implements Serializable {
         try {
             this.allChatRooms = chatManager.getAllChatRooms(accountIdChatRequest);
         } catch (ChatManagerException ex) {
-            Logger.getLogger(AdministrationChatController.class.getName()).log(Level.SEVERE, null, ex);
+            LOG.log(Level.SEVERE, null, ex);
         }
     }
 
