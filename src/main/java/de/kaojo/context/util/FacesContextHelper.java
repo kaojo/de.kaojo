@@ -1,5 +1,7 @@
 package de.kaojo.context.util;
 
+import de.kaojo.ejb.exceptions.ChatManagerException;
+import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
 
@@ -19,6 +21,16 @@ public class FacesContextHelper {
             throw new RuntimeException("Sorry. Got a null request from FacesContext");
         }
         return request;
+    }
+
+    public static void manageException(ChatManagerException ex) {
+        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, ex.getMessage(), null);
+        FacesContext.getCurrentInstance().addMessage(null, message);
+    }
+
+    public static void postMessage(String summary, String detail) {
+        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, summary, detail);
+        FacesContext.getCurrentInstance().addMessage(null, message);
     }
 
 }

@@ -1,49 +1,51 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:h="http://xmlns.jcp.org/jsf/html">
 
-    <h:head>
-        <meta http-equiv="Content-Type"
-              content="text/html; charset=UTF-8" />
-        <h:outputStylesheet library="css" name="default.css"/>
-        <h:outputStylesheet library="css" name="cssLayout.css"/>
-        <h:outputStylesheet name="grid/grid.css" library="primefaces" />
-        <link rel="shortcut icon" href="#{resource['images/favicon.png']}" type="image/x-icon" />
-        <title><ui:insert name="title">Basic Template</ui:insert></title>
-    </h:head>
+  <h:head>
+    <meta http-equiv="Content-Type"
+          content="text/html; charset=UTF-8" />
+    <h:outputStylesheet library="css" name="default.css"/>
+    <h:outputStylesheet name="grid/grid.css" library="primefaces" />
+    <link rel="shortcut icon" href="#{resource['images/favicon.png']}" type="image/x-icon" />
+    <title><ui:insert name="title">Basic Template</ui:insert></title>
+  </h:head>
 
-    <h:body>
-        <ui:debug />
-        <div class="ui-grid headerDiv ui-grid-responsive">
-            <div class="ui-grid-row">
-                <div class="ui-grid-col-12">
-                    <!--<ui:insert name="header">HeaderDiv</ui:insert>-->
-                    <ui:include src="/pages/components/header.xhtml" />
-                    <!--<ui:include src="./components/tabMenu.xhtml" />-->
-                </div>
-            </div>
+  <h:body>
+    <ui:debug />
+    <div class="wrapper">
+      <div class="ui-grid headerDiv ui-grid-responsive">
+        <div class="ui-grid-row">
+          <div class="ui-grid-col-12">
+            <!--<ui:insert name="header">HeaderDiv</ui:insert>-->
+            <ui:include src="/pages/components/header.xhtml" />
+            <!--<ui:include src="./components/tabMenu.xhtml" />-->
+          </div>
         </div>
-        <!-- body -->
-        <div class="ui-grid  ui-grid-responsive">
-            <div class="ui-grid-row">
-                <!-- small menu column -->
-                <!--                <div class="ui-grid-col-1 menuDiv">
-                                    <ui:insert name="left">LeftDiv</ui:insert>
-                                </div>-->
-                <!-- wide column -->
-                <div class="ui-grid-col-12 contentDiv">
-                    <ui:insert name="content">ContentDiv</ui:insert>
-                </div>
-                <!-- small sidebar column -->
-                <!--                <div class="ui-grid-col-1 sidebarDiv">
-                                    <ui:insert name="right">RightDiv</ui:insert>
-                                </div>-->
-            </div>
+      </div>
+      <!-- body -->
+      <div class="ui-grid  ui-grid-responsive">
+        <div class="ui-grid-row">
+          <!-- small menu column -->
+          <!--                <div class="ui-grid-col-1 menuDiv">
+                              <ui:insert name="left">LeftDiv</ui:insert>
+                          </div>-->
+          <!-- wide column -->
+          <div class="ui-grid-col-12 contentDiv">
+            <ui:insert name="content">ContentDiv</ui:insert>
+          </div>
+          <!-- small sidebar column -->
+          <!--                <div class="ui-grid-col-1 sidebarDiv">
+                              <ui:insert name="right">RightDiv</ui:insert>
+                          </div>-->
         </div>
+      </div>
+      <div class="push"></div>
+    </div>
 
-        <!-- footer -->
-        <ui:include src="/pages/components/footer.xhtml" />
-    </h:body>
+    <!-- footer -->
+    <ui:include src="/pages/components/footer.xhtml" />
+  </h:body>
 </html>

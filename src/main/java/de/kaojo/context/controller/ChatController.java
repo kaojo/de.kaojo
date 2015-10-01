@@ -5,6 +5,7 @@ import de.kaojo.chat.model.ChatUser;
 import de.kaojo.chat.model.Message;
 import de.kaojo.context.model.user.User;
 import de.kaojo.context.model.user.DefaultUser;
+import de.kaojo.context.util.FacesContextHelper;
 import de.kaojo.ejb.ChatManager;
 import de.kaojo.ejb.dto.ChatRoomChatRequestImpl;
 import de.kaojo.ejb.dto.AccountIdChatRequestImpl;
@@ -39,6 +40,7 @@ public class ChatController implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private static final String CHAT_PAGE_REDIRECT = "chat?faces-redirect=true;";
     private static final String CHAT_PAGE_NO_REDIRECT = "chat";
+    private static final Logger LOG = Logger.getLogger(ChatController.class.getName());
 
     private String openRoom;
     private boolean openPublicRoom;
@@ -64,6 +66,7 @@ public class ChatController implements Serializable {
             result = chatManager.createNewChatRoom(request);
         } catch (ChatManagerException ex) {
             addMessage("Error opening ChatRoom '" + openRoom + "'");
+            LOG.log(Level.SEVERE, null, ex);
             return CHAT_PAGE_NO_REDIRECT;
         }
         if (result) {
@@ -73,7 +76,7 @@ public class ChatController implements Serializable {
                 joindChatRooms.add(chatRoom);
             } catch (ChatManagerException ex) {
                 addMessage("Error opening ChatRoom '" + openRoom + "'");
-                Logger.getLogger(ChatController.class.getName()).log(Level.SEVERE, null, ex);
+                LOG.log(Level.SEVERE, null, ex);
             }
             return CHAT_PAGE_REDIRECT;
         }
@@ -103,7 +106,7 @@ public class ChatController implements Serializable {
                     joindChatRooms.add(chatRoom);
                 }
             } catch (ChatManagerException ex) {
-                Logger.getLogger(ChatController.class.getName()).log(Level.SEVERE, null, ex);
+                LOG.log(Level.SEVERE, null, ex);
                 addMessage("Can't join ChatRoom with name '" + joinRoom + "'");
             }
             return "chat?faces-redirect=true;";
@@ -144,6 +147,7 @@ public class ChatController implements Serializable {
             oldMessages = chatManager.getOldMessages(chatRequest);
         } catch (ChatManagerException ex) {
             addMessage("Old Messages couldn't get loaded");
+            LOG.log(Level.SEVERE, null, ex);
         }
         ChatRoom room = getChatRoomByName(chatRoom);
         if (room != null) {
@@ -162,7 +166,7 @@ public class ChatController implements Serializable {
             try {
                 joindChatRooms = chatManager.getChatRooms(chatRequest);
             } catch (ChatManagerException ex) {
-                System.out.println(ex.getMessage());
+                LOG.log(Level.SEVERE, null, ex);
             }
         }
         return joindChatRooms;
@@ -173,7 +177,8 @@ public class ChatController implements Serializable {
         try {
             accessibleRooms = chatManager.getAccessibleChatRooms(chatRequest);
         } catch (ChatManagerException ex) {
-            System.out.println(ex.getMessage());
+            FacesContextHelper.manageException(ex);
+            LOG.log(Level.SEVERE, null, ex);
         }
         return accessibleRooms;
     }
