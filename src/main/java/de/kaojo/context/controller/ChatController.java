@@ -1,6 +1,7 @@
 package de.kaojo.context.controller;
 
 import de.kaojo.chat.model.ChatRoom;
+import de.kaojo.chat.model.ChatUser;
 import de.kaojo.chat.model.Message;
 import de.kaojo.context.model.user.User;
 import de.kaojo.context.model.user.DefaultUser;
@@ -13,11 +14,13 @@ import de.kaojo.ejb.dto.interfaces.ChatRoomChatRequest;
 import de.kaojo.ejb.dto.interfaces.AccountIdChatRequest;
 import de.kaojo.ejb.dto.interfaces.NewChatRoomChatRequest;
 import de.kaojo.ejb.exceptions.ChatManagerException;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
@@ -33,14 +36,15 @@ import javax.inject.Named;
 @SessionScoped
 public class ChatController implements Serializable {
 
-    private static final String CHAT_PAGE_REDIRECT = "chat?faces-redirect=true;";
+	private static final long serialVersionUID = 1L;
+	private static final String CHAT_PAGE_REDIRECT = "chat?faces-redirect=true;";
     private static final String CHAT_PAGE_NO_REDIRECT = "chat";
 
     private String openRoom;
     private boolean openPublicRoom;
     private String joinRoom;
-    private List<ChatRoom> chatRooms = new ArrayList();
-    private List<ChatRoom> accessibleRooms = new ArrayList();
+    private List<ChatRoom> joindChatRooms = new ArrayList<ChatRoom>();
+    private List<ChatRoom> accessibleRooms = new ArrayList<ChatRoom>();
 
     @Inject
     @DefaultUser
@@ -66,7 +70,7 @@ public class ChatController implements Serializable {
             ChatRoomNameChatRequestImpl chatRequest = new ChatRoomNameChatRequestImpl(openRoom);
             try {
                 ChatRoom chatRoom = chatManager.getChatRoomByChatRoomName(chatRequest);
-                chatRooms.add(chatRoom);
+                joindChatRooms.add(chatRoom);
             } catch (ChatManagerException ex) {
                 addMessage("Error opening ChatRoom '" + openRoom + "'");
                 Logger.getLogger(ChatController.class.getName()).log(Level.SEVERE, null, ex);
@@ -96,7 +100,7 @@ public class ChatController implements Serializable {
             try {
                 if (chatManager.addUserToChatRoom(chatRequest)) {
                     ChatRoom chatRoom = getChatRoomFromDB(chatRoomId);
-                    chatRooms.add(chatRoom);
+                    joindChatRooms.add(chatRoom);
                 }
             } catch (ChatManagerException ex) {
                 Logger.getLogger(ChatController.class.getName()).log(Level.SEVERE, null, ex);
@@ -108,8 +112,28 @@ public class ChatController implements Serializable {
         return "chat";
     }
 
-    public String leaveChatRoom(String chatRoom) {
-        addMessage("Error leaving ChatRoom '" + chatRoom + "'");
+    public String leaveChatRoom(ChatRoom chatRoom) {
+    	
+    	Long chatRoomId = chatRoom.getId();
+    	
+        if (chatRoomId != null) {
+            Long currentUserId = user.getUserId();
+			ChatRoomChatRequest chatRoomChatRequest = new ChatRoomChatRequestImpl(chatRoomId, currentUserId);
+			try {
+				if (chatManager.removeUserFromChatRoom(chatRoomChatRequest)) {
+
+					AccountIdChatRequest accountIdChatRequest = new AccountIdChatRequestImpl(user.getUserId());
+					this.joindChatRooms = chatManager.getChatRooms(accountIdChatRequest);			
+				}
+			} catch (ChatManagerException ex) {
+				Logger.getLogger(ChatController.class.getName()).log(Level.SEVERE, null, ex);
+				addMessage("Can't remove user with username '" + user.getUserName() + "' from ChatRoom with name '"+ chatRoom.getName() + "'");
+			}
+
+            return "chat?faces-redirect=true;";
+        }
+        
+        addMessage("Error happend!");
         return "chat";
     }
 
@@ -132,16 +156,16 @@ public class ChatController implements Serializable {
         FacesContext.getCurrentInstance().addMessage(null, message);
     }
 
-    public List<ChatRoom> getChatRooms() {
-        if (chatRooms.isEmpty()) {
+    public List<ChatRoom> getJoindChatRooms() {
+        if (joindChatRooms.isEmpty()) {
             AccountIdChatRequest chatRequest = new AccountIdChatRequestImpl(user.getUserId());
             try {
-                chatRooms = chatManager.getChatRooms(chatRequest);
+                joindChatRooms = chatManager.getChatRooms(chatRequest);
             } catch (ChatManagerException ex) {
                 System.out.println(ex.getMessage());
             }
         }
-        return chatRooms;
+        return joindChatRooms;
     }
 
     public List<ChatRoom> getAccessibleRooms() {
@@ -171,7 +195,7 @@ public class ChatController implements Serializable {
     }
 
     public void setChatRooms(List<ChatRoom> chatRooms) {
-        this.chatRooms = chatRooms;
+        this.joindChatRooms = chatRooms;
     }
 
     public void setAccessibleRooms(List<ChatRoom> accessibleRooms) {
@@ -187,7 +211,7 @@ public class ChatController implements Serializable {
     }
 
     private ChatRoom getChatRoomByName(String chatRoom) {
-        for (ChatRoom room : chatRooms) {
+        for (ChatRoom room : joindChatRooms) {
             if (room.getName().equals(chatRoom)) {
                 return room;
             }

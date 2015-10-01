@@ -73,7 +73,12 @@ public class ChatManagerImpl implements ChatManager {
         if (chatRoomE == null | accountE == null) {
             throw new ChatManagerException("Could not remove User from chatroom.");
         }
-        return chatRoomE.getMembers().remove(accountE);
+
+        if (chatRoomE.getMembers().contains(accountE)) {
+        	return chatRoomE.getMembers().remove(accountE);
+        }
+
+        return false;
     }
 
     @Override
