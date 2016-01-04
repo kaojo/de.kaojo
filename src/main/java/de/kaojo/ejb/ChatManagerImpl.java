@@ -19,14 +19,13 @@ import de.kaojo.persistence.entities.AccountEntity;
 import de.kaojo.persistence.entities.ChatRoomEntity;
 import de.kaojo.persistence.entities.MessageEntity;
 import de.kaojo.persistence.entities.TextMessageEntity;
+import de.kaojo.persistence.repositories.AccountRepository;
+import de.kaojo.persistence.repositories.ChatRoomRepository;
+import de.kaojo.persistence.repositories.MessageRepository;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import javax.ejb.Stateless;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
+import javax.inject.Inject;
 
 /**
  *
@@ -35,95 +34,93 @@ import javax.persistence.Query;
 @Stateless
 public class ChatManagerImpl implements ChatManager {
 
-    private static final String DEFAULT_CHAT_ROOM = "kaojo";
+    @Inject
+    private ChatRoomRepository chatRoomRepository;
 
-    @PersistenceContext(unitName = "postgres")
-    EntityManager em;
+    @Inject
+    private AccountRepository accountRepository;
+
+    @Inject
+    private MessageRepository messageRepository;
 
     @Override
     public List<ChatRoom> getAllChatRooms(AccountIdChatRequest chatRequest) throws ChatManagerException {
-        Long accountId = chatRequest.getAccountId();
-        Query query = em.createQuery("SELECT cr FROM ChatRoomEntity cr WHERE (SELECT ac FROM AccountEntity ac WHERE ac.id = :accountId) MEMBER OF cr.invites OR (SELECT ac FROM AccountEntity ac WHERE ac.id = :accountId) MEMBER OF cr.members");
-        query.setParameter("accountId", accountId);
-        List<ChatRoomEntity> result = new ArrayList<>(query.getResultList());
-        return mapChatRooms(result);
+        List<ChatRoomEntity> cre = chatRoomRepository.findByMembersOrInvitesAccountId(chatRequest.getAccountId());
+        return mapChatRoomEntities(cre);
     }
 
     @Override
     public List<ChatRoom> getChatRooms(AccountIdChatRequest chatRequest) {
-        List<ChatRoomEntity> memberedChatRooms = getMemberedChatRooms(chatRequest);
-        return mapChatRooms(memberedChatRooms);
+        return getMemberedChatRooms(chatRequest);
     }
 
     @Override
     public List<ChatRoom> getAccessibleChatRooms(AccountIdChatRequest chatRequest) {
-        List<ChatRoomEntity> invitedChatRooms = getInvitedChatRooms(chatRequest);
-        List<ChatRoomEntity> publicChatRooms = getPublicChatRooms(chatRequest);
+        List<ChatRoom> invitedChatRooms = getInvitedChatRooms(chatRequest);
+        List<ChatRoom> publicChatRooms = getPublicChatRooms(chatRequest);
         if (!publicChatRooms.isEmpty()) {
             invitedChatRooms.addAll(publicChatRooms);
         }
-        return mapChatRooms(invitedChatRooms);
+        return invitedChatRooms;
     }
 
     @Override
     public boolean addUserToChatRoom(ChatRoomChatRequest chatRequest) {
-        Long chatRoomId = chatRequest.getChatRoomId();
-        Long userId = chatRequest.getUserId();
-        AccountEntity accountEntity = em.find(AccountEntity.class, userId);
-        ChatRoomEntity chatRoomEntity = em.find(ChatRoomEntity.class, chatRoomId);
+        AccountEntity accountEntity = accountRepository.findBy(chatRequest.getUserId());
+        ChatRoomEntity chatRoomEntity = chatRoomRepository.findBy(chatRequest.getChatRoomId());
         chatRoomEntity.getMembers().add(accountEntity);
         return true;
     }
 
     @Override
     public boolean removeUserFromChatRoom(ChatRoomChatRequest chatRequest) throws ChatManagerException {
-        ChatRoomEntity chatRoomE = em.find(ChatRoomEntity.class, chatRequest.getChatRoomId());
-        AccountEntity accountE = em.find(AccountEntity.class, chatRequest.getUserId());
-        if (chatRoomE == null | accountE == null) {
+        AccountEntity accountEntity = accountRepository.findBy(chatRequest.getUserId());
+        ChatRoomEntity chatRoomEntity = chatRoomRepository.findBy(chatRequest.getChatRoomId());
+        if (chatRoomEntity == null | accountEntity == null) {
             throw new ChatManagerException("Could not remove User from chatroom.");
         }
-        return chatRoomE.getMembers().remove(accountE);
+        return chatRoomEntity.getMembers().remove(accountEntity);
     }
 
     @Override
     public boolean inviteUserToChatRoom(ChatRoomChatRequest chatRequest) throws ChatManagerException {
-        ChatRoomEntity chatRoomE = em.find(ChatRoomEntity.class, chatRequest.getChatRoomId());
-        AccountEntity accountE = em.find(AccountEntity.class, chatRequest.getUserId());
-        if (chatRoomE == null | accountE == null) {
+        AccountEntity accountEntity = accountRepository.findBy(chatRequest.getUserId());
+        ChatRoomEntity chatRoomEntity = chatRoomRepository.findBy(chatRequest.getChatRoomId());
+        if (chatRoomEntity == null | accountEntity == null) {
             throw new ChatManagerException("Could not invite User to chatroom.");
         }
-        return chatRoomE.getInvites().add(accountE);
+        return chatRoomEntity.getInvites().add(accountEntity);
     }
 
     @Override
     public boolean addAdminToChatRoom(ChatRoomChatRequest chatRequest) throws ChatManagerException {
-        ChatRoomEntity chatRoomE = em.find(ChatRoomEntity.class, chatRequest.getChatRoomId());
-        AccountEntity accountE = em.find(AccountEntity.class, chatRequest.getUserId());
-        if (chatRoomE == null | accountE == null) {
+        AccountEntity accountEntity = accountRepository.findBy(chatRequest.getUserId());
+        ChatRoomEntity chatRoomEntity = chatRoomRepository.findBy(chatRequest.getChatRoomId());
+        if (chatRoomEntity == null | accountEntity == null) {
             throw new ChatManagerException("Could not add User as admin to chatroom.");
         }
-        return chatRoomE.getAdmins().add(accountE);
+        return chatRoomEntity.getAdmins().add(accountEntity);
     }
 
     @Override
     public boolean deleteChatRoom(ChatRoomChatRequest chatRequest) {
-        ChatRoomEntity chatRoomE = em.find(ChatRoomEntity.class, chatRequest.getChatRoomId());
-        em.remove(chatRoomE);
+        ChatRoomEntity chatRoomEntity = chatRoomRepository.findBy(chatRequest.getChatRoomId());
+        chatRoomRepository.remove(chatRoomEntity);
         return true;
     }
 
     @Override
     public boolean createNewChatRoom(NewChatRoomChatRequest chatRequest) throws ChatManagerException {
-        List<ChatRoomEntity> chatRoomEntities = getChatRoomsByName(chatRequest.getRoomName());
-        AccountEntity accountEntity = em.find(AccountEntity.class, chatRequest.getAccountId());
-        if (!chatRoomEntities.isEmpty() || accountEntity == null) {
+        List<ChatRoom> chatRooms = getChatRoomsByName(chatRequest.getRoomName());
+        AccountEntity accountEntity = accountRepository.findBy(chatRequest.getAccountId());
+        if (!chatRooms.isEmpty() || accountEntity == null) {
             return false;
         }
         ChatRoomEntity chatRoomE = new ChatRoomEntity();
         chatRoomE.setRoomName(chatRequest.getRoomName());
         chatRoomE.setUnrestricted(chatRequest.isPublicChatRoom());
         try {
-            em.persist(chatRoomE);
+            chatRoomRepository.save(chatRoomE);
         } catch (Exception e) {
             e.printStackTrace();
             return false;
@@ -136,9 +133,9 @@ public class ChatManagerImpl implements ChatManager {
 
     @Override
     public boolean receiveMessage(MessageChatRequest chatRequest) throws ChatManagerException {
-        ChatRoomEntity chatRoomE = em.find(ChatRoomEntity.class, chatRequest.getChatRoomId());
-        AccountEntity accountE = em.find(AccountEntity.class, chatRequest.getUserId());
-        if (chatRoomE == null | accountE == null) {
+        AccountEntity accountEntity = accountRepository.findBy(chatRequest.getUserId());
+        ChatRoomEntity chatRoomEntity = chatRoomRepository.findBy(chatRequest.getChatRoomId());
+        if (chatRoomEntity == null | accountEntity == null) {
             throw new ChatManagerException("Could not receive Message.");
         }
         Message message = chatRequest.getMessage();
@@ -146,13 +143,13 @@ public class ChatManagerImpl implements ChatManager {
         messageE.setCreationDate(message.getTimestamp());
         messageE.setContent(message.getContent());
         try {
-            em.persist(messageE);
+            messageRepository.save(messageE);
         } catch (Exception e) {
             e.printStackTrace();
             return false;
         }
-        messageE.setAuthor(accountE);
-        messageE.setChatRoom(chatRoomE);
+        messageE.setAuthor(accountEntity);
+        messageE.setChatRoom(chatRoomEntity);
         return true;
     }
 
@@ -163,7 +160,7 @@ public class ChatManagerImpl implements ChatManager {
 
     @Override
     public Long getChatRoomIdFromChatRoomName(ChatRoomNameChatRequest chatRequest) throws ChatManagerException {
-        List<ChatRoomEntity> resultList = getChatRoomsByName(chatRequest.getChatRoomName());
+        List<ChatRoom> resultList = getChatRoomsByName(chatRequest.getChatRoomName());
         if (resultList.isEmpty() | resultList.size() != 1) {
             throw new ChatManagerException("Invalid chatRoomName supplied, chatRoomName: " + chatRequest.getChatRoomName());
         }
@@ -172,65 +169,35 @@ public class ChatManagerImpl implements ChatManager {
 
     @Override
     public String getDisplayNameFromAccountId(AccountIdChatRequest chatRequest) throws ChatManagerException {
-        AccountEntity account = em.find(AccountEntity.class, chatRequest.getAccountId());
-        if (account == null) {
+        AccountEntity accountEntity = accountRepository.findBy(chatRequest.getAccountId());
+        if (accountEntity == null) {
             throw new ChatManagerException("Invalid UserId supplied, UserId: " + chatRequest.getAccountId());
         }
-        return getDisplayName(account);
+        return getDisplayName(accountEntity);
     }
 
-    private List<ChatRoomEntity> getMemberedChatRooms(AccountIdChatRequest chatRequest) {
-        Long userId = chatRequest.getAccountId();
-        Query query = em.createQuery("SELECT DISTINCT cr FROM ChatRoomEntity cr JOIN cr.members m WHERE m.id = :userId ");
-        query.setParameter("userId", userId);
-        return new ArrayList<>(query.getResultList());
+    private List<ChatRoom> getMemberedChatRooms(AccountIdChatRequest chatRequest) {
+        return mapChatRoomEntities(chatRoomRepository.findByMembersAccountId(chatRequest.getAccountId()));
     }
 
-    private List<ChatRoomEntity> getInvitedChatRooms(AccountIdChatRequest chatRequest) {
-        Long userId = chatRequest.getAccountId();
-        Query query = em.createQuery("SELECT DISTINCT cr FROM ChatRoomEntity cr JOIN cr.invites i WHERE i.id = :userId AND :userId <> ALL (SELECT m.id FROM cr.members m)");
-        query.setParameter("userId", userId);
-        return new ArrayList<>(query.getResultList());
+    private List<ChatRoom> getInvitedChatRooms(AccountIdChatRequest chatRequest) {
+        return mapChatRoomEntities(chatRoomRepository.findByInvitesAccountIdExludeMembers(chatRequest.getAccountId()));
     }
 
-    private List<ChatRoomEntity> getPublicChatRooms(AccountIdChatRequest chatRequest) {
-        Long userId = chatRequest.getAccountId();
-        Query query = em.createQuery("SELECT DISTINCT cr FROM ChatRoomEntity cr WHERE cr.unrestricted = true AND :userId <> ALL (SELECT m.id FROM cr.members m)");
-        query.setParameter("userId", userId);
-        List<ChatRoomEntity> result = new ArrayList<>(query.getResultList());
-        if (result.isEmpty()) {
-            query = em.createQuery("SELECT DISTINCT cr from ChatRoomEntity cr WHERE cr.unrestricted = true");
-            List resultList = query.getResultList();
-            if (resultList.isEmpty()) {
-                result.addAll(createDefaultChatRooms());
-            }
-        }
-        return result;
+    private List<ChatRoom> getPublicChatRooms(AccountIdChatRequest chatRequest) {
+        return mapChatRoomEntities(chatRoomRepository.findByUnrestrictedExludeMembered(chatRequest.getAccountId()));
     }
 
     private AccountEntity getAccountByUserName(String userName) throws ChatManagerException {
-        Query query = em.createQuery("SELECT ac FROM AccountEntity ac WHERE ac.userName = :userName");
-        query.setParameter("userName", userName);
-        List resultList = query.getResultList();
+        List resultList = accountRepository.findByUserName(userName);
         if (resultList.isEmpty() | resultList.size() != 1) {
             throw new ChatManagerException("Invalid userName supplied, userName: " + userName);
         }
         return (AccountEntity) resultList.get(0);
     }
 
-    private List<ChatRoomEntity> getChatRoomsByName(String chatRoomName) throws ChatManagerException {
-        Query query = em.createQuery("SELECT cr FROM ChatRoomEntity cr WHERE cr.roomName = :chatRoomName");
-        query.setParameter("chatRoomName", chatRoomName);
-        return query.getResultList();
-    }
-
-    private List<ChatRoom> mapChatRooms(List<ChatRoomEntity> chatRoomsentities) {
-        List<ChatRoom> result = new ArrayList<>();
-        for (ChatRoomEntity chatRoomEntity : chatRoomsentities) {
-            ChatRoom chatRoom = mapChatRoomEntityToChatRoom(chatRoomEntity);
-            result.add(chatRoom);
-        }
-        return result;
+    private List<ChatRoom> getChatRoomsByName(String chatRoomName) {
+        return mapChatRoomEntities(chatRoomRepository.findByRoomName(chatRoomName));
     }
 
     private ChatRoom mapChatRoomEntityToChatRoom(ChatRoomEntity chatRoomEntity) {
@@ -242,57 +209,38 @@ public class ChatManagerImpl implements ChatManager {
         return accountEntity.getDisplayName() != null ? accountEntity.getDisplayName() : accountEntity.getUserName();
     }
 
-    private Set<ChatRoomEntity> createDefaultChatRooms() {
-        Set<ChatRoomEntity> chatRoomEntitys = new HashSet<>();
-        ChatRoomEntity chatRoomEntity = new ChatRoomEntity();
-        chatRoomEntity.setRoomName(DEFAULT_CHAT_ROOM);
-        chatRoomEntity.setUnrestricted(true);
-        try {
-            em.persist(chatRoomEntity);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return chatRoomEntitys;
-        }
-        //create maybe more default ChatRooms
-
-        chatRoomEntitys.add(chatRoomEntity);
-        return chatRoomEntitys;
-    }
-    
-    
-    private List<Message> mapMessages(List<MessageEntity> messages) {
-        List<Message> result = new ArrayList<>();
-        for (MessageEntity messageEntity : messages) {
-            result.add(new Message(messageEntity));
-        }
-        return result;
-    }
-
     @Override
     public List<Message> getOldMessages(ChatRoomNameChatRequest chatRequest) throws ChatManagerException {
-        String chatRoomName = chatRequest.getChatRoomName();
-        Query query = em.createQuery("SELECT me FROM MessageEntity me JOIN me.chatRoom cr WHERE cr.roomName = :chatRoomName ORDER BY me.creationDate");
-        query.setParameter("chatRoomName", chatRoomName);
-        List resultList = (List<MessageEntity>) query.getResultList();
-        return mapMessages(resultList);
+        return mapMessageEntity(messageRepository.findByChatRoomRoomName(chatRequest.getChatRoomName()));
     }
 
     @Override
     public ChatRoom getChatRoomByChatRoomId(ChatRoomChatRequest chatRequest) throws ChatManagerException {
-        Long chatRoomId = chatRequest.getChatRoomId();
-        ChatRoomEntity chatRoomEntity = em.find(ChatRoomEntity.class, chatRoomId);
-        return mapChatRoomEntityToChatRoom(chatRoomEntity);
+        return mapChatRoomEntityToChatRoom(chatRoomRepository.findBy(chatRequest.getChatRoomId()));
     }
 
     @Override
     public ChatRoom getChatRoomByChatRoomName(ChatRoomNameChatRequest chatRequest) throws ChatManagerException {
-        String chatRoomName = chatRequest.getChatRoomName();
-        Query query = em.createQuery("SELECT cr FROM ChatRoomEntity cr WHERE cr.roomName = :chatRoomName");
-        query.setParameter("chatRoomName", chatRoomName);
-        List resultList = (List<ChatRoomEntity>) query.getResultList();
+        List<ChatRoom> resultList = getChatRoomsByName(chatRequest.getChatRoomName());
         if (resultList.isEmpty() | resultList.size() != 1) {
             throw new ChatManagerException("Invalid chatRoomName supplied, chatRoomName: " + chatRequest.getChatRoomName());
         }
-        return mapChatRoomEntityToChatRoom((ChatRoomEntity) resultList.get(0));
+        return resultList.get(0);
+    }
+
+    private List<ChatRoom> mapChatRoomEntities(List<ChatRoomEntity> cre) {
+        List<ChatRoom> result = new ArrayList<>();
+        cre.stream().forEach((chatRoomEntity) -> {
+            result.add(new ChatRoomImpl(chatRoomEntity));
+        });
+        return result;
+    }
+
+    private List<Message> mapMessageEntity(List<MessageEntity> me) {
+        List<Message> result = new ArrayList<>();
+        me.stream().forEach(messageEntity -> {
+            result.add(new Message(messageEntity));
+        });
+        return result;
     }
 }

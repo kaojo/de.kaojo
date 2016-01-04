@@ -17,6 +17,7 @@ public class Message {
     private Date timestamp;
     private String author;
     private String content;
+    private Long id;
 
     public Message() {
 
@@ -36,6 +37,7 @@ public class Message {
         author = messageEntity.getAuthor().getUserName();
         timestamp = messageEntity.getCreationDate();
         content = messageEntity.getContent();
+        id = messageEntity.getId();
     }
 
     public Date getTimestamp() {
@@ -54,4 +56,7 @@ public class Message {
         this.author = author;
     }
 
+    public Long getId() {
+        return id;
+    }
 }
