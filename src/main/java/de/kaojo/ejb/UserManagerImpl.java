@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package de.kaojo.ejb;
 
 import de.kaojo.ejb.dto.interfaces.Credentials;
@@ -12,14 +7,15 @@ import de.kaojo.persistence.entities.AccountEntity;
 import de.kaojo.persistence.entities.ContactEntity;
 import de.kaojo.persistence.entities.RolesEntity;
 import de.kaojo.persistence.entities.enums.Roles;
-import java.util.ArrayList;
+import de.kaojo.persistence.repositories.AccountRepository;
+import de.kaojo.persistence.repositories.ContactRepository;
+import de.kaojo.persistence.repositories.RolesRepository;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import javax.ejb.Stateless;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
+import javax.inject.Inject;
 import javax.persistence.Query;
 
 /**
@@ -29,8 +25,14 @@ import javax.persistence.Query;
 @Stateless
 public class UserManagerImpl implements UserManager {
 
-    @PersistenceContext(unitName = "postgres")
-    EntityManager em;
+    @Inject
+    private AccountRepository accountRepository;
+
+    @Inject
+    private ContactRepository contactRepository;
+
+    @Inject
+    private RolesRepository rolesRepository;
 
     @Override
     public UserDTO getUserFromDB(Credentials credentials) {
@@ -83,9 +85,8 @@ public class UserManagerImpl implements UserManager {
         accountEntity.setLastModified(new Date());
         accountEntity.setLastLogin(new Date());
         try {
-            em.persist(accountEntity);
-        }
-        catch (Exception e) {
+            accountRepository.save(accountEntity);
+        } catch (Exception e) {
             e.printStackTrace();
             return null;
         }
@@ -95,9 +96,8 @@ public class UserManagerImpl implements UserManager {
         ContactEntity contactEntity = new ContactEntity();
         contactEntity.setEmail(newUserRequest.getEmail());
         try {
-            em.persist(contactEntity);
-        }
-        catch (Exception e) {
+            contactRepository.save(contactEntity);
+        } catch (Exception e) {
             e.printStackTrace();
             return null;
         }
@@ -128,54 +128,23 @@ public class UserManagerImpl implements UserManager {
     }
 
     private List<AccountEntity> getUsersByName(String userName) {
-        Query query = em.createQuery("SELECT ku FROM AccountEntity ku WHERE ku.userName = :userName");
-        query.setParameter("userName", userName);
-        query.setMaxResults(10);
-        return new ArrayList<>(query.getResultList());
+        return accountRepository.findByUserName(userName);
     }
 
     private List<ContactEntity> getContactsByEmail(String email) {
-        Query query = em.createQuery("SELECT ce FROM ContactEntity ce WHERE ce.email = :email");
-        query.setParameter("email", email);
-        query.setMaxResults(10);
-        return new ArrayList<>(query.getResultList());
+        return contactRepository.findByEmail(email);
     }
 
     private AccountEntity getUserByName(String userName) {
-        List<AccountEntity> usersByName = getUsersByName(userName);
-        if (usersByName.isEmpty() | usersByName.size() != 1) {
+        List<AccountEntity> accounts = getUsersByName(userName);
+        if (accounts.isEmpty() | accounts.size() != 1) {
             return null;
         }
-        return usersByName.get(0);
+        return accounts.get(0);
     }
 
     private Set<RolesEntity> getDefaultRolesEntities() {
-        Query query = em.createQuery("SELECT re FROM RolesEntity re WHERE re.roles = :defaultRole");
-        query.setParameter("defaultRole", Roles.user);
-        query.setMaxResults(10);
-        Set resultList = new HashSet(query.getResultList());
-        if (resultList.isEmpty()) {
-            resultList = createDefaultRoles();
-        }
-        return resultList;
-    }
-
-    private Set<RolesEntity> createDefaultRoles() {
-        Set<RolesEntity> rolesEntitys = new HashSet<>();
-        RolesEntity rolesEntity = new RolesEntity();
-        rolesEntity.setRoles(Roles.user);
-
-        try {
-            em.persist(rolesEntity);
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-        //create maybe more default Roles
-
-        rolesEntitys.add(rolesEntity);
-        return rolesEntitys;
+        return rolesRepository.findByRole(Roles.user);
     }
 
 }
