@@ -3,6 +3,9 @@ package de.kaojo.ejb;
 import de.kaojo.ejb.dto.interfaces.Credentials;
 import de.kaojo.ejb.dto.NewUserRequest;
 import de.kaojo.ejb.dto.UserDTO;
+import de.kaojo.ejb.dto.interfaces.AccountIdChatRequest;
+import de.kaojo.ejb.dto.interfaces.UserNameChatRequest;
+import de.kaojo.ejb.exceptions.UserManagerException;
 import de.kaojo.persistence.entities.AccountEntity;
 import de.kaojo.persistence.entities.ContactEntity;
 import de.kaojo.persistence.entities.RolesEntity;
@@ -16,7 +19,6 @@ import java.util.List;
 import java.util.Set;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
-import javax.persistence.Query;
 
 /**
  *
@@ -84,34 +86,44 @@ public class UserManagerImpl implements UserManager {
         accountEntity.setCreationDate(new Date());
         accountEntity.setLastModified(new Date());
         accountEntity.setLastLogin(new Date());
-        try {
-            accountRepository.save(accountEntity);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
+        accountEntity = accountRepository.save(accountEntity);
+        RolesEntity defaultRole = getDefaultRolesEntities();
+        Set<RolesEntity> roles = accountEntity.getRoles();
+        if (roles == null) {
+            roles = new HashSet();
         }
-        Set<RolesEntity> rolesEntitys = getDefaultRolesEntities();
-        accountEntity.setRoles(rolesEntitys);
+        roles.add(defaultRole);
+        accountEntity.setRoles(roles);
 
         ContactEntity contactEntity = new ContactEntity();
         contactEntity.setEmail(newUserRequest.getEmail());
-        try {
-            contactRepository.save(contactEntity);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
+        contactRepository.save(contactEntity);
+
         accountEntity.setContactEntity(contactEntity);
         return mapUserEntityToUserDTO(accountEntity);
     }
 
     @Override
-    public UserDTO getUserWithoutPassword(String userName) {
+    public UserDTO getUserWithoutPassword(String userName) throws UserManagerException {
         AccountEntity account = getUserByName(userName);
         if (account == null) {
-            return null;
+            throw new UserManagerException("Invalid userName supplied, userName: " + userName);
         }
         return mapUserEntityToUserDTO(account);
+    }
+
+    @Override
+    public Long getAccountIdFromUserName(UserNameChatRequest chatRequest) throws UserManagerException {
+        return getAccountByUserName(chatRequest.getUserName()).getId();
+    }
+
+    @Override
+    public String getDisplayNameFromAccountId(AccountIdChatRequest chatRequest) throws UserManagerException {
+        AccountEntity accountEntity = accountRepository.findBy(chatRequest.getAccountId());
+        if (accountEntity == null) {
+            throw new UserManagerException("Invalid UserId supplied, UserId: " + chatRequest.getAccountId());
+        }
+        return getDisplayName(accountEntity);
     }
 
     private UserDTO mapUserEntityToUserDTO(AccountEntity userEntity) {
@@ -143,8 +155,19 @@ public class UserManagerImpl implements UserManager {
         return accounts.get(0);
     }
 
-    private Set<RolesEntity> getDefaultRolesEntities() {
+    private RolesEntity getDefaultRolesEntities() {
         return rolesRepository.findByRole(Roles.user);
     }
 
+    private AccountEntity getAccountByUserName(String userName) throws UserManagerException {
+        List resultList = accountRepository.findByUserName(userName);
+        if (resultList.isEmpty() | resultList.size() != 1) {
+            throw new UserManagerException("Invalid userName supplied, userName: " + userName);
+        }
+        return (AccountEntity) resultList.get(0);
+    }
+
+    private String getDisplayName(AccountEntity accountEntity) {
+        return accountEntity.getDisplayName() != null ? accountEntity.getDisplayName() : accountEntity.getUserName();
+    }
 }

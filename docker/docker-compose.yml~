@@ -1,0 +1,21 @@
+web:
+  image: kaojo/wildfly
+  links:
+   - postgres
+  ports:
+   - "9990:9990"
+   - "9999:9999"
+   - "8080:8080"
+  volumes_from:
+   - jbossLog
+postgres:
+  image: kaojo/postgres
+  environment:
+  - POSTGRES_USER=kaojo
+  - POSTGRES_PASSWORD
+  volumes:
+   - /home/jwinter/workspace/postgres-data:/var/lib/postgresql/data
+jbossLog:
+  image: kaojo/jboss-log
+  volumes:
+    - /tmp/de.kaojo/logs:/logs/jboss

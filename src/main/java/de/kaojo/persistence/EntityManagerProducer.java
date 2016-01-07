@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package de.kaojo.persistence.repositories;
+package de.kaojo.persistence;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.context.RequestScoped;
@@ -13,6 +13,7 @@ import javax.enterprise.inject.Produces;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.PersistenceUnit;
+import javax.transaction.TransactionScoped;
 
 /**
  *
@@ -26,7 +27,7 @@ public class EntityManagerProducer {
 
     @Produces
     @Default
-    @RequestScoped
+    @TransactionScoped
     public EntityManager create() {
         return this.entityManagerFactory.createEntityManager();
     }

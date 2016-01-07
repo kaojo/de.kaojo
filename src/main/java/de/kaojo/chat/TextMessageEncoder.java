@@ -8,6 +8,8 @@ package de.kaojo.chat;
 import de.kaojo.chat.model.Message;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.websocket.EncodeException;
 import javax.websocket.Encoder;
 import javax.websocket.EndpointConfig;
@@ -21,24 +23,23 @@ public class TextMessageEncoder implements
 
     @Override
     public String encode(Message object) throws EncodeException {
-        String result = null;
         ObjectMapper mapper = new ObjectMapper();
         try {
-            result =  mapper.writeValueAsString(object);
+            return mapper.writeValueAsString(object);
         } catch (JsonProcessingException ex) {
-            ex.printStackTrace();
+            Logger.getLogger(TextMessageEncoder.class.getName()).log(Level.SEVERE, null, ex);
+            throw new EncodeException(object, "Could not encode Message", ex);
         }
-        return result;
     }
 
     @Override
     public void init(EndpointConfig config) {
-        
+
     }
 
     @Override
     public void destroy() {
-        
+
     }
 
 }

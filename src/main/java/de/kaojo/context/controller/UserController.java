@@ -5,7 +5,10 @@ import de.kaojo.context.model.user.DefaultUser;
 import static de.kaojo.context.util.FacesContextHelper.getRequest;
 import de.kaojo.ejb.UserManager;
 import de.kaojo.ejb.dto.UserDTO;
+import de.kaojo.ejb.exceptions.UserManagerException;
 import java.io.Serializable;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.context.FacesContext;
@@ -40,7 +43,11 @@ public class UserController implements Serializable {
 
     public User getUser() {
         if (user.getUserId() == null) {
-            initUserFromDB();
+            try {
+                initUserFromDB();
+            } catch (UserManagerException ex) {
+                Logger.getLogger(UserController.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
         return user;
     }
@@ -49,7 +56,7 @@ public class UserController implements Serializable {
         this.user.setDisplayName(name);
     }
 
-    private void initUserFromDB() {
+    private void initUserFromDB() throws UserManagerException {
         FacesContext context = FacesContext.getCurrentInstance();
         if (context != null) {
             HttpServletRequest request = getRequest();

@@ -61,7 +61,7 @@ public class AccountEntity extends AbstractEntity<Long> implements Serializable 
     private Date lastModified;
 
     @OneToMany(mappedBy = "author")
-    Set<MessageEntity> messages;
+    private Set<MessageEntity> messages;
 
     @Column
     private String password;

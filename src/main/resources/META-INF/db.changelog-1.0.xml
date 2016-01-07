@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+    <changeSet author="julian" id="1">
+        <createSequence sequenceName="hibernate_sequence"/>
+    </changeSet>
+    <changeSet author="julian" id="2">
+        <createTable tableName="account">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="version" type="INT"/>
+            <column name="active" type="BOOL"/>
+            <column name="creationdate" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="displayname" type="VARCHAR(32)"/>
+            <column name="lastlogin" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="lastmodified" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="password" type="VARCHAR(255)"/>
+            <column name="username" type="VARCHAR(32)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="contactentity_id" type="BIGINT"/>
+            <column name="personentity_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="julian" id="3">
+        <createTable tableName="account_roles">
+            <column name="account_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="roles_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="julian" id="4">
+        <createTable tableName="chat_message">
+            <column name="dtype" type="VARCHAR(31)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="version" type="INT"/>
+            <column name="creationdate" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="content" type="VARCHAR(255)"/>
+            <column name="account_id" type="BIGINT"/>
+            <column name="room_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="julian" id="5">
+        <createTable tableName="chat_room">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="version" type="INT"/>
+            <column name="roomname" type="VARCHAR(255)"/>
+            <column name="unrestricted" type="BOOL"/>
+            <column name="owner_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="julian" id="6">
+        <createTable tableName="chat_room_admins">
+            <column name="chatroom_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="account_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="julian" id="7">
+        <createTable tableName="chat_room_invites">
+            <column name="chatroom_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="account_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="julian" id="8">
+        <createTable tableName="chat_room_members">
+            <column name="chatroom_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="account_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="julian" id="9">
+        <createTable tableName="contact_data">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="version" type="INT"/>
+            <column name="country" type="VARCHAR(255)"/>
+            <column name="countrycode" type="VARCHAR(255)"/>
+            <column name="email" type="VARCHAR(255)"/>
+            <column name="phonenumber" type="BIGINT"/>
+            <column name="postalcode" type="BIGINT"/>
+            <column name="recipient" type="VARCHAR(255)"/>
+            <column name="street" type="VARCHAR(255)"/>
+            <column name="streetnumber" type="VARCHAR(255)"/>
+            <column name="town" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="julian" id="10">
+        <createTable tableName="person_data">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="version" type="INT"/>
+            <column name="birthday" type="date"/>
+            <column name="firstname" type="VARCHAR(32)"/>
+            <column name="lastname" type="VARCHAR(32)"/>
+            <column name="maritalstatus" type="VARCHAR(255)"/>
+            <column name="middlename" type="VARCHAR(32)"/>
+            <column name="salutation" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="julian" id="11">
+        <createTable tableName="roles">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="version" type="INT"/>
+            <column name="roles" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="julian" id="12">
+        <addPrimaryKey columnNames="id" constraintName="account_pkey" tableName="account"/>
+    </changeSet>
+    <changeSet author="julian" id="13">
+        <addPrimaryKey columnNames="account_id, roles_id" constraintName="account_roles_pkey" tableName="account_roles"/>
+    </changeSet>
+    <changeSet author="julian" id="14">
+        <addPrimaryKey columnNames="id" constraintName="chat_message_pkey" tableName="chat_message"/>
+    </changeSet>
+    <changeSet author="julian" id="15">
+        <addPrimaryKey columnNames="chatroom_id, account_id" constraintName="chat_room_admins_pkey" tableName="chat_room_admins"/>
+    </changeSet>
+    <changeSet author="julian" id="16">
+        <addPrimaryKey columnNames="chatroom_id, account_id" constraintName="chat_room_invites_pkey" tableName="chat_room_invites"/>
+    </changeSet>
+    <changeSet author="julian" id="17">
+        <addPrimaryKey columnNames="chatroom_id, account_id" constraintName="chat_room_members_pkey" tableName="chat_room_members"/>
+    </changeSet>
+    <changeSet author="julian" id="18">
+        <addPrimaryKey columnNames="id" constraintName="chat_room_pkey" tableName="chat_room"/>
+    </changeSet>
+    <changeSet author="julian" id="19">
+        <addPrimaryKey columnNames="id" constraintName="contact_data_pkey" tableName="contact_data"/>
+    </changeSet>
+    <changeSet author="julian" id="20">
+        <addPrimaryKey columnNames="id" constraintName="person_data_pkey" tableName="person_data"/>
+    </changeSet>
+    <changeSet author="julian" id="21">
+        <addPrimaryKey columnNames="id" constraintName="roles_pkey" tableName="roles"/>
+    </changeSet>
+    <changeSet author="julian" id="22">
+        <addUniqueConstraint columnNames="username" constraintName="uk_23pocy0cnawgjgtcgt8f7qpk2" tableName="account"/>
+    </changeSet>
+    <changeSet author="julian" id="23">
+        <addUniqueConstraint columnNames="roomname" constraintName="uk_no3wudvuqvkx8mlejke9gdqw0" tableName="chat_room"/>
+    </changeSet>
+    <changeSet author="julian" id="24">
+        <addForeignKeyConstraint baseColumnNames="account_id" baseTableName="chat_message" constraintName="fk_2twcenapcw5x9r1r84rixocnv" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="account"/>
+    </changeSet>
+    <changeSet author="julian" id="25">
+        <addForeignKeyConstraint baseColumnNames="account_id" baseTableName="chat_room_invites" constraintName="fk_399t0pje2rqe00lmrn064ha0t" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="account"/>
+    </changeSet>
+    <changeSet author="julian" id="26">
+        <addForeignKeyConstraint baseColumnNames="id" baseTableName="chat_room" constraintName="fk_488pfk2t2d5uhbtwe4bup6abw" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="chat_room"/>
+    </changeSet>
+    <changeSet author="julian" id="27">
+        <addForeignKeyConstraint baseColumnNames="owner_id" baseTableName="chat_room" constraintName="fk_6flnsplp4a60nm35giasgas01" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="account"/>
+    </changeSet>
+    <changeSet author="julian" id="28">
+        <addForeignKeyConstraint baseColumnNames="chatroom_id" baseTableName="chat_room_admins" constraintName="fk_702585jt8oj0nkojm8snj1173" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="chat_room"/>
+    </changeSet>
+    <changeSet author="julian" id="29">
+        <addForeignKeyConstraint baseColumnNames="account_id" baseTableName="chat_room_members" constraintName="fk_a3b4wvywe3q6kgfl6l5l3bocd" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="account"/>
+    </changeSet>
+    <changeSet author="julian" id="30">
+        <addForeignKeyConstraint baseColumnNames="personentity_id" baseTableName="account" constraintName="fk_ag2ciunodri3a8s3u15f2c9s0" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="person_data"/>
+    </changeSet>
+    <changeSet author="julian" id="31">
+        <addForeignKeyConstraint baseColumnNames="room_id" baseTableName="chat_message" constraintName="fk_br4nh46ofk8xgo7flo2hdtywa" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="chat_room"/>
+    </changeSet>
+    <changeSet author="julian" id="32">
+        <addForeignKeyConstraint baseColumnNames="roles_id" baseTableName="account_roles" constraintName="fk_dm50jnktdvei29746yly6wgdm" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="roles"/>
+    </changeSet>
+    <changeSet author="julian" id="33">
+        <addForeignKeyConstraint baseColumnNames="account_id" baseTableName="chat_room_admins" constraintName="fk_i8ypcep0bu74cwq20u3hu4vd" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="account"/>
+    </changeSet>
+    <changeSet author="julian" id="34">
+        <addForeignKeyConstraint baseColumnNames="contactentity_id" baseTableName="account" constraintName="fk_opiv9q0aw1p8uetacatl1am9j" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="contact_data"/>
+    </changeSet>
+    <changeSet author="julian" id="35">
+        <addForeignKeyConstraint baseColumnNames="account_id" baseTableName="account_roles" constraintName="fk_qay7k28en1n6yohkv9bqtyusr" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="account"/>
+    </changeSet>
+    <changeSet author="julian" id="36">
+        <addForeignKeyConstraint baseColumnNames="chatroom_id" baseTableName="chat_room_invites" constraintName="fk_rd4qh3bqv2vc2jr6fkvcfiale" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="chat_room"/>
+    </changeSet>
+    <changeSet author="julian" id="37">
+        <addForeignKeyConstraint baseColumnNames="chatroom_id" baseTableName="chat_room_members" constraintName="fk_rlieedfu5rafii2i52yedncr0" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="chat_room"/>
+    </changeSet>
+    <changeSet author="julian" id="38">
+        <insert tableName="roles">
+            <column name="id" value="1"/>
+            <column name="version" value="1"/>
+            <column name="roles" value="user"/>
+        </insert>
+        <insert tableName="roles">
+            <column name="id" value="2"/>
+            <column name="version" value="1"/>
+            <column name="roles" value="admin"/>
+        </insert>
+    </changeSet>
+</databaseChangeLog>

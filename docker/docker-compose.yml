@@ -13,9 +13,15 @@ postgres:
   environment:
   - POSTGRES_USER=kaojo
   - POSTGRES_PASSWORD
-  volumes:
-   - /home/jwinter/workspace/postgres-data:/var/lib/postgresql/data
+  volumes_from:
+   - postgresVolumes
 jbossLog:
   image: kaojo/jboss-log
   volumes:
-    - /tmp/de.kaojo/logs:/logs/jboss
+    - /opt/de.kaojo/jbossLogs:/logs/jboss
+postgresVolumes:
+  image: kaojo/postgres-volumes
+  volumes:
+   - /opt/de.kaojo/postgres-config:/etc/postgresql
+   - /opt/de.kaojo/postgres-log:/var/log/postgresql
+   - /opt/de.kaojo/postgres-data:/var/lib/postgresql/data

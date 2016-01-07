@@ -8,6 +8,8 @@ package de.kaojo.chat;
 import de.kaojo.chat.model.Message;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.websocket.DecodeException;
 import javax.websocket.Decoder;
 import javax.websocket.EndpointConfig;
@@ -24,9 +26,9 @@ public class TextMessageDecoder implements Decoder.Text<Message> {
         try {
             return mapper.readValue(s, Message.class);
         } catch (IOException ex) {
-            ex.printStackTrace();
+            Logger.getLogger(TextMessageDecoder.class.getName()).log(Level.SEVERE, null, ex);
+            throw new DecodeException(s, "Encoded message could not be parsed to Message.class");
         }
-        return null;
     }
 
     @Override

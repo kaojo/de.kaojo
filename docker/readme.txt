@@ -23,6 +23,18 @@
 > psql kaojo
 > select ......
 
+# Connection from host to postgres docker, get the exposed port with docker ps
+psql -h localhost -p <exposedPort> -d kaojo -U kaojo --password
+
+# Create Liquibase ChangeLog from project root directory
+liquibase --driver=org.postgresql.Driver
+       --classpath=./config/postgresql-9.4-1201.jdbc4.jar
+       --changeLogFile=db-changelog.xml
+       --url="jdbc:postgresql://localhost:5431/kaojo"
+       --username=kaojo
+       --password=admin
+       generateChangeLog
+
 ### Deployen auf den JBoss ###
 > mvn clean wildfly:deploy
 

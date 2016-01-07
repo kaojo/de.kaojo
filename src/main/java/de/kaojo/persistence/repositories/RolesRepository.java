@@ -7,7 +7,6 @@ package de.kaojo.persistence.repositories;
 
 import de.kaojo.persistence.entities.RolesEntity;
 import de.kaojo.persistence.entities.enums.Roles;
-import java.util.Set;
 import org.apache.deltaspike.data.api.EntityRepository;
 import org.apache.deltaspike.data.api.Query;
 import org.apache.deltaspike.data.api.Repository;
@@ -19,7 +18,7 @@ import org.apache.deltaspike.data.api.Repository;
 @Repository(forEntity = RolesEntity.class)
 public interface RolesRepository extends EntityRepository<RolesEntity, Long> {
 
-    @Query("SELECT re FROM RolesEntity re WHERE re.roles = :defaultRole")
-    public Set<RolesEntity> findByRole(Roles role);
+    @Query("SELECT re FROM RolesEntity re WHERE re.roles = ?1")
+    public RolesEntity findByRole(Roles role);
 
 }

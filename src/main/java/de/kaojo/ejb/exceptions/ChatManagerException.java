@@ -4,7 +4,7 @@ package de.kaojo.ejb.exceptions;
  *
  * @author jwinter
  */
-public class ChatManagerException extends Exception {
+public class ChatManagerException extends KaojoException {
 
     public ChatManagerException() {
     }

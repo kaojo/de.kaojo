@@ -7,7 +7,10 @@ package de.kaojo.ejb;
 
 import de.kaojo.ejb.dto.NewUserRequest;
 import de.kaojo.ejb.dto.UserDTO;
+import de.kaojo.ejb.dto.interfaces.AccountIdChatRequest;
 import de.kaojo.ejb.dto.interfaces.Credentials;
+import de.kaojo.ejb.dto.interfaces.UserNameChatRequest;
+import de.kaojo.ejb.exceptions.UserManagerException;
 import javax.ejb.Local;
 
 /**
@@ -17,14 +20,18 @@ import javax.ejb.Local;
 @Local
 public interface UserManager {
 
-    UserDTO createNewUser(NewUserRequest newUserRequest);
+    public UserDTO createNewUser(NewUserRequest newUserRequest);
 
-    boolean emailAllreadyExists(String email);
+    public boolean emailAllreadyExists(String email);
 
-    UserDTO getUserFromDB(Credentials credentials);
+    public UserDTO getUserFromDB(Credentials credentials);
 
-    boolean userAllreadyExists(String userName);
+    public boolean userAllreadyExists(String userName);
 
-    UserDTO getUserWithoutPassword(String userName);
+    public UserDTO getUserWithoutPassword(String userName) throws UserManagerException;
+
+    public String getDisplayNameFromAccountId(AccountIdChatRequest chatRequest) throws UserManagerException;
+
+    public Long getAccountIdFromUserName(UserNameChatRequest chatRequest) throws UserManagerException;
 
 }

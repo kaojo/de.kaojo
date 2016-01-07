@@ -44,15 +44,11 @@ public interface ChatManager {
 
     public boolean receiveMessage(MessageChatRequest chatRequest) throws ChatManagerException;
 
-    public String getDisplayNameFromAccountId(AccountIdChatRequest chatRequest) throws ChatManagerException;
-
-    public Long getAccountIdFromUserName(UserNameChatRequest chatRequest) throws ChatManagerException;
-
     public Long getChatRoomIdFromChatRoomName(ChatRoomNameChatRequest chatRequest) throws ChatManagerException;
 
     public List<Message> getOldMessages(ChatRoomNameChatRequest chatRequest) throws ChatManagerException;
-    
+
     public ChatRoom getChatRoomByChatRoomId(ChatRoomChatRequest chatRequest) throws ChatManagerException;
-    
+
     public ChatRoom getChatRoomByChatRoomName(ChatRoomNameChatRequest chatRequest) throws ChatManagerException;
 }

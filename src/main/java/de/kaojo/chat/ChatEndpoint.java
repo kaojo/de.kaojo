@@ -2,6 +2,7 @@ package de.kaojo.chat;
 
 import de.kaojo.chat.model.Message;
 import de.kaojo.ejb.ChatManager;
+import de.kaojo.ejb.UserManager;
 import de.kaojo.ejb.dto.AccountIdChatRequestImpl;
 import de.kaojo.ejb.dto.interfaces.ChatRoomNameChatRequest;
 import de.kaojo.ejb.dto.ChatRoomNameChatRequestImpl;
@@ -11,6 +12,7 @@ import de.kaojo.ejb.dto.interfaces.MessageChatRequest;
 import de.kaojo.ejb.dto.MessageChatRequestImpl;
 import de.kaojo.ejb.dto.interfaces.AccountIdChatRequest;
 import de.kaojo.ejb.exceptions.ChatManagerException;
+import de.kaojo.ejb.exceptions.UserManagerException;
 import java.io.IOException;
 import java.util.Map;
 import java.util.logging.Level;
@@ -34,7 +36,10 @@ import javax.websocket.server.ServerEndpoint;
 public class ChatEndpoint {
 
     @Inject
-    ChatManager chatManager;
+    private ChatManager chatManager;
+
+    @Inject
+    private UserManager userManager;
 
     private static final Logger LOG = Logger.getLogger(ChatEndpoint.class.getName());
     public static final String CHAT_USER_PARAM = "chatUser";
@@ -122,10 +127,10 @@ public class ChatEndpoint {
 
         try {
             UserNameChatRequest uChatRequest = new UserNameChatRequestImpl(name);
-            Long accountId = chatManager.getAccountIdFromUserName(uChatRequest);
+            Long accountId = userManager.getAccountIdFromUserName(uChatRequest);
 
             AccountIdChatRequest aChatRequest = new AccountIdChatRequestImpl(accountId);
-            String displayName = chatManager.getDisplayNameFromAccountId(aChatRequest);
+            String displayName = userManager.getDisplayNameFromAccountId(aChatRequest);
 
             ChatRoomNameChatRequest chatRoomNameChatRequest = new ChatRoomNameChatRequestImpl(chatRoom);
             Long chatRoomId = chatManager.getChatRoomIdFromChatRoomName(chatRoomNameChatRequest);
@@ -135,7 +140,7 @@ public class ChatEndpoint {
             userProperties.put(ACCOUNT_ID_PARAM, accountId);
             userProperties.put(CHAT_ROOM_PARAM, chatRoom);
             userProperties.put(CHAT_ROOM_ID_PARAM, chatRoomId);
-        } catch (ChatManagerException ex) {
+        } catch (ChatManagerException | UserManagerException ex) {
             LOG.log(Level.SEVERE, null, ex);
         }
     }

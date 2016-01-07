@@ -8,15 +8,23 @@ web:
    - "8080:8080"
    - "8787:8787"
   volumes_from:
-    - jbossLog
+   - jbossLog
 postgres:
   image: kaojo/postgres
+  ports:
+   - "5431:5432"
   environment:
-  - POSTGRES_USER=kaojo
-  - POSTGRES_PASSWORD=admin
-  volumes:
-   - /home/jwinter/workspace/postgres-data:/var/lib/postgresql/data
+   - POSTGRES_USER=kaojo
+   - POSTGRES_PASSWORD=admin
+  volumes_from:
+   - postgresVolumes
 jbossLog:
   image: kaojo/jboss-log
   volumes:
-    - /home/jwinter/workspace/jbossLog:/logs/jboss
+    - /opt/de.kaojo/jbossLogs:/logs/jboss
+postgresVolumes:
+  image: kaojo/postgres-volumes
+  volumes:
+   - /opt/de.kaojo/postgres-config:/etc/postgresql
+   - /opt/de.kaojo/postgres-log:/var/log/postgresql
+   - /opt/de.kaojo/postgres-data:/var/lib/postgresql/data

@@ -14,7 +14,6 @@ import de.kaojo.ejb.dto.interfaces.ChatRoomNameChatRequest;
 import de.kaojo.ejb.dto.interfaces.MessageChatRequest;
 import de.kaojo.ejb.dto.interfaces.AccountIdChatRequest;
 import de.kaojo.ejb.dto.interfaces.NewChatRoomChatRequest;
-import de.kaojo.ejb.dto.interfaces.UserNameChatRequest;
 import de.kaojo.persistence.entities.AccountEntity;
 import de.kaojo.persistence.entities.ChatRoomEntity;
 import de.kaojo.persistence.entities.MessageEntity;
@@ -119,12 +118,7 @@ public class ChatManagerImpl implements ChatManager {
         ChatRoomEntity chatRoomE = new ChatRoomEntity();
         chatRoomE.setRoomName(chatRequest.getRoomName());
         chatRoomE.setUnrestricted(chatRequest.isPublicChatRoom());
-        try {
-            chatRoomRepository.save(chatRoomE);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
+        chatRoomRepository.save(chatRoomE);
         chatRoomE.setOwner(accountEntity);
         chatRoomE.getMembers().add(accountEntity);
         chatRoomE.getAdmins().add(accountEntity);
@@ -142,20 +136,10 @@ public class ChatManagerImpl implements ChatManager {
         MessageEntity messageE = new TextMessageEntity();
         messageE.setCreationDate(message.getTimestamp());
         messageE.setContent(message.getContent());
-        try {
-            messageRepository.save(messageE);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
+        messageRepository.save(messageE);
         messageE.setAuthor(accountEntity);
         messageE.setChatRoom(chatRoomEntity);
         return true;
-    }
-
-    @Override
-    public Long getAccountIdFromUserName(UserNameChatRequest chatRequest) throws ChatManagerException {
-        return getAccountByUserName(chatRequest.getUserName()).getId();
     }
 
     @Override
@@ -165,15 +149,6 @@ public class ChatManagerImpl implements ChatManager {
             throw new ChatManagerException("Invalid chatRoomName supplied, chatRoomName: " + chatRequest.getChatRoomName());
         }
         return resultList.get(0).getId();
-    }
-
-    @Override
-    public String getDisplayNameFromAccountId(AccountIdChatRequest chatRequest) throws ChatManagerException {
-        AccountEntity accountEntity = accountRepository.findBy(chatRequest.getAccountId());
-        if (accountEntity == null) {
-            throw new ChatManagerException("Invalid UserId supplied, UserId: " + chatRequest.getAccountId());
-        }
-        return getDisplayName(accountEntity);
     }
 
     private List<ChatRoom> getMemberedChatRooms(AccountIdChatRequest chatRequest) {
@@ -188,14 +163,6 @@ public class ChatManagerImpl implements ChatManager {
         return mapChatRoomEntities(chatRoomRepository.findByUnrestrictedExludeMembered(chatRequest.getAccountId()));
     }
 
-    private AccountEntity getAccountByUserName(String userName) throws ChatManagerException {
-        List resultList = accountRepository.findByUserName(userName);
-        if (resultList.isEmpty() | resultList.size() != 1) {
-            throw new ChatManagerException("Invalid userName supplied, userName: " + userName);
-        }
-        return (AccountEntity) resultList.get(0);
-    }
-
     private List<ChatRoom> getChatRoomsByName(String chatRoomName) {
         return mapChatRoomEntities(chatRoomRepository.findByRoomName(chatRoomName));
     }
@@ -203,10 +170,6 @@ public class ChatManagerImpl implements ChatManager {
     private ChatRoom mapChatRoomEntityToChatRoom(ChatRoomEntity chatRoomEntity) {
         ChatRoomImpl chatRoomImpl = new ChatRoomImpl(chatRoomEntity);
         return chatRoomImpl;
-    }
-
-    private String getDisplayName(AccountEntity accountEntity) {
-        return accountEntity.getDisplayName() != null ? accountEntity.getDisplayName() : accountEntity.getUserName();
     }
 
     @Override
